@@ -1,0 +1,48 @@
+<html>
+<head>
+	<title>Project Euler Python solution 1 - cchristiansen</title>
+	<link href="style.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+	<h1>Project Euler Python solution 1</h1>
+	<h2>Problem statement</h2>
+	<p>Find the sum of all multiples of 5, 7 or 11 below 1000.</p>
+	<h2>Solution</h2>
+	<h3>Manual way</h3>
+	<pre><code>i = 0
+sum = 0
+while i < 1000:
+	if i%5 == 0 or i%7 == 0 or i%11 == 0:
+		sum = sum + i
+	i = i+1
+print sum
+	</code></pre>
+	<p>This is probably the "easiest" code to understand. However, it is not particularly <i>elegant</i>, Pythonic nor quick. The time taken to run this code is almost 2 seconds when the limit is changed from 1000 to 10,000,000 instead.</p>
+	<h3>Better way</h3>
+	<pre><code>import numpy as np
+import itertools
+
+def triangular(a,b):
+    n = (b-1)/a
+    return a*n*(n+1)/2
+
+def addon(vtriangular, nums, i, limit):
+    return((-1)**(i%2)*vtriangular(list(np.prod(x) for x in list(itertools.combinations(nums,i+1))),limit))
+
+limit = 1000
+nums = [5,7,11]
+
+vtriangular = np.vectorize(triangular)
+
+print(sum(list(sum(addon(vtriangular,nums,i,limit)) for i in range(len(nums)))))
+	</pre></code>
+	<p>Making use of the <a href="https://en.wikipedia.org/wiki/Triangular_number">triangular number formula</a> speeds up the process massively. <code>5+10+15+20+&hellip;</code> is the same as <code>5*(1+2+3+4+&hellip;)</code> which is <code>5*n*(n+1)/2</code>. Using numpy's vectorize function, we do this for all the numbers in <code>nums = [5,7,11]</code>.</p>
+	<p>However, we are now double counting for the products of 5, 7 and 11. In other words, all multiples of 35, 55 and 77 are added twice. Hence we need to remove these. However after we remove this, we will have removed the multiples of the product of 5, 7 and 11 (i.e. 385) twice. This then needs to be added on again. </p>
+	<p><code>addon</code> deals with this. <code>list(itertools.combinations)</code> throws out <code>[5, 7, 11]</code> when given the input <code>r=1</code>, <code>[(5,7),(7,11),(5,11)]</code> when <code>r=2</code> and <code>[(5,7,11)]</code> for <code>r=3</code>. Taking the products of these, we then use the traingular number formular, and dependent on whether r is even or odd, we subtract or add: <code>(-1)**(i%2)&hellip;</code></p>
+	<p>The code takes less than 0.1 seconds to complete, even when the limit is changed from 1000 to 10,000,000.</p>
+	<h2>Return</h2>
+	<a href="../index.html">Homepage.</a> 
+	<a href="index.html">Project Euler Python solutions.</a> 
+	<a href="2.html">Next problem.</a>
+</body>
+</html>
