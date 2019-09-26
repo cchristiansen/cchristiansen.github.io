@@ -6,13 +6,25 @@
 <body>
 	<h1>Project Euler Python solution 2</h1>
 	<h2>Problem statement</h2>
-	<p></p>
+	<p>Find the sum of odd <a href="https://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci numbers</a> smaller than 6 million.</p>
 	<h2>Solution</h2>
-	<div class="code"></div>
+	<h3>Straightforward way</h3>
+	<pre><div class="code">a = 0
+b = 1
+sum = 0
+while b < 6000000:
+	x = a+b
+	a = b
+	b = x
+	if b%2 == 1:
+		sum = sum + b
+print(sum)	
+	</div></pre>
+	<p>Other less straightforward methods do not scale well. May have to revisit to see if there is a faster method.</p>
 	<h2>Return</h2>
 	<a href="../index.html">Homepage.</a> 
 	<a href="index.html">Project Euler Python solutions.</a>
-	<a href="">Previous problem.</a>
-	<a href="">Next problem.</a>
+	<a href="1.html">Previous problem.</a>
+	<a href="3.html">Next problem.</a>
 </body>
 </html>
