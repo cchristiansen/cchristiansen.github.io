@@ -1,0 +1,28 @@
+<html>
+<head>
+	<title>Project Euler Python solution 3 - cchristiansen</title>
+	<link href="style.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+	<h1>Project Euler Python solution 3</h1>
+	<h2>Problem statement</h2>
+	<p>What is the greatest prime factor of 600851475147?</p>
+	<h2>Solution</h2>
+	<pre><div class="code">x = 600851475147
+
+def largestprimefactor(x):
+    for i in range(2,int(x**0.5)+1,1):
+        if x%i == 0:
+            return largestprimefactor(x/i)
+    return x
+
+print(largestprimefactor(x))
+	</div></pre>
+	<p>Obtaining the prime factors of large numbers is a notoriously computationally expensive problem. Expensive enough that a great deal of modern cryptography is based off of it. For this relatively small number, brute force still works. Maybe checking against a dictionary would be quicker.</p>
+	<h2>Return</h2>
+	<a href="../index.html">Homepage.</a> 
+	<a href="index.html">Project Euler Python solutions.</a>
+	<a href="2.html">Previous problem.</a>
+	<a href="4.html">Next problem.</a>
+</body>
+</html>

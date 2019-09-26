@@ -8,7 +8,7 @@
 	<h2>Problem statement</h2>
 	<p>Find the sum of all multiples of 5, 7 or 11 below 1000.</p>
 	<h2>Solution</h2>
-	<h3>Manual way</h3>
+	<h3>Straightfoward way</h3>
 	<pre><code>i = 0
 sum = 0
 while i < 1000:
@@ -17,8 +17,8 @@ while i < 1000:
 	i = i+1
 print sum
 	</code></pre>
-	<p>This is probably the "easiest" code to understand. However, it is not particularly <i>elegant</i>, Pythonic nor quick. The time taken to run this code is almost 2 seconds when the limit is changed from 1000 to 10,000,000 instead.</p>
-	<h3>Better way</h3>
+	<p>This is probably the "easiest" code to understand. However, it is not particularly elegant, Pythonic nor quick. The time taken to run this code is almost 2 seconds when the limit is changed from 1000 to 10,000,000 instead.</p>
+	<h3>Quicker way</h3>
 	<pre><code>import numpy as np
 import itertools
 
