@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1294px"
+   height="216px"
+   viewBox="0 0 1294 216"
+   version="1.1"
+   id="svg24"
+   sodipodi:docname="wave-footer.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata28">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     id="namedview26"
+     showgrid="false"
+     inkscape:zoom="1.3114809"
+     inkscape:cx="677.86832"
+     inkscape:cy="-13.167673"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg24" />
+  <!-- Generator: Sketch 46.1 (44463) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title2">wave_footer</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <defs
+     id="defs19">
+    <radialGradient
+       cx="116.70788%"
+       cy="110.133192%"
+       fx="116.70788%"
+       fy="110.133192%"
+       r="147.799618%"
+       gradientTransform="translate(1.167079,1.101332),scale(0.166924,1.000000),rotate(-170.639853),translate(-1.167079,-1.101332)"
+       id="radialGradient-1">
+      <stop
+         stop-color="#0069FF"
+         offset="0%"
+         id="stop6" />
+      <stop
+         stop-color="#0269FD"
+         offset="2.91250472%"
+         id="stop8" />
+      <stop
+         stop-color="#0369FC"
+         offset="4.5053357%"
+         id="stop10" />
+      <stop
+         stop-color="#0468FB"
+         offset="6.00516035%"
+         id="stop12" />
+      <stop
+         stop-color="#1165EF"
+         offset="25.4821693%"
+         id="stop14" />
+      <stop
+         stop-color="#4457C0"
+         offset="100%"
+         id="stop16" />
+    </radialGradient>
+  </defs>
+  <g
+     id="Ressource"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd"
+     style="fill:#f56e12;fill-opacity:1">
+    <g
+       id="wave_footer"
+       fill="url(#radialGradient-1)"
+       style="fill:#f56e12;fill-opacity:1">
+      <path
+         d="M0,0 L1294,3.28701505e-11 L1294,216 C1078.47689,206.049898 862.975994,201.074847 647.49731,201.074847 C432.018625,201.074847 216.186189,206.049898 6.60793035e-14,216 L0,0 Z"
+         id="Image-Hero-Copy"
+         transform="translate(647.000000, 108.000000) scale(1, -1) translate(-647.000000, -108.000000) "
+         style="fill:#f56e12;fill-opacity:1" />
+    </g>
+  </g>
+</svg>
