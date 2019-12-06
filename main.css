@@ -1,16 +1,53 @@
 html {
-  background: url() no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+    background: url() no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+	background-color: #374048;
+	color: ivory;
 }
 
 body {
-	margin: 5 auto;
+	margin: 5 auto; 
 	max-width: 60em;
+}
+
+header {
+	text-align: center;	
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-family: "Comfortaa", sans-serif;
+	color: white;
 }
 
 img {
 	max-width: 100%;
+}
+
+p {	
+	margin-left: 2em;
+	font-family: "Arial", Arial, sans-serif;
+	font-size: 1em;
+}
+
+a:link {
+	color: pink;
+	text-decoration: none;
+}
+
+a:visited {
+	color: pink;
+	text-decoration: none;
+}
+
+a:hover {
+	color: plum;
+	text-decoration: underline;
+}
+
+a:active {
+	color: plum;
+	text-decoration: underline;
 }
