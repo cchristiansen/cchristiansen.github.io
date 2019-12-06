@@ -13,6 +13,15 @@ body {
 	max-width: 60em;
 }
 
+@viewport {
+    width: device-width ;
+    zoom: 1.0 ;
+} 
+
+@-ms-viewport {
+    width: device-width ;
+}
+
 header {
 	text-align: center;
 	font-family: "Latin Modern Roman", serif;	
