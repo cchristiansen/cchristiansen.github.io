@@ -15,6 +15,11 @@ html,body {
 	height: 100%;
 }
 
+@font-face {
+	font-family: Comfortaa;
+	src: url(Comfortaa-Light.ttf)
+}
+
 @viewport {
     width: device-width ;
     zoom: 1.0 ;
@@ -65,14 +70,33 @@ html,body {
 	margin-right: auto;
 }
 
+.column {
+  float: left;
+  width: 25%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 header {
 	text-align: center;
 	font-family: "Latin Modern Roman", serif;	
 }
 
+.center {
+	text-align: center;
+}
+
 h1,h2,h3,h4,h5,h6 {
 	font-family: "Comfortaa", sans-serif;
 	color: white;
+}
+
+.comfortaa {
+	font-family: "Comfortaa", sans-serif;
 }
 
 img {
@@ -106,3 +130,54 @@ a:active {
 	color: plum;
 	text-decoration: underline;
 }
+
+footer {
+	margin-top: 20px;
+	text-align: center;
+	font-family: "Arial", Arial, sans-serif;
+}
+
+hr {
+	border: 1px dashed pink;	
+}
+
+.em {
+	font-style: italic;
+}
+
+.pink {
+	color: pink;
+}
+
+.inline {
+	display: inline-block;
+}
+
+.logo {
+	max-width: 30em;
+}
+
+.left {
+	float: left;	
+}
+
+.right {
+	float: right;
+}
+
+.date {
+	font-family: "Arial", Arial, sans-serif;
+	font-size: 1em;
+	float: right;
+	display: inline;
+	color: pink;
+}
+
+.noblock {
+	display: inline;
+}
+
+.bottom-margin {
+	margin-bottom: 30px;
+}
+
