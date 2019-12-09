@@ -108,7 +108,8 @@ img {
 p {	
 	margin-left: 2em;
 	font-family: "Arial", Arial, sans-serif;
-	font-size: 1em;
+	font-size: 1.1em;
+	line-height: 1.4;
 }
 
 a:link {
