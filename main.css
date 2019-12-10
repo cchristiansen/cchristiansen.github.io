@@ -65,14 +65,17 @@ html,body {
 }
 
 .main {
+	padding: 5px;
 	margin-left: auto;
 	max-width: 60em;
 	margin-right: auto;
 }
 
-.column {
-  float: left;
-  width: 25%;
+@media(min-width:500px) {
+	.column {
+  		float: left;
+  		width: 25%;
+	}
 }
 
 .row:after {
