@@ -34,7 +34,7 @@ html,body {
     width: device-width ;
 }
 
-.fade img {
+.fade {
     -webkit-animation: 4s fadein; /* Safari, Chrome and Opera > 12.1 */
        -moz-animation: 4s fadein; /* Firefox < 16 */
         -ms-animation: 4s fadein; /* Internet Explorer */
