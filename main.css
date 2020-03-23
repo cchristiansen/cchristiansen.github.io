@@ -16,13 +16,13 @@ html,body {
 }
 
 @font-face {
-	font-family: Comfortaa;
-	src: url(./fonts/Comfortaa-Light.ttf)
+	font-family: RobotoMono;
+	src: url(./fonts/Roboto_Mono/RobotoMono-Regular.ttf);
 }
 
 @font-face {
-	font-family: RobotoMono;
-	src: url(./fonts/Roboto_Mono/RobotoMono-Regular.ttf);
+	font-family: EBGaramond;
+	src: url(./fonts/EBGaramond-0.016/ttf/EBGaramond12-Regular.ttf);
 }
 
 @viewport {
@@ -75,28 +75,25 @@ html,body {
     top: 0; bottom: 0;
     left: 0; right: 0;
     margin: auto;
-	max-width: 45em;
+	max-width: 35em;
     padding: 10px;
 }
 
 h1 {
     color: black;
 	text-align: center;
-	font-family: "Latin Modern Roman", serif;	
+	font-family: "EBGaramond", "Latin Modern Roman", serif;
 }
 
 h2 {
     margin-top: 40px;
     margin-bottom: 0px;
-}
-
-.comfortaa {
-	font-family: "Comfortaa", sans-serif;
+	font-family: "EBGaramond", "Latin Modern Roman", serif;
 }
 
 p {	
 	margin-left: 3em;
-	font-family: "Latin Modern Roman", serif;
+	font-family: "EBGaramond", "Latin Modern Roman", serif;
 	font-size: 1.4em;
 	line-height: 1.4;
 }
