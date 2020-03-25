@@ -37,14 +37,12 @@ body {
 
 @-webkit-keyframes color-change {
     0% { background-color: white; }
-    3% { background-color: white; }
-    5% { background-color: pink; }
-    10% { background-color: purple; }
-    20% { background-color: yellow; }
-    24% { background-color: red; }
-    33% { background-color: purple; }
-    38% { background-color: cyan; }
-    40% { background-color: white; }
+    10% { background-color: white; }
+    15% { background-color: pink; }
+    18% { background-color: pink; }
+    24% { background-color: purple; }
+    36% { background-color: midnightblue; }
+    48% { background-color: white; }
     60% { background-color: white; }
     65% { background-color: black; }
     80% { background-color: black; }
@@ -54,14 +52,12 @@ body {
 
 @-moz-keyframes color-change {
     0% { background-color: white; }
-    3% { background-color: white; }
-    5% { background-color: pink; }
-    10% { background-color: purple; }
-    20% { background-color: yellow; }
-    24% { background-color: red; }
-    33% { background-color: purple; }
-    38% { background-color: cyan; }
-    40% { background-color: white; }
+    10% { background-color: white; }
+    15% { background-color: pink; }
+    18% { background-color: pink; }
+    24% { background-color: purple; }
+    36% { background-color: midnightblue; }
+    48% { background-color: white; }
     60% { background-color: white; }
     65% { background-color: black; }
     80% { background-color: black; }
@@ -71,14 +67,12 @@ body {
 
 @-ms-keyframes color-change {
     0% { background-color: white; }
-    3% { background-color: white; }
-    5% { background-color: pink; }
-    10% { background-color: purple; }
-    20% { background-color: yellow; }
-    24% { background-color: red; }
-    33% { background-color: purple; }
-    38% { background-color: cyan; }
-    40% { background-color: white; }
+    10% { background-color: white; }
+    15% { background-color: pink; }
+    18% { background-color: pink; }
+    24% { background-color: purple; }
+    36% { background-color: midnightblue; }
+    48% { background-color: white; }
     60% { background-color: white; }
     65% { background-color: black; }
     80% { background-color: black; }
@@ -88,14 +82,12 @@ body {
 
 @-o-keyframes color-change {
     0% { background-color: white; }
-    3% { background-color: white; }
-    5% { background-color: pink; }
-    10% { background-color: purple; }
-    20% { background-color: yellow; }
-    24% { background-color: red; }
-    33% { background-color: purple; }
-    38% { background-color: cyan; }
-    40% { background-color: white; }
+    10% { background-color: white; }
+    15% { background-color: pink; }
+    18% { background-color: pink; }
+    24% { background-color: purple; }
+    36% { background-color: midnightblue; }
+    48% { background-color: white; }
     60% { background-color: white; }
     65% { background-color: black; }
     80% { background-color: black; }
@@ -105,14 +97,12 @@ body {
 
 @keyframes color-change {
     0% { background-color: white; }
-    3% { background-color: white; }
-    5% { background-color: pink; }
-    10% { background-color: purple; }
-    20% { background-color: yellow; }
-    24% { background-color: red; }
-    33% { background-color: purple; }
-    38% { background-color: cyan; }
-    40% { background-color: white; }
+    10% { background-color: white; }
+    15% { background-color: pink; }
+    18% { background-color: pink; }
+    24% { background-color: purple; }
+    36% { background-color: midnightblue; }
+    48% { background-color: white; }
     60% { background-color: white; }
     65% { background-color: black; }
     80% { background-color: black; }
