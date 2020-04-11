@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+
+<channel>
+	<title>Christian Christiansen</title>
+	<link>https://christianchristiansen.net/log/index.html</link>
+	<description>Latest updates from Christian Christiansen's log.</description>
+
+    <image>
+	<url>https://christianchristiansen.net/favicon.ico</url>
+	<title>Christian Christiansen</title>
+	<link>https://christianchristiansen.net</link>
+	<width>32</width>
+	<height>32</height>
+    </image> 
+	<item>
+		<title>First commit to KDE</title>
+		<link>https://christianchristiansen.net/log/kde-first-commit.html</link>
+		<pubDate>Sat, 11 Apr 2020 12:00:00 AEST</pubDate>
+		<guid isPermaLink="false">
+            https://christianchristiansen.net/log/kde-first-commit.html
+        </guid>
+
+		<description>After years of using open source, I have finally
+        contributed back to the community. This is &lt;a
+        href=&quot;https://christianchristiansen.net/log/kde-first-commit.html&quot;&gt;how&lt;/a&gt;.
+        </description>
+	</item>
+</channel>
+</rss>

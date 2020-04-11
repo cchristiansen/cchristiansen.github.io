@@ -3,8 +3,8 @@ html {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-	background-color: white;
-	color: black;
+	background-color: #31363b;
+	color: white;
 }
 
 html,body {
@@ -80,13 +80,13 @@ html,body {
 }
 
 h1 {
-    color: black;
+    color: white;
 	text-align: center;
 	font-family: "EBGaramond", "Latin Modern Roman", serif;
 }
 
 h2 {
-    color: black;
+    color: white;
     margin-top: 40px;
     margin-bottom: 0px;
 	font-family: "EBGaramond", "Latin Modern Roman", serif;
@@ -105,17 +105,17 @@ code {
 }
 
 a:link {
-	color: darkmagenta;
+	color: plum;
 	text-decoration: none;
 }
 
 a:visited {
-	color: darkmagenta;
+	color: plum;
 	text-decoration: none;
 }
 
 a:hover {
-	color: plum;
+	color: darkmagenta;
 	text-decoration: none;
 }
 
