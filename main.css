@@ -79,6 +79,11 @@ html,body {
     padding: 10px;
 }
 
+img {
+    max-width: 25em;
+    width: 100%;
+}
+
 h1 {
     color: black;
 	text-align: center;
@@ -92,11 +97,22 @@ h2 {
 	font-family: "EBGaramond", "Latin Modern Roman", serif;
 }
 
-p {	
+p {
 	margin-left: 3em;
-	font-family: "EBGaramond", "Latin Modern Roman", serif;
-	font-size: 1.4em;
 	line-height: 1.4;
+	font-size: 1.4em;
+}
+
+p, blockquote {
+	font-family: "EBGaramond", "Latin Modern Roman", serif;
+}
+
+blockquote {
+    font-size: 1.1em;
+}
+
+.nomargin {
+    margin-left: 0em;
 }
 
 code {
