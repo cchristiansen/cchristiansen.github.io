@@ -28,13 +28,13 @@ html,body {
 @viewport {
     width: device-width ;
     zoom: 1.0 ;
-} 
+}
 
 @-ms-viewport {
     width: device-width ;
 }
 
-#main-block {
+body, #main-block {
     -webkit-animation: 4s fadein; /* Safari, Chrome and Opera > 12.1 */
        -moz-animation: 4s fadein; /* Firefox < 16 */
         -ms-animation: 4s fadein; /* Internet Explorer */
@@ -69,7 +69,7 @@ html,body {
     to   { opacity: 1; }
 }
 
-#main-block {
+body, #main-block {
     max-height: 100%;
     position: absolute;
     top: 0; bottom: 0;
@@ -86,8 +86,8 @@ img {
 
 h1 {
     color: black;
-	text-align: center;
-	font-family: "EBGaramond", "Latin Modern Roman", serif;
+    text-align: center;
+    font-family: "EBGaramond", "Latin Modern Roman", serif;
 }
 
 h2 {
@@ -117,7 +117,8 @@ blockquote {
 
 code {
     text-align: center;
-	font-family: "RobotoMono";
+    font-family: "RobotoMono";
+    font-size: 0.8em;
 }
 
 a:link {

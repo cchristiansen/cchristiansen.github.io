@@ -12,31 +12,40 @@
 	<link>https://christianchristiansen.net</link>
 	<width>32</width>
 	<height>32</height>
-    </image> 
-	<item>
-		<title>La fille aux yeux d'or</title>
-		<link>https://christianchristiansen.net/log/girl-with-the-golden-eyes.html</link>
-		<pubDate>Sat, 18 Jul 2020 12:00:00 AEST</pubDate>
-		<guid isPermaLink="false">
-            https://christianchristiansen.net/log/girl-with-the-golden-eyes.html
+    </image>
+    <item>
+        <title>FBi Radio currently playing</title>
+        <link>https://christianchristiansen.net/log/fbiradio.html</link>
+        <pubDate>Mon, 01 Jan 2021 19:00:00 AEST</pubDate>
+        <guid isPermaLink="false">
+        https://christianchristiansen.net/log/fbiradio.html
         </guid>
-
-		<description> Writing on Balzac's novella, to be found &lt;a
+        <description>Created a Python script to name currently playing track on FBi Radio. Read &lt;a
+        href=&quot;https://christianchristiansen.net/log/fbiradio.html&quot;&gt;here&lt;/a&gt;.
+        </description>
+    </item>
+    <item>
+        <title>La fille aux yeux d'or</title>
+        <link>https://christianchristiansen.net/log/girl-with-the-golden-eyes.html</link>
+        <pubDate>Sat, 18 Jul 2020 12:00:00 AEST</pubDate>
+        <guid isPermaLink="false">
+        https://christianchristiansen.net/log/girl-with-the-golden-eyes.html
+        </guid>
+        <description> Writing on Balzac's novella, to be found &lt;a
         href=&quot;https://christianchristiansen.net/log/girl-with-the-golden-eyes.html&quot;&gt;here&lt;/a&gt;.
         </description>
     </item>
-	<item>
-		<title>First commit to KDE</title>
-		<link>https://christianchristiansen.net/log/kde-first-commit.html</link>
-		<pubDate>Sat, 11 Apr 2020 12:00:00 AEST</pubDate>
-		<guid isPermaLink="false">
-            https://christianchristiansen.net/log/kde-first-commit.html
+    <item>
+        <title>First commit to KDE</title>
+        <link>https://christianchristiansen.net/log/kde-first-commit.html</link>
+        <pubDate>Sat, 11 Apr 2020 12:00:00 AEST</pubDate>
+        <guid isPermaLink="false">
+        https://christianchristiansen.net/log/kde-first-commit.html
         </guid>
-
-		<description>After years of using open source, I have finally
+        <description>After years of using open source, I have finally
         contributed back to the community. This is &lt;a
         href=&quot;https://christianchristiansen.net/log/kde-first-commit.html&quot;&gt;how&lt;/a&gt;.
         </description>
-	</item>
+    </item>
 </channel>
 </rss>
