@@ -3,26 +3,26 @@ html {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-	background-color: white;
-	color: black;
+    background-color: white;
+    color: black;
 }
 
 html,body {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
     position: absolute;
 }
 
 @font-face {
-	font-family: RobotoMono;
-	src: url(./fonts/Roboto_Mono/RobotoMono-Regular.ttf);
+    font-family: RobotoMono;
+    src: url(./fonts/Roboto_Mono/RobotoMono-Regular.ttf);
 }
 
 @font-face {
-	font-family: EBGaramond;
-	src: url(./fonts/EBGaramond-0.016/ttf/EBGaramond12-Regular.ttf);
+    font-family: EBGaramond;
+    src: url(./fonts/EBGaramond-0.016/ttf/EBGaramond12-Regular.ttf);
 }
 
 @viewport {
@@ -75,7 +75,7 @@ body, #main-block {
     top: 0; bottom: 0;
     left: 0; right: 0;
     margin: auto;
-	max-width: 35em;
+    max-width: 35em;
     padding: 10px;
 }
 
@@ -94,20 +94,21 @@ h2 {
     color: black;
     margin-top: 40px;
     margin-bottom: 0px;
-	font-family: "EBGaramond", "Latin Modern Roman", serif;
+    font-family: "EBGaramond", "Latin Modern Roman", serif;
 }
 
 p {
-	line-height: 1.4;
-	font-size: 1.4em;
+    margin-left: 0em;
+    line-height: 1.4;
+    font-size: 1.4em;
 }
 
 p, blockquote {
-	font-family: "EBGaramond", "Latin Modern Roman", serif;
+    font-family: "EBGaramond", "Latin Modern Roman", serif;
 }
 
 .margin {
-	margin-left: 3em;
+    margin-left: 3em;
 }
 
 blockquote {
@@ -121,23 +122,23 @@ code {
 }
 
 a:link {
-	color: darkmagenta;
-	text-decoration: none;
+    color: darkmagenta;
+    text-decoration: none;
 }
 
 a:visited {
-	color: darkmagenta;
-	text-decoration: none;
+    color: darkmagenta;
+    text-decoration: none;
 }
 
 a:hover {
-	color: plum;
-	text-decoration: none;
+    color: plum;
+    text-decoration: none;
 }
 
 a:active {
-	color: plum;
-	text-decoration: none;
+    color: plum;
+    text-decoration: none;
 }
 
 .footer img {
