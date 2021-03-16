@@ -98,7 +98,6 @@ h2 {
 }
 
 p {
-	margin-left: 3em;
 	line-height: 1.4;
 	font-size: 1.4em;
 }
@@ -107,12 +106,12 @@ p, blockquote {
 	font-family: "EBGaramond", "Latin Modern Roman", serif;
 }
 
-blockquote {
-    font-size: 1.1em;
+.margin {
+	margin-left: 3em;
 }
 
-.nomargin {
-    margin-left: 0em;
+blockquote {
+    font-size: 1.1em;
 }
 
 code {
