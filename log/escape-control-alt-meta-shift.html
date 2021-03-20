@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-20 Sat 16:37 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Escape Control Alt Meta Shift. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="Rock climbing, guitar playing, ivory tickling, and GNU Emacs have all become inextricable parts of my life. And all of them demand far too much of my left pinky. After slightly straining my left wrist on a crimpy dynamic slab, I became acutely aware of the punishing ritual I subject my weakest finger to from dawn till dusk."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Escape Control Alt Meta Shift</h1>
+
+<div class="figure">
+<p><img src="./pinky.jpg" alt="pinky.jpg" />
+</p>
+</div>
+
+<p>
+Rock climbing, guitar playing, ivory tickling, and GNU Emacs have all become
+inextricable parts of my life. And all of them demand far too much of my left
+pinky. After slightly straining my left wrist on a crimpy dynamic slab, I have
+become acutely aware of the punishing ritual I subject my weakest finger to
+from dawn till dusk.
+</p>
+
+<p>
+<a href="http://ergoemacs.org/emacs/emacs_pinky.html">Emacs pinky</a> is an undeniable issue amongst programmers. I already alleviate
+stress by using <a href="https://www.emacswiki.org/emacs/Evil">evil-mode</a>, remapping <code>Caps Lock</code> to <code>Escape</code>, and raising my
+wrists above the keyboard by shoving a sweater underneath my arms. However, I
+still expect my left pinky to auto-complete with <code>Tab</code>, return to command mode
+with <code>Caps Lock</code> (masquerading as <code>Escape</code>), capitalise letters with <code>Shift</code>,
+change buffers (and run countless other Emacs commands) with <code>Control</code>, switch
+windows via <a href="https://swaywm.org">sway</a> with <code>Super</code> (aka <code>Meta</code> or the Windows key), and, of course,
+press <code>Alt</code> to help summon the genie <code>&lt;M-x&gt;</code>.
+</p>
+
+<p>
+I should surely be able to find some method to further reduce my poor digit's
+burden.
+</p>
+
+<div id="outline-container-orgd25080a" class="outline-2">
+<h2 id="orgd25080a">Space as a leading key?</h2>
+<div class="outline-text-2" id="text-orgd25080a">
+<p>
+Doom Emacs and Spacemacs eschew <code>Control</code> in favour of <code>Space</code> for commands.
+The briefest of flirtations with Doom has convinced me for life that there is
+nothing as perverse as using another human's Emacs config. Afer restoring my
+<code>~/.emacs.d/</code> and sanity, I found no easy way to extricate the leading space
+behaviour from either Doom and Spacemacs.
+</p>
+
+<p>
+I delved further into abondoned forums to seek a more viable (and less deviant)
+option.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc47425e" class="outline-2">
+<h2 id="orgc47425e">Caps as Escape and Control?</h2>
+<div class="outline-text-2" id="text-orgc47425e">
+<p>
+<a href="https://gitlab.com/interception/linux/plugins/caps2esc">caps2esc</a> showed promise. It remaps not only <code>Caps Lock</code> to <code>Escape</code>, but also
+allows <code>Caps Lock</code> to act as <code>Control</code> whilst it is held down. <a href="https://gitlab.com/interception/linux/plugins/space2meta/">space2meta</a>
+remaps <code>Space</code> to <code>Meta</code> (aka <code>Super</code>) whilst it is held down. And both run on
+the <code>udev</code> level so they are window manager agnostic and work in TTY!
+</p>
+
+<p>
+I started copy-pasting code and creating my own <code>caps2meta</code>, <code>return2meta</code>, and
+<code>space2ctrl</code>, until I thought there must be an even better solution.
+And, indeed, there is.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc620fc9" class="outline-2">
+<h2 id="orgc620fc9">Dual Function Keys</h2>
+<div class="outline-text-2" id="text-orgc620fc9">
+<p>
+<a href="https://gitlab.com/interception/linux/plugins/dual-function-keys">Dual Function Keys</a> allows anybody to remap any key to any other key when it is
+tapped, double-tapped or held down.
+</p>
+
+<p>
+To install on Arch Linux, simply:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo pacman -S interception-dual-function-keys
+</pre>
+</div>
+
+<p>
+Then create a YAML file describing the key remappings required. In my personal
+config: <code>Caps Lock</code> becomes <code>Escape</code> when tapped, and <code>Meta</code> / <code>Super</code> when
+held; <code>Space</code> becomes <code>Ctrl</code> when held; <code>Enter</code> / <code>Return</code> becomes <code>Meta</code> /
+<code>Super</code> when held.
+</p>
+
+<p>
+<code>~/.config/dfk.yaml</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-yaml">TIMING:
+    TAP_MILLISEC: 200
+    DOUBLE_TAP_MILLISEC: 150
+
+MAPPINGS:
+    - KEY: KEY_CAPSLOCK
+      TAP: KEY_ESC
+      HOLD: KEY_LEFTMETA
+
+    - KEY: KEY_SPACE
+      TAP: KEY_SPACE
+      HOLD: KEY_LEFTCTRL
+
+    - KEY: KEY_ENTER
+      TAP: KEY_ENTER
+      HOLD: KEY_LEFTMETA
+</pre>
+</div>
+
+<p>
+Create a YAML file in <code>/etc/interception/udevmon.d/</code> for the system
+configuration.
+</p>
+
+<p>
+<code>/etc/interception/udevmon.d/keys.yaml</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-yaml">- JOB: intercept -g $DEVNODE | dual-function-keys -c /path/to/dfk.yaml | uinput -d $DEVNODE
+  DEVICE:
+    EVENTS:
+      EV_KEY: [KEY_CAPSLOCK, KEY_SPACE, KEY_ENTER]
+</pre>
+</div>
+
+<p>
+Now to get the keybindings up and running:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo udevmon
+</pre>
+</div>
+
+<p>
+To have the keybindings start automatically at boot-time:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo systemctl enable udevmon
+sudo systemctl start udevmon
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0bf2b04" class="outline-2">
+<h2 id="org0bf2b04">Addendum</h2>
+<div class="outline-text-2" id="text-org0bf2b04">
+<p>
+Et voilà! My thumb and right pinky can now relieve my left pinky of most of its
+duties. And I'll soon be back on the wall, cursing crimpy dynamic slabs.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<center>
+<div class="footer">
+<a href="index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="index.html"><h1>Christian Christiansen.</h1></a>
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

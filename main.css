@@ -118,7 +118,12 @@ blockquote {
 code {
     text-align: center;
     font-family: "RobotoMono";
-    font-size: 0.8em;
+    font-size: 0.7em;
+}
+
+.org-src-container {
+    margin-top: -1em;
+    margin-left: 1em;
 }
 
 a:link {
@@ -152,4 +157,8 @@ a:active {
 
 .footer {
     padding: 20px;
+}
+
+.footer code {
+    font-size: 1em;
 }

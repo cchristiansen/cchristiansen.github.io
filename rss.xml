@@ -14,18 +14,229 @@
 	<height>32</height>
     </image>
     <item>
-        <title>FBi Radio currently playing</title>
-        <link>https://christianchristiansen.net/log/fbiradio.html</link>
-        <pubDate>Mon, 01 Jan 2021 19:00:00 AEST</pubDate>
-        <guid isPermaLink="false">
-        https://christianchristiansen.net/log/fbiradio.html
+        <title>Escape Control Alt Meta Shift</title>
+        <link>https://christianchristiansen.net/log/escape-control-alt-meta-shift.html</link>
+        <pubDate>Sat, 20 Mar 2021 16:56:22 AEDT</pubDate>
+        <guid>
+        https://christianchristiansen.net/log/escape-control-alt-meta-shift.html
         </guid>
-        <description>Created a Python script to name currently playing track on FBi Radio. Read &lt;a
-        href=&quot;https://christianchristiansen.net/log/fbiradio.html&quot;&gt;here&lt;/a&gt;.
+        <description>
+
+&lt;h1 class=&quot;title&quot;&gt;Escape Control Alt Meta Shift&lt;/h1&gt;
+
+&lt;div class=&quot;figure&quot;&gt;
+&lt;p&gt;&lt;img src=&quot;./pinky.jpg&quot; alt=&quot;pinky.jpg&quot; /&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Rock climbing, guitar playing, ivory tickling, and GNU Emacs have all become
+inextricable parts of my life. And all of them demand far too much of my left
+pinky. After slightly straining my left wrist on a crimpy dynamic slab, I have
+become acutely aware of the punishing ritual I subject my weakest finger to
+from dawn till dusk.
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;a href=&quot;http://ergoemacs.org/emacs/emacs_pinky.html&quot;&gt;Emacs pinky&lt;/a&gt; is an undeniable issue amongst programmers. I already alleviate
+stress by using &lt;a href=&quot;https://www.emacswiki.org/emacs/Evil&quot;&gt;evil-mode&lt;/a&gt;, remapping &lt;code&gt;Caps Lock&lt;/code&gt; to &lt;code&gt;Escape&lt;/code&gt;, and raising my
+wrists above the keyboard by shoving a sweater underneath my arms. However, I
+still expect my left pinky to auto-complete with &lt;code&gt;Tab&lt;/code&gt;, return to command mode
+with &lt;code&gt;Caps Lock&lt;/code&gt; (masquerading as &lt;code&gt;Escape&lt;/code&gt;), capitalise letters with &lt;code&gt;Shift&lt;/code&gt;,
+change buffers (and run countless other Emacs commands) with &lt;code&gt;Control&lt;/code&gt;, switch
+windows via &lt;a href=&quot;https://swaywm.org&quot;&gt;sway&lt;/a&gt; with &lt;code&gt;Super&lt;/code&gt; (aka &lt;code&gt;Meta&lt;/code&gt; or the Windows key), and, of course,
+press &lt;code&gt;Alt&lt;/code&gt; to help summon the genie &lt;code&gt;&amp;lt;M-x&amp;gt;&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+I should surely be able to find some method to further reduce my poor digit&#x27;s
+burden.
+&lt;/p&gt;
+
+&lt;div id=&quot;outline-container-orgd25080a&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;orgd25080a&quot;&gt;Space as a leading key?&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-orgd25080a&quot;&gt;
+&lt;p&gt;
+Doom Emacs and Spacemacs eschew &lt;code&gt;Control&lt;/code&gt; in favour of &lt;code&gt;Space&lt;/code&gt; for commands.
+The briefest of flirtations with Doom has convinced me for life that there is
+nothing as perverse as using another human&#x27;s Emacs config. Afer restoring my
+&lt;code&gt;~/.emacs.d/&lt;/code&gt; and sanity, I found no easy way to extricate the leading space
+behaviour from either Doom and Spacemacs.
+&lt;/p&gt;
+
+&lt;p&gt;
+I delved further into abondoned forums to seek a more viable (and less deviant)
+option.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-orgc47425e&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;orgc47425e&quot;&gt;Caps as Escape and Control?&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-orgc47425e&quot;&gt;
+&lt;p&gt;
+&lt;a href=&quot;https://gitlab.com/interception/linux/plugins/caps2esc&quot;&gt;caps2esc&lt;/a&gt; showed promise. It remaps not only &lt;code&gt;Caps Lock&lt;/code&gt; to &lt;code&gt;Escape&lt;/code&gt;, but also
+allows &lt;code&gt;Caps Lock&lt;/code&gt; to act as &lt;code&gt;Control&lt;/code&gt; whilst it is held down. &lt;a href=&quot;https://gitlab.com/interception/linux/plugins/space2meta/&quot;&gt;space2meta&lt;/a&gt;
+remaps &lt;code&gt;Space&lt;/code&gt; to &lt;code&gt;Meta&lt;/code&gt; (aka &lt;code&gt;Super&lt;/code&gt;) whilst it is held down. And both run on
+the &lt;code&gt;udev&lt;/code&gt; level so they are window manager agnostic and work in TTY!
+&lt;/p&gt;
+
+&lt;p&gt;
+I started copy-pasting code and creating my own &lt;code&gt;caps2meta&lt;/code&gt;, &lt;code&gt;return2meta&lt;/code&gt;, and
+&lt;code&gt;space2ctrl&lt;/code&gt;, until I thought there must be an even better solution.
+And, indeed, there is.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-orgc620fc9&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;orgc620fc9&quot;&gt;Dual Function Keys&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-orgc620fc9&quot;&gt;
+&lt;p&gt;
+&lt;a href=&quot;https://gitlab.com/interception/linux/plugins/dual-function-keys&quot;&gt;Dual Function Keys&lt;/a&gt; allows anybody to remap any key to any other key when it is
+tapped, double-tapped or held down.
+&lt;/p&gt;
+
+&lt;p&gt;
+To install on Arch Linux, simply:
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-sh&quot;&gt;sudo pacman -S interception-dual-function-keys
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Then create a YAML file describing the key remappings required. In my personal
+config: &lt;code&gt;Caps Lock&lt;/code&gt; becomes &lt;code&gt;Escape&lt;/code&gt; when tapped, and &lt;code&gt;Meta&lt;/code&gt; / &lt;code&gt;Super&lt;/code&gt; when
+held; &lt;code&gt;Space&lt;/code&gt; becomes &lt;code&gt;Ctrl&lt;/code&gt; when held; &lt;code&gt;Enter&lt;/code&gt; / &lt;code&gt;Return&lt;/code&gt; becomes &lt;code&gt;Meta&lt;/code&gt; /
+&lt;code&gt;Super&lt;/code&gt; when held.
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;code&gt;~/.config/dfk.yaml&lt;/code&gt;
+&lt;/p&gt;
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-yaml&quot;&gt;TIMING:
+    TAP_MILLISEC: 200
+    DOUBLE_TAP_MILLISEC: 150
+
+MAPPINGS:
+    - KEY: KEY_CAPSLOCK
+      TAP: KEY_ESC
+      HOLD: KEY_LEFTMETA
+
+    - KEY: KEY_SPACE
+      TAP: KEY_SPACE
+      HOLD: KEY_LEFTCTRL
+
+    - KEY: KEY_ENTER
+      TAP: KEY_ENTER
+      HOLD: KEY_LEFTMETA
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Create a YAML file in &lt;code&gt;/etc/interception/udevmon.d/&lt;/code&gt; for the system
+configuration.
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;code&gt;/etc/interception/udevmon.d/keys.yaml&lt;/code&gt;
+&lt;/p&gt;
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-yaml&quot;&gt;- JOB: intercept -g $DEVNODE | dual-function-keys -c /path/to/dfk.yaml | uinput -d $DEVNODE
+  DEVICE:
+    EVENTS:
+      EV_KEY: [KEY_CAPSLOCK, KEY_SPACE, KEY_ENTER]
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Now to get the keybindings up and running:
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-sh&quot;&gt;sudo udevmon
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+To have the keybindings start automatically at boot-time:
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-sh&quot;&gt;sudo systemctl enable udevmon
+sudo systemctl start udevmon
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-org0bf2b04&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;org0bf2b04&quot;&gt;Addendum&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-org0bf2b04&quot;&gt;
+&lt;p&gt;
+Et voilà! My thumb and right pinky can now relieve my left pinky of most of its
+duties. And I&#x27;ll soon be back on the wall, cursing crimpy dynamic slabs.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
         </description>
     </item>
     <item>
-        <title>La fille aux yeux d'or</title>
+        <title>FBi Radio currently playing. Christian Christiansen.</title>
+        <link>https://christianchristiansen.net/log/fbiradio.html</link>
+        <pubDate>Mon, 01 Jan 2021 19:00:00 AEDT</pubDate>
+        <guid>
+        https://christianchristiansen.net/log/fbiradio.html
+        </guid>
+        <description>
+
+&lt;h1 class=&quot;title&quot;&gt;FBi Radio currently playing&lt;/h1&gt;
+
+&lt;div class=&quot;figure&quot;&gt;
+&lt;p&gt;&lt;img src=&quot;./fbiradio.jpg&quot; alt=&quot;fbiradio.jpg&quot; /&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Amongst all the wild and fantastical affairs humans partake in, music is by far
+the most baffling. We indoctrinate our infants with lullabies, make pilgrimages
+to clubs, festivals and operas, and buy our groceries whilst barely pubescent
+teenagers serenade us over tinny tannoys. There are no clear evolutionary
+advantages associated with an appreciation of Bach&#x27;s fugues or gabber; music is
+an inexplicable and joyous byproduct of the human condition.
+&lt;/p&gt;
+
+&lt;p&gt;
+Since arriving in Australia, &lt;a href=&quot;https://fbiradio.com&quot;&gt;FBi Radio&lt;/a&gt;, the independent non-profit radio station
+which plays 50% Australian music (of which 50% is from New South Wales), has
+satiated my desire for novel tracks and artists, and helped me to delve into the
+local culture and survive a year without the euphoria of dancing with a
+hundred fellow revelers. Tkay Maidza, 3NDLES5, Crazymike, Shady Nasty, Low
+Flung, Party Dozen, Cool Sounds, &amp;#x2026; (the list is far too long to properly
+compile) - they all immeasurably improved my year.
+&lt;/p&gt;
+
+&lt;p&gt;
+With so many great artists and tracks on FBi, I&#x27;ve struggled with having to
+visit the website, find the current program, and scroll to locate what&#x27;s
+currently playing everytime my ears are piqued. To solve this, I have created a
+&lt;a href=&quot;https://github.com/cchristiansen/fbiradio/&quot;&gt;Python script&lt;/a&gt;. Now I just have to type &lt;code&gt;fbiplaying&lt;/code&gt; and the answer falls right
+into my lap. Now excuse me - I need to check out what the current track is.
+It&#x27;s wild.
+&lt;/p&gt;
+
+&lt;p&gt;
+Listen to 94.5 FM.
+&lt;/p&gt;
+
+        </description>
+    </item>
+    <item>
+        <title>La Fille aux yeux d'or. Christian Christiansen.</title>
         <link>https://christianchristiansen.net/log/girl-with-the-golden-eyes.html</link>
         <pubDate>Sat, 18 Jul 2020 12:00:00 AEST</pubDate>
         <guid isPermaLink="false">
@@ -34,17 +245,201 @@
         <description> Writing on Balzac's novella, to be found &lt;a
         href=&quot;https://christianchristiansen.net/log/girl-with-the-golden-eyes.html&quot;&gt;here&lt;/a&gt;.
         </description>
+        <guid>
+        https://christianchristiansen.net/log/girl-with-the-golden-eyes.html
+        </guid>
+        <description>
+
+
+&lt;center&gt;&lt;h1&gt;La Fille aux yeux d&#x27;or&lt;/h1&gt;&lt;/center&gt;
+
+&lt;p&gt;
+&lt;img src=&quot;../portfolio/la-fille-painting.jpg&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+The lights go back on. The punters shield their eyes, wipe sweat off their
+foreheads, trickle out, past the cloakroom onto Oxford Street, lighting up,
+with grins larger than faces.
+&lt;/p&gt;
+
+&lt;p&gt;
+Tuesday 2&lt;sup style=&quot;font-size: 14px;&quot;&gt;nd&lt;/sup&gt; December 2014, at the 100 Club,
+London. Iceage have just completed a seering set, whilst touring off the back
+of their third album.  &lt;cite&gt;Plowing Into the Field of Love&lt;/cite&gt; saw the
+Danish punk band expand, explore, embrace a greater lyrical and musical
+landscape, delving into instrumentation and lyrical themes only hinted at in
+the nihilistic &lt;cite&gt;You&#x27;re Nothing&lt;/cite&gt;, whilst retaining their sharpness,
+their danger.
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;q&gt;The only current punk band I can think of that sounds really dangerous.&lt;/q&gt;
+- Iggy Pop. Danger evident throughout today&#x27;s gig. The gaggle who had turned
+out this evening were hard to discern, Nick Cave fans, posers, remnants from past
+tours, and those who simply wanted to steal a glance of the handsome quartet.
+But from the first twang of guitar, it was evident who the bulk of the audience
+were. They shoved, dived, shouted back lyrics, with raised fists. They were
+here to see the best punk band in punk&#x27;s own city. And they have. On their way
+out, palpable satisfaction hangs in the sweaty air.
+&lt;/p&gt;
+
+&lt;p&gt;
+The unmistakable hiss of an amp comes back on. Confusion erupts.
+&quot;Iceage don&#x27;t do encores?!&quot; But the foursome are back on, and we pile back
+in. I reach the front, crash onto the stage, thrust by the mob behind. I lie
+there, staring up, watching from below Elias Rønnenfelt bewitch the ruckus
+abound. Watching our generation&#x27;s Elvis, our Bob Dylan, our Ian Curtis.
+&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;pre&gt;&lt;p style=&quot;line-height: 1;&quot;&gt;Raise your fists
+For the depraved roses
+Raise it today
+Everything drifts
+Soon it&#x27;s gone
+Don&#x27;t find a place to stay&lt;/p&gt;&lt;/pre&gt;&lt;/blockquote&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;center&gt;
+&lt;img style=&quot;width: 105px; height: 60px;&quot; src=&quot;iceage-logos.png&quot; /&gt;
+&lt;/center&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+Today, five years on, I am listening to the crooners from the antipodes. The
+gang of four have swelled and gained a guitarist, and a maraca shaker. The
+fury of the mosh pit is replaced with luxurious lounge listening.
+Cowboy tassels, snakeskin boots, 1000-mile
+stares are being filmed live by a camera crew courtesy of Brodie Sessions, as
+Iceage saunter through songs inspired by Mina, Pieter Bruegel the Elder, and
+Samuel Beckett. The spectacle finishes with a rendition of &lt;cite&gt;Lockdown
+Blues&lt;/cite&gt;, their latest covid-19 inspired single.
+&lt;/p&gt;
+
+&lt;p&gt;
+Incontent with simply providing a new single, a wondrous livestreamed show, and
+a vast backlog of influences to uncover, Iceage have also contributed a list of
+suggested books for reading over this pandemic period:
+&lt;cite&gt;The Bluest Eye&lt;/cite&gt; by Toni Morrison, &lt;cite&gt;Papillon&lt;/cite&gt; by
+Henry Charrière, &lt;cite&gt;The Happy Birthday of Death&lt;/cite&gt; by Gregory Corso,
+&lt;cite&gt;God&#x27;s Mistress&lt;/cite&gt; by James Galvin, and &lt;cite&gt;The Girl with the
+Golden Eyes&lt;/cite&gt; by Honoré de Balzac.
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;img src=&quot;the-girl-with-the-golden-eyes.jpg&quot;&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+I ordered a copy of &lt;cite&gt;The Girl with the Golden Eyes&lt;/cite&gt;; the book&#x27;s
+cover posed even more questions than the title (never mind the blurb:
+&lt;q&gt; The greatest French novelist of all time tells the story of a man enslaved
+by a strange girl who bewitched him, ignited his passion, taught him all the
+ways of love and then revealed herself as captive to the most grotesque
+perversion known to human flesh&lt;/q&gt;). Count me in.
+&lt;/p&gt;
+
+&lt;p&gt;
+Chapter 1, even in translation, unveiled a new realm of linguistic
+possibilities to me; Balzac&#x27;s descriptions of Parisian society uprooted my
+notions of what language is capable of expressing.
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p style=&quot;line-height: 1; &quot;&gt;
+Thus we are brought to the third circle of this hell, which, perhaps, will some
+day find its Dante. In this third social circle, a sort of Parisian belly, in
+which the interest of the town are digested, and where they are condensed into
+the form known as &lt;i&gt;business&lt;/i&gt;, there moves and agitates, as by some acrid
+and bitter intestinal process, the crowd of lawyers, doctors, notaries,
+councillors, business men, bankers, big merchants, speculators and magistrates.
+Here are to be found even more causes of moral and physical destruction than
+elsewhere. These people - almost all of them - live in unhealthy offices, in
+fetid ante-chambers, in little barred dens, and spend their days bowed down
+beneath the weight of affairs; they rise at dawn to be in time, not to be left
+behind, to gain all or not to lose, to over-reach a man or his money, to open or
+wind up some business, to take advantage of some fleeting opportunity, to get a
+man hanged or set him free. They infect their horses, they over-drive and age
+and break them, like their own legs, before their time. Time is their tyrant: it
+fails them, it escapes them; they can neither expand it nor cut it short. What
+soul can remain great, pure, moral and generous, and, consequently, what face
+retain its beauty in this depraving practice of a calling which compels one to
+bear the weight of the public sorrows, to analyse them, to weight them,
+estimate them, and mark them out by rule? Where do these folk put aside their
+hearts?
+&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+It is a shame that chapter 2 goes on to explore the limits of story telling
+with wafer-thin characterisation, an incredulous plot, wanton literary and
+cultural references, and scarcely discernible narration. And an abrupt ending.
+&lt;/p&gt;
+
+
+        </description>
     </item>
     <item>
-        <title>First commit to KDE</title>
+        <title>First commit to KDE. Christian Christiansen.</title>
         <link>https://christianchristiansen.net/log/kde-first-commit.html</link>
         <pubDate>Sat, 11 Apr 2020 12:00:00 AEST</pubDate>
-        <guid isPermaLink="false">
+        <guid>
         https://christianchristiansen.net/log/kde-first-commit.html
         </guid>
-        <description>After years of using open source, I have finally
-        contributed back to the community. This is &lt;a
-        href=&quot;https://christianchristiansen.net/log/kde-first-commit.html&quot;&gt;how&lt;/a&gt;.
+        <description>
+
+
+&lt;center&gt;&lt;h1&gt;First commit to KDE&lt;/h1&gt;&lt;/center&gt;
+
+&lt;p&gt;After years of reading Linux Format, then Linux Voice, now finding refuge
+in &lt;a href=&quot;https://latenightlinux.com/&quot;&gt;Late Night Linux&lt;/a&gt;; after scouring
+through countless forums over a decade ago to ornate my desktop with ever
+fancier bling (and wobblier windows); after wrecking multiple installations
+from ever more ridiculous projects (who knew that running state-of-the-art
+games through Wine on a tiny Sony Vaio laptop without a GPU wasn&#x27;t a sensible
+idea?), I have finally contributed back to the open source community.
+&lt;/p&gt;
+
+&lt;p&gt;I stumbled across a recommendation to read the excellent
+&lt;a href=&quot;https://producingoss.com&quot;&gt;Producing Open Source Software&lt;/a&gt; by Karl
+Fogel.
+The book demystified the inner workings of open source, and had me itching to
+join in. So I set about on a mission to do so.&lt;/p&gt;
+
+&lt;h2&gt;Step 1: Hang out on IRC.&lt;/h2&gt;
+&lt;p&gt;See what&#x27;s happening.
+To be honest, I couldn&#x27;t see much happening on IRC, but I quickly became
+frustrated by Konversation&#x27;s inability to log my nickname in automatically.&lt;/p&gt;
+
+&lt;h2&gt;Step 2: Find out what the issue was.&lt;/h2&gt;
+&lt;p&gt;Apparently NickServ is no
+longer the go-to identification service and I should have been using SASL
+instead. &lt;a href=&quot;https://bugs.kde.org/show_bug.cgi?id=400362&quot;&gt;Why wasn&#x27;t that
+the default?&lt;/a&gt; Nobody was able to say - everybody seemed to think it was a
+sensible idea. Time to get stuck in.&lt;/p&gt;
+
+&lt;h2&gt;Step 3: Get the build environment running.&lt;/h2&gt;
+&lt;p&gt;This was a real pain, despite KDE&#x27;s
+&lt;a href=&quot;https://community.kde.org/Get_Involved/development&quot;&gt;impeccable wiki
+&lt;/a&gt; to help get started. Although LTS releases are
+incredibly useful for a multitude of reasons, I found out the hard way
+that they&#x27;re ill-suited for development.&lt;/p&gt;
+
+&lt;h2&gt;Step 4: Change the code.&lt;/h2&gt;
+&lt;p&gt;And test, test, test. Diving into new territory always contains several
+unforeseen pitfalls. However, I soon had something working, and sent it off
+to review. Again, KDE has
+&lt;a href=&quot;https://community.kde.org/Infrastructure/Phabricator&quot;&gt;excellent
+documentation&lt;/a&gt; for newcomers. After a minor edit...&lt;/p&gt;
+
+&lt;h2&gt;Step 5: Celebrate.&lt;/h2&gt;
+&lt;p&gt;It got accepted! Woohoo! Champagne for everyone¹!&lt;/p&gt;
+&lt;p&gt;Ah wait, somebody on the #konversation channel has found another annoying
+bug... Hold my flute.&lt;/p&gt;
+
+
         </description>
     </item>
 </channel>
