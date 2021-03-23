@@ -14,6 +14,170 @@
 	<height>32</height>
     </image>
     <item>
+        <title>Develop a Hello World alert for Windows on Arch Linux</title>
+        <link>https://christianchristiansen.net/log/windows.html</link>
+        <pubDate>Tue, 23 Mar 2021 12:57:24 AEDT</pubDate>
+        <guid>
+        https://christianchristiansen.net/log/windows.html
+        </guid>
+        <description>
+        
+&lt;h1 class=&quot;title&quot;&gt;Develop a Hello World alert for Windows on Arch Linux&lt;/h1&gt;
+&lt;p&gt;
+Only proceed when all possibilities to avoid Windows have dried up.
+Proceed with care and suspicion: Clippy takes no prisoners.
+&lt;/p&gt;
+
+&lt;div id=&quot;outline-container-org6d9cd8b&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;org6d9cd8b&quot;&gt;Step 1: Hello World&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-org6d9cd8b&quot;&gt;
+&lt;p&gt;
+Write the program.
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;code&gt;helloword.cpp&lt;/code&gt;
+&lt;/p&gt;
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-C++&quot;&gt;#ifndef UNICODE // Not strictly necessary, but good practice
+#define UNICODE
+#endif
+
+#include &amp;lt;windows.h&amp;gt; // Use Windows libraries
+
+int WINAPI wWinMain(
+    HINSTANCE hInstance,     // Handle to current instance
+    HINSTANCE hPrevInstance, // Handle to previous instance of application
+    PWSTR pCmdLine,          // Command line arguments as Unicode string
+    int nCmdShow)            // Open minimised, maximised, or normally
+{
+    MessageBox (
+        NULL,            // Handle to owner of the message box
+        L&quot;Hello world!&quot;, // Message to be displayed
+        L&quot;Hello&quot;,        // Pop-up title
+        MB_OKCANCEL);    // Contents and behaviour of pop-up
+    return 0;
+}
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Further documentation on &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/learnwin32/winmain--the-application-entry-point&quot;&gt;wWinMain&lt;/a&gt; and &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox&quot;&gt;MessageBox&lt;/a&gt;.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-org024b75b&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;org024b75b&quot;&gt;Step 2: GNU Compiler Collection&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-org024b75b&quot;&gt;
+&lt;p&gt;
+Compile the program.
+&lt;/p&gt;
+
+&lt;p&gt;
+Running &lt;code&gt;gcc&lt;/code&gt; without any modifications will not work, as we require
+supplementary Windows libraries.
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-sh&quot;&gt;sudo pacman -S mingw-w64-headers mingw-w64-cpp
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Then if we run
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-sh&quot;&gt;x86_64-w64-mingw32-g++ helloworld.cpp
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+we will get an &lt;a href=&quot;https://stackoverflow.com/questions/58324230/undefined-reference-to-winmain-c-mingw&quot;&gt;error&lt;/a&gt; about an &lt;code&gt;undefined reference to `WinMain&#x27;&lt;/code&gt; . What we&#x27;re
+missing is the flag &lt;code&gt;-municode&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-sh&quot;&gt;x86_64-w64-mingw32-g++ -municode helloworld.cpp
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Out pops &lt;code&gt;a.exe&lt;/code&gt;. We have now created our first Windows program on Arch Linux!
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-orgdab56e0&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;orgdab56e0&quot;&gt;Step 3: Wine&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-orgdab56e0&quot;&gt;
+&lt;p&gt;
+Run the program.
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;a href=&quot;https://www.winehq.org&quot;&gt;Wine&lt;/a&gt; allows us to run Windows programs on Linux. To install Wine on Arch Linux,
+we will first have to enable the &lt;code&gt;multilib&lt;/code&gt; repository by uncommenting two
+lines in &lt;code&gt;/etc/pacman.conf&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;code&gt;/etc/pacman.conf&lt;/code&gt;
+&lt;/p&gt;
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-sh&quot;&gt;# [multilib]
+# Include = /etc/pacman.d/mirrorlist
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Then update the repositories, and install the following packages:
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-sh&quot;&gt;sudo pacman -Syu
+sudo pacman -S wine wine-mono
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Run
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-sh&quot;&gt;wine a.exe
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+and bask in triumph.
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;center&gt;
+&lt;img src=&quot;./windows.png&quot; alt=&quot;windows.png&quot; /&gt;
+&lt;/center&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-orge162603&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;orge162603&quot;&gt;Further steps&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-orge162603&quot;&gt;
+&lt;p&gt;
+Write more programs.
+&lt;/p&gt;
+
+&lt;p&gt;
+Try following &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/learnwin32/your-first-windows-program&quot;&gt;tutorials&lt;/a&gt; on creating more involved Windows programs.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+        </description>
+    </item>
+    <item>
         <title>Escape Control Alt Meta Shift</title>
         <link>https://christianchristiansen.net/log/escape-control-alt-meta-shift.html</link>
         <pubDate>Sat, 20 Mar 2021 16:56:22 AEDT</pubDate>

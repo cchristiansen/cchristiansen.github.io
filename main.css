@@ -81,7 +81,7 @@ body, #main-block {
 
 img {
     max-width: 25em;
-    width: 100%;
+    max-width: 100%;
 }
 
 h1 {
@@ -119,6 +119,10 @@ code {
     text-align: center;
     font-family: "RobotoMono";
     font-size: 0.7em;
+}
+
+pre {
+    color: #220022;
 }
 
 .org-src-container {

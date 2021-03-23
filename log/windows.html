@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-23 Tue 12:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Develop a Hello World alert for Windows on Arch Linux. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="Only proceed when all possibilities to avoid Windows have dried up. Proceed with care and suspicion: Clippy takes no prisoners."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Develop a Hello World alert for Windows on Arch Linux</h1>
+<p>
+Only proceed when all possibilities to avoid Windows have dried up.
+Proceed with care and suspicion: Clippy takes no prisoners.
+</p>
+
+<div id="outline-container-org6d9cd8b" class="outline-2">
+<h2 id="org6d9cd8b">Step 1: Hello World</h2>
+<div class="outline-text-2" id="text-org6d9cd8b">
+<p>
+Write the program.
+</p>
+
+<p>
+<code>helloword.cpp</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-C++">#ifndef UNICODE // Not strictly necessary, but good practice
+#define UNICODE
+#endif
+
+#include &lt;windows.h&gt; // Use Windows libraries
+
+int WINAPI wWinMain(
+    HINSTANCE hInstance,     // Handle to current instance
+    HINSTANCE hPrevInstance, // Handle to previous instance of application
+    PWSTR pCmdLine,          // Command line arguments as Unicode string
+    int nCmdShow)            // Open minimised, maximised, or normally
+{
+    MessageBox (
+        NULL,            // Handle to owner of the message box
+        L"Hello world!", // Message to be displayed
+        L"Hello",        // Pop-up title
+        MB_OKCANCEL);    // Contents and behaviour of pop-up
+    return 0;
+}
+</pre>
+</div>
+
+<p>
+Further documentation on <a href="https://docs.microsoft.com/en-us/windows/win32/learnwin32/winmain--the-application-entry-point">wWinMain</a> and <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebox">MessageBox</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org024b75b" class="outline-2">
+<h2 id="org024b75b">Step 2: GNU Compiler Collection</h2>
+<div class="outline-text-2" id="text-org024b75b">
+<p>
+Compile the program.
+</p>
+
+<p>
+Running <code>gcc</code> without any modifications will not work, as we require
+supplementary Windows libraries.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo pacman -S mingw-w64-headers mingw-w64-cpp
+</pre>
+</div>
+
+<p>
+Then if we run
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">x86_64-w64-mingw32-g++ helloworld.cpp
+</pre>
+</div>
+
+<p>
+we will get an <a href="https://stackoverflow.com/questions/58324230/undefined-reference-to-winmain-c-mingw">error</a> about an <code>undefined reference to `WinMain'</code> . What we're
+missing is the flag <code>-municode</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">x86_64-w64-mingw32-g++ -municode helloworld.cpp
+</pre>
+</div>
+
+<p>
+Out pops <code>a.exe</code>. We have now created our first Windows program on Arch Linux!
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdab56e0" class="outline-2">
+<h2 id="orgdab56e0">Step 3: Wine</h2>
+<div class="outline-text-2" id="text-orgdab56e0">
+<p>
+Run the program.
+</p>
+
+<p>
+<a href="https://www.winehq.org">Wine</a> allows us to run Windows programs on Linux. To install Wine on Arch Linux,
+we will first have to enable the <code>multilib</code> repository by uncommenting two
+lines in <code>/etc/pacman.conf</code>.
+</p>
+
+<p>
+<code>/etc/pacman.conf</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"># [multilib]
+# Include = /etc/pacman.d/mirrorlist
+</pre>
+</div>
+
+<p>
+Then update the repositories, and install the following packages:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo pacman -Syu
+sudo pacman -S wine wine-mono
+</pre>
+</div>
+
+<p>
+Run
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">wine a.exe
+</pre>
+</div>
+
+<p>
+and bask in triumph.
+</p>
+
+<p>
+<center>
+<img src="./windows.png" alt="windows.png" />
+</center>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge162603" class="outline-2">
+<h2 id="orge162603">Further steps</h2>
+<div class="outline-text-2" id="text-orge162603">
+<p>
+Write more programs.
+</p>
+
+<p>
+Try following <a href="https://docs.microsoft.com/en-us/windows/win32/learnwin32/your-first-windows-program">tutorials</a> on creating more involved Windows programs.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<center>
+<div class="footer">
+<a href="index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="index.html"><h1>Christian Christiansen.</h1></a>
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
