@@ -12,8 +12,6 @@ import html
 from datetime import datetime
 from pytz import timezone
 
-# TODO: Check if already added.
-
 man = ("Add an entry to log. Run python add_new_entry.py path/to/entry.html "
        "to add an entry.")
 
@@ -71,6 +69,13 @@ class Entry:
     def add_to_rss(self, filename):
         with open(filename, "r") as f:
             rss = f.readlines()
+            if self.link in rss:
+                ans = input(
+                    "This file has already been added to rss. Are you sure you"
+                    " want to add this file? (y, N) ")
+                if len(ans) == 0 or ans[0].lower() != "y":
+                    raise Exception(
+                        f"{self.title} has already been added to rss")
             rss = self.rss_entry(rss)
 
         with open(filename, "w") as f:
