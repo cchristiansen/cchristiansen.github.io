@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-04-07 Wed 21:19 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 1a. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="Computer science, similar to geometry (geo- earth, -metron measurement), is a misnomer. Computer science is neither a science, nor particularly about computers. Geometry is the formalisation of notions of space and time.Computer science is the formalisation of intuitions about process."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 1a</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#overview">1. Overview</a>
+<ul>
+<li><a href="#black-box">1.1. Black-box abstraction</a></li>
+<li><a href="#conventional-interfaces">1.2. Conventional interfaces</a></li>
+<li><a href="#metalinguistic-abstraction">1.3. Meta-linguistic abstraction</a></li>
+</ul>
+</li>
+<li><a href="#introduction-to-lisp">2. Introduction to LISP</a></li>
+<li><a href="#recap">3. Recap</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-overview" class="outline-2">
+<h2 id="overview"><span class="section-number-2">1</span> Overview</h2>
+<div class="outline-text-2" id="text-overview">
+<p>
+Computer science, similar to geometry (<i>geo-</i> earth, <i>-metron</i> measurement), is
+a misnomer. Computer science is neither a science, nor particularly about
+computers. Geometry is the formalisation of notions of space and time. Computer
+science is the formalisation of intuitions about process.
+</p>
+
+<p>
+<b>Declarative knowledge</b>: what is a square root? <br />
+<b>Imperative knowledge</b>: how do we find a square root?
+</p>
+
+<p>
+We will use LISP to write procedures. Procedures invoke processes. Processes
+are the building blocks of imperative knowledge.
+</p>
+
+<p>
+Computer science is really about techniques for controlling complexity, moreso
+than any other discipline. In computer science we deal with idealised
+components. Little difference exists between what we can build and what we can
+imagine. We are limited by our own minds; engineers are not.
+</p>
+
+<blockquote>
+<p>
+The programmer, like the poet, works only slightly removed from pure
+thought-stuff. He builds his castles in the air, from air, creating by
+extertion of the imagination.
+</p>
+</blockquote>
+<p>
+<div class="quoter">Fred Brooks, The Mythical Man
+Month</div>
+</p>
+
+<p>
+We will learn three techniques for controlling complexity: black-box
+abstraction, conventional interfaces, meta-linguistic abstraction.
+</p>
+</div>
+
+<div id="outline-container-black-box" class="outline-3">
+<h3 id="black-box"><span class="section-number-3">1.1</span> Black-box abstraction</h3>
+<div class="outline-text-3" id="text-black-box">
+<ul class="org-ul">
+<li>primitive objects: procedures, data</li>
+<li>means of combination: procedures, data</li>
+<li>means of abstraction: procedure definition, simple data abstraction</li>
+<li>capturing common patterns: high-order procedures, data as procedures</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-conventional-interfaces" class="outline-3">
+<h3 id="conventional-interfaces"><span class="section-number-3">1.2</span> Conventional interfaces</h3>
+<div class="outline-text-3" id="text-conventional-interfaces">
+<ul class="org-ul">
+<li>generic operations</li>
+<li>large-scale structure and modularity</li>
+<li>object-oriented programming</li>
+<li>operations on aggregate</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-metalinguistic-abstraction" class="outline-3">
+<h3 id="metalinguistic-abstraction"><span class="section-number-3">1.3</span> Meta-linguistic abstraction</h3>
+<div class="outline-text-3" id="text-metalinguistic-abstraction">
+<ul class="org-ul">
+<li>eval/apply</li>
+<li>interpreter</li>
+<li>Y combinator</li>
+<li>creating new languages</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-introduction-to-lisp" class="outline-2">
+<h2 id="introduction-to-lisp"><span class="section-number-2">2</span> Introduction to LISP</h2>
+<div class="outline-text-2" id="text-introduction-to-lisp">
+<p>
+For any new language, first determine the primitive elements, means of
+combination, and means of abstraction.
+</p>
+
+<p>
+LISP uses prefix notation. The following
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(+ 3 17.4 5)
+</pre>
+</div>
+
+<p>
+is a <i>combination</i> of an <i>operator</i> <code>+</code>, with <i>operands</i> <code>3</code>, <code>17.4</code> and <code>5</code>.
+</p>
+
+<p>
+To define:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define A (* 5 5))
+(define (square x) (* x x))
+(define square (labmda (x) (* x x)))
+</pre>
+</div>
+
+<p>
+To use conditionals:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (abs x)
+  (cond ((&lt; x 0) (- x))
+        ((= x 0) 0)
+        ((&gt; x 0) x)))
+(define (abs x)
+  (if (&lt; x 0) (- x) x))
+</pre>
+</div>
+
+<p>
+The following square root procedure contains other procedures (this is called
+<i>block structure</i>). <code>try</code> has a <i>recursive definition</i>.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (square x) (* x x))
+(define (average x y) (/ (+ x y) 2))
+(define (sqrt x)
+  (define (improve guess)
+    (average guess (/ x guess)))
+  (define (good-enough? guess)
+    (&lt; (abs (- (square guess) x))
+       .001))
+  (define (try guess)
+    (if (good-enough? guess)
+        guess
+        (try (improve guess))))
+  (try 1))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-recap" class="outline-2">
+<h2 id="recap"><span class="section-number-2">3</span> Recap</h2>
+<div class="outline-text-2" id="text-recap">
+<p>
+So far we have covered:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">procedures</th>
+<th scope="col" class="org-left">data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><b>primitive elements</b></td>
+<td class="org-left">+ * &lt; =</td>
+<td class="org-left">23 1.738</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>means of combination</b></td>
+<td class="org-left">() cond if</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>means of abstraction</b></td>
+<td class="org-left">define</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Now go make yourself a sandwich.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<center>
+<div class="footer">
+<a href="index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="index.html"><h1>Christian Christiansen.</h1></a>
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
