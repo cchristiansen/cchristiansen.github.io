@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-04-13 Tue 13:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 2a. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 2a
+<br />
+<span class="subtitle">Higher-order Procedures</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#deja-vu">1. Déjà vu</a></li>
+<li><a href="#procedure-as-argument">2. Procedure as argument</a></li>
+<li><a href="#procedure-as-value">3. Procedure as value</a></li>
+<li><a href="#newtons-method">4. Newton's method</a></li>
+<li><a href="#a-thousand-words">5. A thousand words</a></li>
+<li><a href="#first-class-citizens">6. First-class citizens</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-deja-vu" class="outline-2">
+<h2 id="deja-vu"><span class="section-number-2">1</span> Déjà vu</h2>
+<div class="outline-text-2" id="text-deja-vu">
+<p>
+
+<math display="block">
+<mrow>
+  <munder><mo>∑</mo>
+    <mrow><mn>a</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>b</mi></mrow>
+  </munder>
+  <mi>i</mi>
+</mrow>
+</math>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (sum-int a b)
+  (if (&gt; a b)
+      0
+      (+ a (sum-int (1+ a) b))))
+</pre>
+</div>
+
+<p>
+
+<math display="block">
+<mrow>
+  <munder><mo>∑</mo>
+    <mrow><mn>a</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>b</mi></mrow>
+  </munder>
+  <msup><mi>i</mi><mrow><mn>2</mn></mrow></msup>
+</mrow>
+</math>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (sum-sq a b)
+  (if (&gt; a b)
+      0
+      (+ (sq a) (sum-int (1+ a) b))))
+</pre>
+</div>
+
+<p>
+Computers were created to take care of menial tasks, so avoid repitition.
+Divide everything into smaller pieces, then each small piece needs to be
+debugged/understood only once.
+</p>
+
+<p>
+
+<math display="block">
+<mrow>
+  <munder><mo>∑</mo>
+    <mrow>
+      <mfrac linethickness="0px">
+        <mrow><mn>a</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>b</mi></mrow>
+        <mrow><mi>by 4</mi></mrow>
+      </mfrac>
+    </mrow>
+  </munder>
+  <mfrac>1<mrow><mi>i</mi>(<mi>i</mi> + 2)</mrow></mfrac>
+</mrow>
+</math>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (pi-sum a b)
+  (if (&gt; a b)
+      0
+      (+ (/1 (* a (+ a 2)))
+         (pi-sum (+ a 4) b))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-procedure-as-argument" class="outline-2">
+<h2 id="procedure-as-argument"><span class="section-number-2">2</span> Procedure as argument</h2>
+<div class="outline-text-2" id="text-procedure-as-argument">
+<p>
+When dealing with patterns, find the abstraction.
+</p>
+
+<p>
+General pattern in the above sums:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (&lt;name&gt; a b)
+  (if (&gt; a b)
+      0
+      (+ (&lt;term&gt; a)
+         (&lt;name&gt; (&lt;next&gt; a) b))))
+</pre>
+</div>
+
+<p>
+And now more correctly:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (sum term a next b)
+  (if (&gt; a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+</pre>
+</div>
+
+<p>
+<code>term</code> and <code>next</code> are both <i>procedural arguments</i>.
+</p>
+
+<p>
+Rewritten <code>sum-int</code>, <code>sum-sq</code> and <code>pi-sum</code> are shown below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (sum-int a b)
+  (define (identity a) a)
+  (sum identity a 1+ b))
+
+(define (sum-sq a b)
+  (sum sq a 1+ b))
+
+(define (pi-sum a b)
+  (sum (lambda (i) (/ 1 (* i (+ i 2))))
+       a
+       (lambda (i) (+ i 4))
+       b))
+</pre>
+</div>
+
+<p>
+There are multiple ways of implmenting <code>sum</code>. Below is an iterative version.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (sum term a next b)
+  (define (iter j ans)
+    (if (&gt; j b)
+        ans
+        (iter (next j)
+              (+ (term j) ans))))
+  (iter a 0))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-procedure-as-value" class="outline-2">
+<h2 id="procedure-as-value"><span class="section-number-2">3</span> Procedure as value</h2>
+<div class="outline-text-2" id="text-procedure-as-value">
+<blockquote>
+<p>
+Computers to make people happy - not people to make computers happy.
+</p>
+</blockquote>
+
+<p>
+Returning to the square root procedure, note that we have been searching for a
+<i>fixed point</i> of <math><mi>f</mi></math>.
+(<math><mi>x</mi></math> is a fixed point of
+<math><mi>f</mi></math> if
+
+<math>
+<mrow>
+<mi>f</mi>(<mi>x</mi>)<mo>=</mo><mi>x</mi>
+</mrow>
+</math>.)
+</p>
+
+<p>
+
+<math display="block">
+<mrow>
+  <mi>y</mi>
+  <mover accent="true" displaystyle="true"><mo>↦</mo><mo>𝑓</mo></mover>
+  <mfrac>
+    <mrow><mi>y</mi><mo>+</mo>
+      <mfrac><mi>x</mi><mi>y</mi></mfrac>
+    </mrow><mn>2</mn>
+  </mfrac>
+</mrow></math>
+</p>
+
+<p>
+
+<math display="block">
+<mrow>
+  <mi>f</mi><mo>(</mo><msqrt><mi>x</mi></msqrt><mo>)</mo>
+  <mo>=</mo>
+  <msqrt><mi>x</mi></msqrt>
+</mrow></math>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (sqrt x)
+  (fixed-point
+   (lambda (y) (average (/x y) y))
+   1))
+
+(define (fixed-point f start)
+  (define tolerance 0.00001)
+  (define (close-enough? u v)
+    (&lt; (abs (- u v)) tolerance))
+  (define (iter old new)
+    (if (close-enough? old new)
+        new
+        (iter new (f new))))
+  (iter start (f start)))
+</pre>
+</div>
+
+<p>
+Note that
+
+<math>
+<mrow>
+  <mi>y</mi>
+  <mo>↦</mo>
+  <mfrac>
+    <mrow><mi>x</mi></mrow>
+    <mi>y</mi>
+  </mfrac>
+</mrow></math>
+with
+
+<math>
+<mrow>
+  <mi>y</mi>
+  <mo>=</mo>
+  <mi>1</mi>
+</mrow></math>
+and
+
+<math>
+<mrow>
+  <mi>x</mi>
+  <mo>=</mo>
+  <mi>2</mi>
+</mrow></math>
+leads to a never-ending oscillation. The dampener is required to ensure that
+progress towards to answer is maintained.
+</p>
+
+<p>
+More clearly stated:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (sqrt x)
+  (fixed-point
+   (average-damp (lambda (y) (/ x y)))
+   1))
+(define average-damp
+  (lambda (f)
+    (lambda (x) (average (f x) x)))
+</pre>
+</div>
+
+<p>
+<code>average-damp</code> takes a procedure as an argument and returns a procedure as a
+value.
+</p>
+</div>
+</div>
+
+<div id="outline-container-newtons-method" class="outline-2">
+<h2 id="newtons-method"><span class="section-number-2">4</span> Newton's method</h2>
+<div class="outline-text-2" id="text-newtons-method">
+<p>
+Newton's method, also known as the Newton-Raphson method, is an algorithm to
+produce successively better approximations to the zeroes (i.e. roots) of
+functions. (Find <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="y" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">y</mi>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑦</ci>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">y</annotation>
+  </semantics>
+</math>
+ s.t. <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="f(y)=0" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mrow id="p1.1.m1.1.2" xref="p1.1.m1.1.2.cmml">
+      <mrow id="p1.1.m1.1.2.2" xref="p1.1.m1.1.2.2.cmml">
+        <mi id="p1.1.m1.1.2.2.2" xref="p1.1.m1.1.2.2.2.cmml">f</mi>
+        <mo id="p1.1.m1.1.2.2.1" xref="p1.1.m1.1.2.2.1.cmml">⁢</mo>
+        <mrow id="p1.1.m1.1.2.2.3.2" xref="p1.1.m1.1.2.2.cmml">
+          <mo stretchy="false" id="p1.1.m1.1.2.2.3.2.1" xref="p1.1.m1.1.2.2.cmml">(</mo>
+          <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">y</mi>
+          <mo stretchy="false" id="p1.1.m1.1.2.2.3.2.2" xref="p1.1.m1.1.2.2.cmml">)</mo>
+        </mrow>
+      </mrow>
+      <mo id="p1.1.m1.1.2.1" xref="p1.1.m1.1.2.1.cmml">=</mo>
+      <mn id="p1.1.m1.1.2.3" xref="p1.1.m1.1.2.3.cmml">0</mn>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <apply id="p1.1.m1.1.2.cmml" xref="p1.1.m1.1.2">
+        <eq id="p1.1.m1.1.2.1.cmml" xref="p1.1.m1.1.2.1"/>
+        <apply id="p1.1.m1.1.2.2.cmml" xref="p1.1.m1.1.2.2">
+          <times id="p1.1.m1.1.2.2.1.cmml" xref="p1.1.m1.1.2.2.1"/>
+          <ci id="p1.1.m1.1.2.2.2.cmml" xref="p1.1.m1.1.2.2.2">𝑓</ci>
+          <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑦</ci>
+        </apply>
+        <cn type="integer" id="p1.1.m1.1.2.3.cmml" xref="p1.1.m1.1.2.3">0</cn>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">f(y)=0</annotation>
+  </semantics>
+</math>
+.)
+</p>
+
+<p>
+Start with a guess <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="y+0" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mrow id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">
+      <mi id="p1.1.m1.1.1.2" xref="p1.1.m1.1.1.2.cmml">y</mi>
+      <mo id="p1.1.m1.1.1.1" xref="p1.1.m1.1.1.1.cmml">+</mo>
+      <mn id="p1.1.m1.1.1.3" xref="p1.1.m1.1.1.3.cmml">0</mn>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <apply id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">
+        <plus id="p1.1.m1.1.1.1.cmml" xref="p1.1.m1.1.1.1"/>
+        <ci id="p1.1.m1.1.1.2.cmml" xref="p1.1.m1.1.1.2">𝑦</ci>
+        <cn type="integer" id="p1.1.m1.1.1.3.cmml" xref="p1.1.m1.1.1.3">0</cn>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">y+0</annotation>
+  </semantics>
+</math>
+. Then
+</p>
+
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.3" class="ltx_Math" alttext="y_{n+1}=y_{n}-\dfrac{f(y_{n})}{\frac{df}{dy}|_{y=y_{n}}}" display="block">
+  <semantics id="S0.Ex1.m1.3a">
+    <mrow id="S0.Ex1.m1.3.4" xref="S0.Ex1.m1.3.4.cmml">
+      <msub id="S0.Ex1.m1.3.4.2" xref="S0.Ex1.m1.3.4.2.cmml">
+        <mi id="S0.Ex1.m1.3.4.2.2" xref="S0.Ex1.m1.3.4.2.2.cmml">y</mi>
+        <mrow id="S0.Ex1.m1.3.4.2.3" xref="S0.Ex1.m1.3.4.2.3.cmml">
+          <mi id="S0.Ex1.m1.3.4.2.3.2" xref="S0.Ex1.m1.3.4.2.3.2.cmml">n</mi>
+          <mo id="S0.Ex1.m1.3.4.2.3.1" xref="S0.Ex1.m1.3.4.2.3.1.cmml">+</mo>
+          <mn id="S0.Ex1.m1.3.4.2.3.3" xref="S0.Ex1.m1.3.4.2.3.3.cmml">1</mn>
+        </mrow>
+      </msub>
+      <mo id="S0.Ex1.m1.3.4.1" xref="S0.Ex1.m1.3.4.1.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.3.4.3" xref="S0.Ex1.m1.3.4.3.cmml">
+        <msub id="S0.Ex1.m1.3.4.3.2" xref="S0.Ex1.m1.3.4.3.2.cmml">
+          <mi id="S0.Ex1.m1.3.4.3.2.2" xref="S0.Ex1.m1.3.4.3.2.2.cmml">y</mi>
+          <mi id="S0.Ex1.m1.3.4.3.2.3" xref="S0.Ex1.m1.3.4.3.2.3.cmml">n</mi>
+        </msub>
+        <mo id="S0.Ex1.m1.3.4.3.1" xref="S0.Ex1.m1.3.4.3.1.cmml">-</mo>
+        <mfrac id="S0.Ex1.m1.3.3" xref="S0.Ex1.m1.3.3.cmml">
+          <mrow id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">
+            <mi id="S0.Ex1.m1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.3.cmml">f</mi>
+            <mo id="S0.Ex1.m1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.2.cmml">⁢</mo>
+            <mrow id="S0.Ex1.m1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">
+              <mo stretchy="false" id="S0.Ex1.m1.1.1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">(</mo>
+              <msub id="S0.Ex1.m1.1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">
+                <mi id="S0.Ex1.m1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.1.1.1.2.cmml">y</mi>
+                <mi id="S0.Ex1.m1.1.1.1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.1.1.1.3.cmml">n</mi>
+              </msub>
+              <mo stretchy="false" id="S0.Ex1.m1.1.1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">)</mo>
+            </mrow>
+          </mrow>
+          <msub id="S0.Ex1.m1.3.3.3.4" xref="S0.Ex1.m1.3.3.3.3.cmml">
+            <mrow id="S0.Ex1.m1.3.3.3.4.2" xref="S0.Ex1.m1.3.3.3.3.cmml">
+              <mfrac id="S0.Ex1.m1.2.2.2.1" xref="S0.Ex1.m1.2.2.2.1.cmml">
+                <mrow id="S0.Ex1.m1.2.2.2.1.2" xref="S0.Ex1.m1.2.2.2.1.2.cmml">
+                  <mi id="S0.Ex1.m1.2.2.2.1.2.2" xref="S0.Ex1.m1.2.2.2.1.2.2.cmml">d</mi>
+                  <mo id="S0.Ex1.m1.2.2.2.1.2.1" xref="S0.Ex1.m1.2.2.2.1.2.1.cmml">⁢</mo>
+                  <mi id="S0.Ex1.m1.2.2.2.1.2.3" xref="S0.Ex1.m1.2.2.2.1.2.3.cmml">f</mi>
+                </mrow>
+                <mrow id="S0.Ex1.m1.2.2.2.1.3" xref="S0.Ex1.m1.2.2.2.1.3.cmml">
+                  <mi id="S0.Ex1.m1.2.2.2.1.3.2" xref="S0.Ex1.m1.2.2.2.1.3.2.cmml">d</mi>
+                  <mo id="S0.Ex1.m1.2.2.2.1.3.1" xref="S0.Ex1.m1.2.2.2.1.3.1.cmml">⁢</mo>
+                  <mi id="S0.Ex1.m1.2.2.2.1.3.3" xref="S0.Ex1.m1.2.2.2.1.3.3.cmml">y</mi>
+                </mrow>
+              </mfrac>
+              <mo fence="true" stretchy="false" id="S0.Ex1.m1.3.3.3.4.2.1" xref="S0.Ex1.m1.3.3.3.3.1.cmml">|</mo>
+            </mrow>
+            <mrow id="S0.Ex1.m1.3.3.3.2.1" xref="S0.Ex1.m1.3.3.3.2.1.cmml">
+              <mi id="S0.Ex1.m1.3.3.3.2.1.2" xref="S0.Ex1.m1.3.3.3.2.1.2.cmml">y</mi>
+              <mo id="S0.Ex1.m1.3.3.3.2.1.1" xref="S0.Ex1.m1.3.3.3.2.1.1.cmml">=</mo>
+              <msub id="S0.Ex1.m1.3.3.3.2.1.3" xref="S0.Ex1.m1.3.3.3.2.1.3.cmml">
+                <mi id="S0.Ex1.m1.3.3.3.2.1.3.2" xref="S0.Ex1.m1.3.3.3.2.1.3.2.cmml">y</mi>
+                <mi id="S0.Ex1.m1.3.3.3.2.1.3.3" xref="S0.Ex1.m1.3.3.3.2.1.3.3.cmml">n</mi>
+              </msub>
+            </mrow>
+          </msub>
+        </mfrac>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.3b">
+      <apply id="S0.Ex1.m1.3.4.cmml" xref="S0.Ex1.m1.3.4">
+        <eq id="S0.Ex1.m1.3.4.1.cmml" xref="S0.Ex1.m1.3.4.1"/>
+        <apply id="S0.Ex1.m1.3.4.2.cmml" xref="S0.Ex1.m1.3.4.2">
+          <csymbol cd="ambiguous" id="S0.Ex1.m1.3.4.2.1.cmml" xref="S0.Ex1.m1.3.4.2">subscript</csymbol>
+          <ci id="S0.Ex1.m1.3.4.2.2.cmml" xref="S0.Ex1.m1.3.4.2.2">𝑦</ci>
+          <apply id="S0.Ex1.m1.3.4.2.3.cmml" xref="S0.Ex1.m1.3.4.2.3">
+            <plus id="S0.Ex1.m1.3.4.2.3.1.cmml" xref="S0.Ex1.m1.3.4.2.3.1"/>
+            <ci id="S0.Ex1.m1.3.4.2.3.2.cmml" xref="S0.Ex1.m1.3.4.2.3.2">𝑛</ci>
+            <cn type="integer" id="S0.Ex1.m1.3.4.2.3.3.cmml" xref="S0.Ex1.m1.3.4.2.3.3">1</cn>
+          </apply>
+        </apply>
+        <apply id="S0.Ex1.m1.3.4.3.cmml" xref="S0.Ex1.m1.3.4.3">
+          <minus id="S0.Ex1.m1.3.4.3.1.cmml" xref="S0.Ex1.m1.3.4.3.1"/>
+          <apply id="S0.Ex1.m1.3.4.3.2.cmml" xref="S0.Ex1.m1.3.4.3.2">
+            <csymbol cd="ambiguous" id="S0.Ex1.m1.3.4.3.2.1.cmml" xref="S0.Ex1.m1.3.4.3.2">subscript</csymbol>
+            <ci id="S0.Ex1.m1.3.4.3.2.2.cmml" xref="S0.Ex1.m1.3.4.3.2.2">𝑦</ci>
+            <ci id="S0.Ex1.m1.3.4.3.2.3.cmml" xref="S0.Ex1.m1.3.4.3.2.3">𝑛</ci>
+          </apply>
+          <apply id="S0.Ex1.m1.3.3.cmml" xref="S0.Ex1.m1.3.3">
+            <divide id="S0.Ex1.m1.3.3.4.cmml" xref="S0.Ex1.m1.3.3"/>
+            <apply id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1">
+              <times id="S0.Ex1.m1.1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.1.2"/>
+              <ci id="S0.Ex1.m1.1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.1.3">𝑓</ci>
+              <apply id="S0.Ex1.m1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1.1.1">
+                <csymbol cd="ambiguous" id="S0.Ex1.m1.1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1.1.1">subscript</csymbol>
+                <ci id="S0.Ex1.m1.1.1.1.1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.2">𝑦</ci>
+                <ci id="S0.Ex1.m1.1.1.1.1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.3">𝑛</ci>
+              </apply>
+            </apply>
+            <apply id="S0.Ex1.m1.3.3.3.3.cmml" xref="S0.Ex1.m1.3.3.3.4">
+              <csymbol cd="latexml" id="S0.Ex1.m1.3.3.3.3.1.cmml" xref="S0.Ex1.m1.3.3.3.4.2.1">evaluated-at</csymbol>
+              <apply id="S0.Ex1.m1.2.2.2.1.cmml" xref="S0.Ex1.m1.2.2.2.1">
+                <divide id="S0.Ex1.m1.2.2.2.1.1.cmml" xref="S0.Ex1.m1.2.2.2.1"/>
+                <apply id="S0.Ex1.m1.2.2.2.1.2.cmml" xref="S0.Ex1.m1.2.2.2.1.2">
+                  <times id="S0.Ex1.m1.2.2.2.1.2.1.cmml" xref="S0.Ex1.m1.2.2.2.1.2.1"/>
+                  <ci id="S0.Ex1.m1.2.2.2.1.2.2.cmml" xref="S0.Ex1.m1.2.2.2.1.2.2">𝑑</ci>
+                  <ci id="S0.Ex1.m1.2.2.2.1.2.3.cmml" xref="S0.Ex1.m1.2.2.2.1.2.3">𝑓</ci>
+                </apply>
+                <apply id="S0.Ex1.m1.2.2.2.1.3.cmml" xref="S0.Ex1.m1.2.2.2.1.3">
+                  <times id="S0.Ex1.m1.2.2.2.1.3.1.cmml" xref="S0.Ex1.m1.2.2.2.1.3.1"/>
+                  <ci id="S0.Ex1.m1.2.2.2.1.3.2.cmml" xref="S0.Ex1.m1.2.2.2.1.3.2">𝑑</ci>
+                  <ci id="S0.Ex1.m1.2.2.2.1.3.3.cmml" xref="S0.Ex1.m1.2.2.2.1.3.3">𝑦</ci>
+                </apply>
+              </apply>
+              <apply id="S0.Ex1.m1.3.3.3.2.1.cmml" xref="S0.Ex1.m1.3.3.3.2.1">
+                <eq id="S0.Ex1.m1.3.3.3.2.1.1.cmml" xref="S0.Ex1.m1.3.3.3.2.1.1"/>
+                <ci id="S0.Ex1.m1.3.3.3.2.1.2.cmml" xref="S0.Ex1.m1.3.3.3.2.1.2">𝑦</ci>
+                <apply id="S0.Ex1.m1.3.3.3.2.1.3.cmml" xref="S0.Ex1.m1.3.3.3.2.1.3">
+                  <csymbol cd="ambiguous" id="S0.Ex1.m1.3.3.3.2.1.3.1.cmml" xref="S0.Ex1.m1.3.3.3.2.1.3">subscript</csymbol>
+                  <ci id="S0.Ex1.m1.3.3.3.2.1.3.2.cmml" xref="S0.Ex1.m1.3.3.3.2.1.3.2">𝑦</ci>
+                  <ci id="S0.Ex1.m1.3.3.3.2.1.3.3.cmml" xref="S0.Ex1.m1.3.3.3.2.1.3.3">𝑛</ci>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.3c">y_{n+1}=y_{n}-\dfrac{f(y_{n})}{\frac{df}{dy}|_{y=y_{n}}}</annotation>
+  </semantics>
+</math>
+
+</p>
+
+<p>
+Re-implementing <code>sqrt</code> using Newton's method:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (sqrt x)
+  (newton (lambda (y) (- x (square y)))
+          1))
+
+(define (newton f guess)
+  (define df (deriv f))
+  (fixed-point
+   (lambda (x) (- x (/ (f x) (df x))))
+   guess))
+</pre>
+</div>
+
+<p>
+Use wishful thinking to assume magic can be done with anything with a name.
+Wishful thinking is essential for good computer science.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define deriv
+  (lambda (f)
+    (lambda (x)
+      (/ (- (f (+ x dx))
+            (f x))
+         dx))))
+(define dx 0.000001)
+</pre>
+</div>
+
+<p>
+And magically we have the derivative! Evidently this isn't perfect and should
+make numerical analysts skin crawl.
+</p>
+</div>
+</div>
+
+<div id="outline-container-a-thousand-words" class="outline-2">
+<h2 id="a-thousand-words"><span class="section-number-2">5</span> A thousand words</h2>
+<div class="outline-text-2" id="text-a-thousand-words">
+<p>
+<center>
+<img src="./2a-sqrt-newton.png" alt="2a-sqrt-newton.png" />
+</center>
+</p>
+</div>
+</div>
+
+<div id="outline-container-first-class-citizens" class="outline-2">
+<h2 id="first-class-citizens"><span class="section-number-2">6</span> First-class citizens</h2>
+<div class="outline-text-2" id="text-first-class-citizens">
+<p>
+Christopher Strachey, grandfather of computer science, logician and inventor of
+denotational semantics, was one of the first to make procedures first-class
+citizens in porgramming langauges.
+</p>
+
+<p>
+<b>The rights &amp; privileges of first-class citizens</b>
+</p>
+<ul class="org-ul">
+<li>To be named by variables.</li>
+<li>To be passed as arguments to procedures.</li>
+<li>To be returned as values of procedures.</li>
+<li>To be incorporated into data structures.</li>
+</ul>
+
+<p>
+Turning procedures into first-class citizens allows for powerful abstractions.
+</p>
+
+<p>
+Note to self: orgmode and latexml are lifesavers.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
