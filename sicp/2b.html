@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-04-25 Sun 17:18 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 2b. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 2b
+<br />
+<span class="subtitle">Compound Data</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#layers">1. Layers</a></li>
+<li><a href="#lists">2. Lists</a></li>
+<li><a href="#org2bb3dce">3. Data abstraction</a></li>
+<li><a href="#descartes">4. Descartes</a></li>
+<li><a href="#turtles-all-the-way-down">5. Turtles all the way down</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-layers" class="outline-2">
+<h2 id="layers"><span class="section-number-2">1</span> Layers</h2>
+<div class="outline-text-2" id="text-layers">
+<p>
+Layers with abstraction create barriers that isolate the details of the lower layers.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (+rat x y)
+  (make-rat
+   (+ (* (numer x) (denom y))
+      (* (numer y) (denom x)))
+   (* (denom x) (denom y))))
+(define (*rat x y)
+  (make-rat
+   (* (numer x) (numer y))
+   (* (denom x) (denom y))))
+</pre>
+</div>
+
+<p>
+<code>make-rat</code> is a <i>constructor</i>. <code>numer</code> and <code>denom</code> are <i>selectors</i>.
+</p>
+
+<p>
+Programming languages should express the concepts in our heads. Otherwise, they
+confuse not only our programming, but also our minds.
+</p>
+
+<p>
+"Why bother with data abstraction?" is a similar question to "why bother to
+package instructions up into procedures?"
+</p>
+</div>
+</div>
+
+<div id="outline-container-lists" class="outline-2">
+<h2 id="lists"><span class="section-number-2">2</span> Lists</h2>
+<div class="outline-text-2" id="text-lists">
+<p>
+The glue that holds data together is called <i>list structure</i>. It provides a way
+to create <i>pairs</i>.
+</p>
+
+<p>
+<code>cons</code> constructs a pair whose first part is <code>x</code> and whose second part is <code>y</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(cons x y)
+</pre>
+</div>
+
+<p>
+<code>car</code> selects the first part of the pair <code>p</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(car p)
+</pre>
+</div>
+
+<p>
+<code>cdr</code> selects the second part of the pair <code>p</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(cdr p)
+</pre>
+</div>
+
+<p>
+Pairs can be reprented using <i>box and pointer notation</i>. (Note: this term and
+representation appears to be defunct.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (make-rat n d)
+  (cons n d))
+(define (numer x) (car x))
+(define (denom x) (cdr x))
+</pre>
+</div>
+
+<p>
+The above implementation spits out <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="\frac{1}{2}+\frac{1}{4}=\frac{6}{8}" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mrow id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">
+      <mrow id="p1.1.m1.1.1.2" xref="p1.1.m1.1.1.2.cmml">
+        <mfrac id="p1.1.m1.1.1.2.2" xref="p1.1.m1.1.1.2.2.cmml">
+          <mn id="p1.1.m1.1.1.2.2.2" xref="p1.1.m1.1.1.2.2.2.cmml">1</mn>
+          <mn id="p1.1.m1.1.1.2.2.3" xref="p1.1.m1.1.1.2.2.3.cmml">2</mn>
+        </mfrac>
+        <mo id="p1.1.m1.1.1.2.1" xref="p1.1.m1.1.1.2.1.cmml">+</mo>
+        <mfrac id="p1.1.m1.1.1.2.3" xref="p1.1.m1.1.1.2.3.cmml">
+          <mn id="p1.1.m1.1.1.2.3.2" xref="p1.1.m1.1.1.2.3.2.cmml">1</mn>
+          <mn id="p1.1.m1.1.1.2.3.3" xref="p1.1.m1.1.1.2.3.3.cmml">4</mn>
+        </mfrac>
+      </mrow>
+      <mo id="p1.1.m1.1.1.1" xref="p1.1.m1.1.1.1.cmml">=</mo>
+      <mfrac id="p1.1.m1.1.1.3" xref="p1.1.m1.1.1.3.cmml">
+        <mn id="p1.1.m1.1.1.3.2" xref="p1.1.m1.1.1.3.2.cmml">6</mn>
+        <mn id="p1.1.m1.1.1.3.3" xref="p1.1.m1.1.1.3.3.cmml">8</mn>
+      </mfrac>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <apply id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">
+        <eq id="p1.1.m1.1.1.1.cmml" xref="p1.1.m1.1.1.1"/>
+        <apply id="p1.1.m1.1.1.2.cmml" xref="p1.1.m1.1.1.2">
+          <plus id="p1.1.m1.1.1.2.1.cmml" xref="p1.1.m1.1.1.2.1"/>
+          <apply id="p1.1.m1.1.1.2.2.cmml" xref="p1.1.m1.1.1.2.2">
+            <divide id="p1.1.m1.1.1.2.2.1.cmml" xref="p1.1.m1.1.1.2.2"/>
+            <cn type="integer" id="p1.1.m1.1.1.2.2.2.cmml" xref="p1.1.m1.1.1.2.2.2">1</cn>
+            <cn type="integer" id="p1.1.m1.1.1.2.2.3.cmml" xref="p1.1.m1.1.1.2.2.3">2</cn>
+          </apply>
+          <apply id="p1.1.m1.1.1.2.3.cmml" xref="p1.1.m1.1.1.2.3">
+            <divide id="p1.1.m1.1.1.2.3.1.cmml" xref="p1.1.m1.1.1.2.3"/>
+            <cn type="integer" id="p1.1.m1.1.1.2.3.2.cmml" xref="p1.1.m1.1.1.2.3.2">1</cn>
+            <cn type="integer" id="p1.1.m1.1.1.2.3.3.cmml" xref="p1.1.m1.1.1.2.3.3">4</cn>
+          </apply>
+        </apply>
+        <apply id="p1.1.m1.1.1.3.cmml" xref="p1.1.m1.1.1.3">
+          <divide id="p1.1.m1.1.1.3.1.cmml" xref="p1.1.m1.1.1.3"/>
+          <cn type="integer" id="p1.1.m1.1.1.3.2.cmml" xref="p1.1.m1.1.1.3.2">6</cn>
+          <cn type="integer" id="p1.1.m1.1.1.3.3.cmml" xref="p1.1.m1.1.1.3.3">8</cn>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">\frac{1}{2}+\frac{1}{4}=\frac{6}{8}</annotation>
+  </semantics>
+</math>
+.
+How can this be rectified?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (make-rat n d)
+  (let ((g (gcd n d)))
+    (cons (/ n g)
+          (/ d g))))
+</pre>
+</div>
+
+<p>
+<code>let</code> creates a local context for local names.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2bb3dce" class="outline-2">
+<h2 id="org2bb3dce"><span class="section-number-2">3</span> Data abstraction</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+
+<pre>
+USE:                     +rat *rat -rat
+=============================================
+ABSTRACTION LAYER:    make-rat numer denom
+=============================================
+REPRESENTATION:              pairs
+</pre>
+
+</p>
+
+<p>
+Set up data objects by postulating constructors and selectors to separate use
+from representation. If you have the name of a spirit, you have control over
+it.
+</p>
+
+<p>
+Another way of representing rationals:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (make-rat n d) (cons n d))
+(define (numer x)
+  (let ((g (gcd (car x) (cdr x))))
+    (/ (car x) g)))
+(define (denom x)
+  (let ((g (gcd (car x) (cdr x))))
+    (/ (cdr x) g)))
+</pre>
+</div>
+
+<p>
+There is a narrow line between deferring decisions and outright
+procrastination. Ideally, we can make progress without having to be bound by
+the consequences of our decisions. Through wishful thinking, we give names to
+our decisions, and continue as if we've made a decision. Wishful thinking is a
+powerful design technique.
+</p>
+
+<p>
+The maxim "do all of your design before any of your code" was likely to be
+coined by someone who has rarely implemented complex computer systems.
+</p>
+
+<blockquote>
+<p>
+Computer science is a lot like magic; there's a bad part of computer science
+which is a lot like religion.
+</p>
+</blockquote>
+
+<p>
+The real power is that you can pretend you've made the decision, then later on
+figure out what decision you ought to have made. When you can do that, you have
+the best of both worlds.
+</p>
+</div>
+</div>
+
+<div id="outline-container-descartes" class="outline-2">
+<h2 id="descartes"><span class="section-number-2">4</span> Descartes</h2>
+<div class="outline-text-2" id="text-descartes">
+<p>
+One beauty of abstraction is the ability to use abstract data as building
+blocks for even more complicated things.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">; representing vectors in the plane
+(define (make-vector x y) (cons x y))
+(define (xcor p) (car p))
+(define (ycor p) (cdr p))
+</pre>
+</div>
+
+<p>
+Build line segments from vectors.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">; representing line segments
+(define (make-seg p q) (cons p q))
+(define (seg-start s) (car s))
+(define (seg-end s) (cdr s))
+(define (midpoint s)
+  (let ((a (seg-start s))
+        (b (seg-end s)))
+    (make-vector
+     (average (xcor a) (xcor b))
+     (average (ycor a) (ycor b)))))
+(define (length s)
+  (let
+      ((dx (- (xcor (seg-end s))
+              (xcor (set-start s))))
+       (dy (- (ycor (seg-end s))
+              (ycor (set-start s)))))
+    (sqrt (+ (square dx) (square dy)))))
+</pre>
+</div>
+
+<p>
+How segments, vectors and pairs are abstracted:
+</p>
+<center>
+<pre>
+segments
+--------------------------
+make-seg seg-start seg-end
+--------------------------
+vectors
+--------------------------
+make-vector xcor ycor
+--------------------------
+pairs
+</pre>
+</center>
+
+<p>
+<i>Closed</i> means of abstraction allows for pairs of pairs.
+Abstractions keep complexity from sprawling out and allow choices to be
+localised. <i>Abstract data</i> can sit on top of any suitable representation.
+</p>
+</div>
+</div>
+
+<div id="outline-container-turtles-all-the-way-down" class="outline-2">
+<h2 id="turtles-all-the-way-down"><span class="section-number-2">5</span> Turtles all the way down</h2>
+<div class="outline-text-2" id="text-turtles-all-the-way-down">
+<center>
+<pre>
+rational numbers
+================
+pairs
+================
+???
+</pre>
+</center>
+
+<p>
+What <i>is</i> a rational number? It is a number that satisfies the axiom:
+</p>
+
+<p>
+If
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="x=\texttt{(make-rat n d)}" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mi id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">x</mi>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mtext mathvariant="monospace" id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3a.cmml">(make-rat n d)</mtext>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <ci id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">𝑥</ci>
+        <ci id="S0.Ex1.m1.1.1.3a.cmml" xref="S0.Ex1.m1.1.1.3">
+          <mtext mathvariant="monospace" id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">(make-rat n d)</mtext>
+        </ci>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">x=\texttt{(make-rat n d)}</annotation>
+  </semantics>
+</math>
+
+Then
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="\frac{\texttt{(numer x)}}{\texttt{(denom x)}}=\frac{n}{d}" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mfrac id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">
+        <mtext mathvariant="monospace" id="S0.Ex1.m1.1.1.2.2" xref="S0.Ex1.m1.1.1.2.2a.cmml">(numer x)</mtext>
+        <mtext mathvariant="monospace" id="S0.Ex1.m1.1.1.2.3" xref="S0.Ex1.m1.1.1.2.3a.cmml">(denom x)</mtext>
+      </mfrac>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mfrac id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">
+        <mi id="S0.Ex1.m1.1.1.3.2" xref="S0.Ex1.m1.1.1.3.2.cmml">n</mi>
+        <mi id="S0.Ex1.m1.1.1.3.3" xref="S0.Ex1.m1.1.1.3.3.cmml">d</mi>
+      </mfrac>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <apply id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">
+          <divide id="S0.Ex1.m1.1.1.2.1.cmml" xref="S0.Ex1.m1.1.1.2"/>
+          <ci id="S0.Ex1.m1.1.1.2.2a.cmml" xref="S0.Ex1.m1.1.1.2.2">
+            <mtext mathvariant="monospace" id="S0.Ex1.m1.1.1.2.2.cmml" xref="S0.Ex1.m1.1.1.2.2">(numer x)</mtext>
+          </ci>
+          <ci id="S0.Ex1.m1.1.1.2.3a.cmml" xref="S0.Ex1.m1.1.1.2.3">
+            <mtext mathvariant="monospace" id="S0.Ex1.m1.1.1.2.3.cmml" xref="S0.Ex1.m1.1.1.2.3">(denom x)</mtext>
+          </ci>
+        </apply>
+        <apply id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">
+          <divide id="S0.Ex1.m1.1.1.3.1.cmml" xref="S0.Ex1.m1.1.1.3"/>
+          <ci id="S0.Ex1.m1.1.1.3.2.cmml" xref="S0.Ex1.m1.1.1.3.2">𝑛</ci>
+          <ci id="S0.Ex1.m1.1.1.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3">𝑑</ci>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">\frac{\texttt{(numer x)}}{\texttt{(denom x)}}=\frac{n}{d}</annotation>
+  </semantics>
+</math>
+
+</p>
+
+<p>
+What is a pair? It is a thing that satisifes the axiom:
+</p>
+
+<p>
+For any <code>x</code> and <code>y</code>,<br />
+<code>(car (cons x y))</code> is <code>x</code><br />
+<code>(cdr (cons x y))</code> is <code>y</code>.
+</p>
+
+<p>
+Using this logic, we can proceed to build pairs from thin air.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (cons a b)
+  (lambda (pick)
+    (cond ((= pick 1) a)
+          ((= pick 2) b))))
+(define (car x) (x 1))
+(define (cdr x) (x 2))
+</pre>
+</div>
+
+<p>
+We have just built data out of a procedure - built out of existential nothing.
+</p>
+
+<blockquote>
+<p>
+We don't need data to build these data abstractions, because we can
+do everything in terms of procedures.
+</p>
+</blockquote>
+
+<p>
+We will continue to blur the line between data and procedures. A procedure is
+not just the act of doing something; a procedure is a real object that exists.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
