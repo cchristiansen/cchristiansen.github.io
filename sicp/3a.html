@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-04-26 Mon 19:33 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 3a. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="How data is used, can be separated from how it is represented."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 3a
+<br />
+<span class="subtitle">Henderson Escher Example</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#recap">1. Recap</a></li>
+<li><a href="#lists">2. Lists</a></li>
+<li><a href="#for-each-map">3. For each map</a></li>
+<li><a href="#henderson-escher-example">4. Henderson Escher example</a>
+<ul>
+<li><a href="#henderson-escher-example-basics">4.1. Basics</a></li>
+<li><a href="#henderson-escher-example-means-of-combination">4.2. Means of combination</a></li>
+<li><a href="#henderson-escher-example-means-of-abstraction">4.3. Means of abstraction</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-recap" class="outline-2">
+<h2 id="recap"><span class="section-number-2">1</span> Recap</h2>
+<div class="outline-text-2" id="text-recap">
+<p>
+How data is used, can be separated from how it is represented.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">; vectors
+(define (+vect v1 v2)
+  (make-vector
+   (+ (xcor v1) (xcor v2))
+   (+ (ycor v1) (ycor v2))))
+(define (scale s v)
+  (make-vector
+   (* s (xcor v))
+   (* s (ycor v))))
+(define make-vector cons)
+(define xcor car)
+(define ycor cdr)
+
+; line segments
+(define make-segment cons)
+(define seg-start car)
+(define seg-end cdr)
+</pre>
+</div>
+
+<p>
+Mathematically speaking, the set of data objects in LISP is closed under the
+operation of forming pairs.
+</p>
+</div>
+</div>
+
+<div id="outline-container-lists" class="outline-2">
+<h2 id="lists"><span class="section-number-2">2</span> Lists</h2>
+<div class="outline-text-2" id="text-lists">
+<p>
+<i>Lists</i> provide a convention for representing sequences. A list is implemented
+as a sequence of pairs chained together, where the <code>cdr</code> of a pair is the next
+pair, and the last <code>cdr</code> is <code>nil</code>.
+</p>
+
+<p>
+The following two instructions are equivalent:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(cons 1
+      (cons 2
+            (cons 3
+                  (cons 4 nil))))
+(list 1 2 3 4)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-for-each-map" class="outline-2">
+<h2 id="for-each-map"><span class="section-number-2">3</span> For each map</h2>
+<div class="outline-text-2" id="text-for-each-map">
+<p>
+We will create procedures to apply/run procedures on each element in a list in
+turn.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define 1-to-4 (list 1 2 3 4))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (scale-list s l)
+  (if (null? l)
+      nil
+      (cons (* (car l) s)
+            (scale-list s (cdr l)))))
+</pre>
+</div>
+
+<p>
+This can be generalised.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (map p l)
+  (if (null? l)
+      nil
+      (cons (p (car l))
+            (map p (cdr l)))))
+(define (scale-list s l)
+  (map (lambda (item) (* item s))
+       l))
+(map square 1-to-4)
+(map (lambda (x) (+ x 10)) 1-to-4)
+</pre>
+</div>
+
+<p>
+<code>for-each</code> is also a powerful tool.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (for-each proc list)
+  (cond ((null? list) "done")
+        (else (proc (car list))
+              (for-each proc (cdr list)))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-henderson-escher-example" class="outline-2">
+<h2 id="henderson-escher-example"><span class="section-number-2">4</span> Henderson Escher example</h2>
+<div class="outline-text-2" id="text-henderson-escher-example">
+</div>
+
+<div id="outline-container-henderson-escher-example-basics" class="outline-3">
+<h3 id="henderson-escher-example-basics"><span class="section-number-3">4.1</span> Basics</h3>
+<div class="outline-text-3" id="text-henderson-escher-example-basics">
+<p>
+By exploring a language created by Peter Henderson, for creating Escher-like
+images, we will cover everything we have seen so far:
+</p>
+<ul class="org-ul">
+<li>list structure</li>
+<li>abstraction</li>
+<li>representation</li>
+<li>higher-order procedures</li>
+<li>metalinguistic abstraction</li>
+</ul>
+
+<blockquote>
+<p>
+One of the ways of tackling complexity, is to build a suitably powerful language.
+</p>
+</blockquote>
+
+<p>
+As with any language, we must first determine what are the:
+</p>
+<ol class="org-ol">
+<li>primitives;</li>
+<li>means of combination;</li>
+<li>means of abstraction.</li>
+</ol>
+
+<p>
+In this language, there is only one primitive: picture. There are many means of
+combination: <code>rotate</code> <code>above</code> <code>flip</code> <code>beside</code> etc.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (coord-map rect)
+  (lambda (point)
+    (+vect
+     (+vect (scale (xcor point) (horiz rect))
+            (scale (ycor point) (vert rect)))
+     (origin rect))))
+(define (make-picture seglist)
+  (lambda (rect)
+    (for-each
+     (lambda (s)
+       (drawline
+        ((coord-map rect) (seg-start s))
+        ((coord-map rect) (seg-end s))))
+     seglist)))
+
+; To create a picture in a rectangle
+(define r (make-rect ...))
+(define g (make-pict ...))
+(g r)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-henderson-escher-example-means-of-combination" class="outline-3">
+<h3 id="henderson-escher-example-means-of-combination"><span class="section-number-3">4.2</span> Means of combination</h3>
+<div class="outline-text-3" id="text-henderson-escher-example-means-of-combination">
+<p>
+By representing data (namely rectangles/pictures) as procedures, means of
+combination can be easily implemented.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (beside p1 p2 a)
+  (lambda (rect)
+    (p1 (make-rect
+         (origin rect)
+         (scale a (horiz rect))
+         (vert rect)))
+    (p2 (make-rect
+         (+vect (origin rect) (scale a (horiz rect)))
+         (scale (- 1 a) (horiz rect))
+         (vert rect)))))
+(define (rotate90 pict)
+  (lambda (rect)
+    (pict (make-rect
+           (+vert (origin rect) (horiz rect))
+           (vert rect)
+           (scale -1 (horiz rect))))))
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-henderson-escher-example-means-of-abstraction" class="outline-3">
+<h3 id="henderson-escher-example-means-of-abstraction"><span class="section-number-3">4.3</span> Means of abstraction</h3>
+<div class="outline-text-3" id="text-henderson-escher-example-means-of-abstraction">
+<blockquote>
+<p>
+The real punchline comes when you look at the means of abstraction.
+</p>
+</blockquote>
+
+<p>
+As we have implemented means of combinations as procedures, when we abstract
+further, everything that LISP supplies us for manipulating procedures is
+already available.
+</p>
+
+<blockquote>
+<p>
+Not only is this language implemented in LISP, it is also <i>embedded</i> in LISP.
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (right-push p n a)
+  (if (= n 0)
+      p
+      (beside p (right-push p (- n 1) a) a)))
+</pre>
+</div>
+
+<p>
+Generalise with the power of LISP.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (push comb)
+  (lambda (pict n a)
+    ((repeated (lambda (p) (comb pict p a))
+               n)
+     pict)))
+(define right-push (push beside))
+</pre>
+</div>
+
+<p>
+The <b>language of schemes of combination</b> sits upon the
+<b>language of geometric positions</b> which in turn is built upon the
+<b>language of primitive pictures</b>. Each layer is split into a whole language,
+rendering it more robust than forever splitting out a task into subtasks, as in
+each layer there is a whole vocabulary to express things in that layer.
+</p>
+
+<blockquote>
+<p>
+The design process is not so much about implementing programs, as it is about
+implementing languages.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

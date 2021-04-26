@@ -3,12 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-04-25 Sun 17:18 -->
+<!-- 2021-04-26 Mon 17:47 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SICP 2b. Christian Christiansen.</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Christian Christiansen" />
+<meta name="description" content="Abstraction layers create barriers that isolate the details of the lower layers."
+ />
 <link rel="stylesheet" type="text/css" href="../main.css">
 </head>
 <body>
@@ -22,8 +24,8 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#layers">1. Layers</a></li>
-<li><a href="#lists">2. Lists</a></li>
-<li><a href="#org2bb3dce">3. Data abstraction</a></li>
+<li><a href="#pairs">2. Pairs</a></li>
+<li><a href="#data-abstraction">3. Data abstraction</a></li>
 <li><a href="#descartes">4. Descartes</a></li>
 <li><a href="#turtles-all-the-way-down">5. Turtles all the way down</a></li>
 </ul>
@@ -34,7 +36,8 @@
 <h2 id="layers"><span class="section-number-2">1</span> Layers</h2>
 <div class="outline-text-2" id="text-layers">
 <p>
-Layers with abstraction create barriers that isolate the details of the lower layers.
+Abstraction layers create barriers that isolate the details of the lower
+layers.
 </p>
 
 <div class="org-src-container">
@@ -66,9 +69,9 @@ package instructions up into procedures?"
 </div>
 </div>
 
-<div id="outline-container-lists" class="outline-2">
-<h2 id="lists"><span class="section-number-2">2</span> Lists</h2>
-<div class="outline-text-2" id="text-lists">
+<div id="outline-container-pairs" class="outline-2">
+<h2 id="pairs"><span class="section-number-2">2</span> Pairs</h2>
+<div class="outline-text-2" id="text-pairs">
 <p>
 The glue that holds data together is called <i>list structure</i>. It provides a way
 to create <i>pairs</i>.
@@ -176,9 +179,9 @@ How can this be rectified?
 </div>
 </div>
 
-<div id="outline-container-org2bb3dce" class="outline-2">
-<h2 id="org2bb3dce"><span class="section-number-2">3</span> Data abstraction</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-data-abstraction" class="outline-2">
+<h2 id="data-abstraction"><span class="section-number-2">3</span> Data abstraction</h2>
+<div class="outline-text-2" id="text-data-abstraction">
 <p>
 
 <pre>
