@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-04-28 Wed 19:17 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 4a. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="Having in the previous lecture implemented rules of differentiation, we will now attempt to wield the computer with tools to parse language."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 4a
+<br />
+<span class="subtitle">Pattern-matching: Rule-based Substitution</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#overview">1. Overview</a></li>
+<li><a href="#pattern-match">2. Pattern match</a></li>
+<li><a href="#skeletons">3. Skeletons</a></li>
+<li><a href="#simplifying">4. Simplifying</a></li>
+<li><a href="#algebra-rules">5. Algebra rules</a></li>
+<li><a href="#diagram">6. Diagram</a></li>
+<li><a href="#match">7. Match</a></li>
+<li><a href="#instantiation">8. Instantiation</a></li>
+<li><a href="#simplify">9. Simplify</a></li>
+<li><a href="#wrapping-up">10. Wrapping up</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-overview" class="outline-2">
+<h2 id="overview"><span class="section-number-2">1</span> Overview</h2>
+<div class="outline-text-2" id="text-overview">
+<p>
+Having in the previous lecture implemented the rules of differentiation, we
+will now attempt to wield the computer with tools to parse language.
+</p>
+
+<p>
+<center><pre>
+Rule
+  Pattern ------&#x2013;&#x2014;&gt; Skeleton
+ ​  |                  ​|
+                ​ | Match            | Instantiation
+ ​  |                  ​|
+ ​  V                  ​V
+Expression |---&#x2013;&#x2014;&gt; Expression
+  Source            Target
+</center></pre>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define deriv-rules
+  '(
+    ((dd (?c c) (? v)) 0)
+    ((dd (?v v) (? v)) 1)
+    ((dd (?v u) (? v)) 0)
+    ((dd (+ (? x1) (? x2)) (? v))
+     (+ (dd (: x1) (: v))
+        (dd (: x2) (: v))))
+    ((dd (* (? x1) (? x2)) (? v))
+     (+ (* (: x1) (dd (: x2) (: v)))
+        (* (dd (: x1) (: v)) (: x2 ))))
+    ((dd (** (? x) (?c n)) (: v))
+     (* (* (: n)
+           (** (: x) (: (- n 1))))
+        (dd (: x) (: v))))
+    ))
+</pre>
+</div>
+
+<p>
+<code>:</code> stands for <i>substitution object</i>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-pattern-match" class="outline-2">
+<h2 id="pattern-match"><span class="section-number-2">2</span> Pattern match</h2>
+<div class="outline-text-2" id="text-pattern-match">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><code>foo</code></td>
+<td class="org-left">matches exactly itself</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>(f a b)</code></td>
+<td class="org-left">matches any list with 1st, 2nd and 3rd elements as <code>f</code> <code>a</code> <code>b</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>(? x)</code></td>
+<td class="org-left">matches anything, call it <code>x</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>(?c x)</code></td>
+<td class="org-left">matches constant, call it <code>x</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>(?v x)</code></td>
+<td class="org-left">matches variable, call it <code>x</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-skeletons" class="outline-2">
+<h2 id="skeletons"><span class="section-number-2">3</span> Skeletons</h2>
+<div class="outline-text-2" id="text-skeletons">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><code>foo</code></td>
+<td class="org-left">instantiates itself</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>(f a b)</code></td>
+<td class="org-left">instantiates to 3-list results of instantiating each of <code>f</code> <code>a</code> <code>b</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>(: x)</code></td>
+<td class="org-left">instantiate to the value of <code>x</code> in the pattern matched</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-simplifying" class="outline-2">
+<h2 id="simplifying"><span class="section-number-2">4</span> Simplifying</h2>
+<div class="outline-text-2" id="text-simplifying">
+<p>
+Need to create a simplifier to parse the differentiation rules.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define dsimp
+  (simplifier deriv-rules))
+</pre>
+</div>
+
+<p>
+Want to create <code>dsimp</code> such that the following output is obtained.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(dsimp '(dd (+ x y) x))
+(+ 1 0)
+</pre>
+</div>
+
+<p>
+Evidently this can be further reduced using algebraic rules.
+</p>
+</div>
+</div>
+
+<div id="outline-container-algebra-rules" class="outline-2">
+<h2 id="algebra-rules"><span class="section-number-2">5</span> Algebra rules</h2>
+<div class="outline-text-2" id="text-algebra-rules">
+<p>
+The rules of algebraic simplification.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define algebra-rules
+  '(
+    (((? op) (?c e1) (?c e2))
+     (: (op e1 e2)))
+    (((? op) (? e1) (?c e2))
+     ((: op) (: e2) (: e1)))
+    ((+ 0 (? e)) (: e))
+    ((* 1 (? e)) (: e))
+    ((* 0 (? e)) 0)
+    ((* (?c e1) (* (?c e2) (? e3)))
+     (* (: (* e1 e2)) (: e3)))
+    ((* (? e1) (* (?c e2) (? e3)))
+     (* (: e2) (* (: e1) (: e3))))
+    ((* (* (? e1) (? e2) (? e3)))
+     (* (: e1) (* (: e2) (: e3))))
+    ((+ (?c e1) (+ (?c e2) (? e3)))
+     (+ (: (+ e1 e2)) (: e3)))
+    ((+ (? e1) (+ (?c 32) (? e3)))
+     (+ (: e2) (+ (: e1) (: e3))))
+    ((+ (+ (? e1) (? e2)) (? e3))
+     (+ (: e1) (+ (: e2) (: e3))))
+    ((+ (* (?c c) (? a)) (* (?c d) (? a)))
+     (* (: (+ c d)) (: a)))
+    ((* (? c) (+ (? d) (? e)))
+     (+ (* (: c) (: d)) (* (: c) (: e))))
+    ))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-diagram" class="outline-2">
+<h2 id="diagram"><span class="section-number-2">6</span> Diagram</h2>
+<div class="outline-text-2" id="text-diagram">
+<p>
+Each rule has a pattern and a skeleton.
+</p>
+
+
+<div id="orgfefaf2e" class="figure">
+<p><img src="./4a-pattern-match.png" alt="4a-pattern-match.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-match" class="outline-2">
+<h2 id="match"><span class="section-number-2">7</span> Match</h2>
+<div class="outline-text-2" id="text-match">
+<p>
+Implement pattern matching.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (match pat exp dict)
+  (cond ((eq? dict 'failed) 'failed)
+        ((atom? pat)
+         *** Atomic patterns)
+        *** Pattern variable clauses
+        ((atom? exp) 'failed)
+        (else
+         (match (cdr pat)
+                (cdr exp)
+                (match (car pat)
+                       (car exp)
+                       dict)))))
+</pre>
+</div>
+
+<p>
+Two trees have to be examined simultaneously: the tree of the expression
+and the tree of the pattern.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(+ (* (? x) (? y)) (? y))
+(+ (* 3 x)) x)
+</pre>
+</div>
+
+<p>
+Now fill in the atomic patterns' part.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">((atom? pat)
+ (if (atom? exp)
+     (if (eq? pat exp)
+         dict
+         'failed)
+     'failed))
+</pre>
+</div>
+
+<p>
+And now the rest.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">((arbitrary-constant? pat)
+ (if (constant? exp)
+     (extend-dict pat exp dict)
+     'failed))
+((arbitrary-variable? pat)
+ (if (variable? exp)
+     (extend-dict pat exp dict)
+     'failed))
+((arbitrary-expression? pat)
+ (extend-dict pat exp dict))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-instantiation" class="outline-2">
+<h2 id="instantiation"><span class="section-number-2">8</span> Instantiation</h2>
+<div class="outline-text-2" id="text-instantiation">
+<p>
+How is the match instantiated?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (instantiate skeleton dict)
+  (define (loop s)
+    (cond ((atom? s) s)
+          ((skeleton-evaluation? s)
+           (evaluate (eval-exp s) dict))
+          (else (cons (loop (car s))
+                      (loop (cdr s))))))
+  (loop skeleton))
+</pre>
+</div>
+
+<p>
+The magic happens in <code>evaluate</code>. <code>evaluate</code> will be covered in much more detail
+in upcoming lectures.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (evaluate form dict)
+  (if (atom? form)
+      (lookup form dict)
+      (apply
+       (eval (lookup (car form) dict)
+             user-initial-environment)
+       (mapcar (lambda (v)
+                 (lookup v dict))
+               (cdr form)))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-simplify" class="outline-2">
+<h2 id="simplify"><span class="section-number-2">9</span> Simplify</h2>
+<div class="outline-text-2" id="text-simplify">
+<p>
+Every rule will look at every node. If there's a match, a new expression is
+made, substituting into the skeleton. Continue calling in order to simplify.
+</p>
+
+<p>
+GIGO: garbage in garbage out.
+</p>
+
+<p>
+GIGO simplifier.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (simplifier the-rules)
+  (define (simplify-exp exp)
+    ***)
+  (define (simplify-parts exp)
+    ***)
+  (define(try-rules exp)
+    ***)
+  simplify-exp)
+
+(define (simplify-exp exp)
+  (try-rules (if (compound? exp)
+                 (simplify-parts exp)
+                 exp)))
+
+(define (simplify-parts exp)
+  (if (null? exp)
+      '()
+      (cons (simplify-exp (car exp))
+            (simplify-parts (cdr exp)))))
+</pre>
+</div>
+
+<p>
+The above can also be implemented using <code>map</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (simplify-exp exp)
+  (try-rules
+   (if (compound? exp)
+       (map simplify-exp exp)
+       exp)))
+</pre>
+</div>
+
+<p>
+<code>try-rules</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (try-rules exp)
+  (define (scan rules)
+    ***)
+  (scan the-rules))
+
+(define (scan rules)
+  (if (null? rules)
+      exp
+      (let ((dict
+             (match (pattern (car rules))
+                    exp
+                    (empty-dictionary))))
+        (if (eq? dat 'failed)
+            (scan (dcdr rules))
+            (simplify-exp
+             (instantiate
+                 (skeleton (car rules))
+                 dict))))))
+</pre>
+</div>
+
+<blockquote>
+<p>
+The pattern of recursion here is very complicated. And one of the most
+important things is not to think about that. If you try to think about the
+actual pattern by which this does something, you're going to get very confused.
+I would.
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+One key of programming and design, is knowing what not to think about.
+</p>
+</blockquote>
+
+<p>
+Learn to program with abandon.
+</p>
+</div>
+</div>
+
+<div id="outline-container-wrapping-up" class="outline-2">
+<h2 id="wrapping-up"><span class="section-number-2">10</span> Wrapping up</h2>
+<div class="outline-text-2" id="text-wrapping-up">
+<p>
+How are dictionaries implemented?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (empty-dictionary) '())
+
+(define (extend-dictionary put dat dict)
+  (let ((name (variable-name pat)))
+    (let ((v (assq name dict)))
+      (cond ((null? v)
+             (cons (list name dat) dict))
+            ((eq? (cadr v) dat) dict)
+            (else 'failed)))))
+
+(define(lookup var dict)
+  (let ((v (assq var dict)))
+    (if (null? v) var (cadr v))))
+</pre>
+</div>
+
+<p>
+Note: this is by far the toughest lecture so far.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
