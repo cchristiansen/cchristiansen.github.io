@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-05 Wed 10:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 5a. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="Today, we're going to do something horrible: we're going to add an assignment statement."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 5a
+<br />
+<span class="subtitle">Assignment, State &amp; Side-effects</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#assignment">1. Assignment</a></li>
+<li><a href="#environment-model">2. Environment model</a>
+<ul>
+<li><a href="#bound-variables">2.1. Bound variables</a></li>
+<li><a href="#free-variables">2.2. Free variables</a></li>
+<li><a href="#bound-variable-list">2.3. Bound variable list</a></li>
+<li><a href="#environment-rules">2.4. Environment rules</a>
+<ul>
+<li><a href="#rule-1">2.4.1. Rule 1</a></li>
+<li><a href="#rule-2">2.4.2. Rule 2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#objects">3. Objects</a>
+<ul>
+<li><a href="#actions-and-identity">3.1. Actions and identity</a></li>
+</ul>
+</li>
+<li><a href="#cesaros-method-for-estimating-pi">4. Cesàro's method for estimating pi</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-assignment" class="outline-2">
+<h2 id="assignment"><span class="section-number-2">1</span> Assignment</h2>
+<div class="outline-text-2" id="text-assignment">
+<blockquote>
+<p>
+Today, we're going to do something horrible: we're going to add an assignment
+statement.
+</p>
+</blockquote>
+
+<p>
+New features should provide new means of decomposition. So far, all of the
+programs have been functional; they have encoded mathamatical truths. Processes
+evolved by such programs can be understood by substitution.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">&lt;before&gt;
+(set! &lt;var&gt; &lt;value&gt;)
+&lt;after&gt;
+</pre>
+</div>
+
+<p>
+Note: Similar to how <code>?</code> denotes predicate procedure, <code>!</code> denotes
+assignment-like things.
+</p>
+
+<p>
+By introducing assignment, time is now introduced. <code>var</code> has a different state
+before and after.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define count 1)
+(define (demo x)
+  (set! count (1+ count))
+  (+ x count))
+(demo 3)
+</pre>
+</div>
+
+<pre class="example">
+5
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-scheme">(demo 3)
+</pre>
+</div>
+
+<pre class="example">
+6
+</pre>
+
+
+<p>
+To show the difference between functional and imperative, let's see how the
+factorial procedures differ.
+</p>
+
+<p>
+Functional version:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (fact n)
+  (define (iter m i)
+    (cond ((&gt; i n) m)
+          (else (iter (* i m) (+ i 1)))))
+  (iter 1 1))
+</pre>
+</div>
+
+<p>
+Imperative version:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (fact n)
+  (let ((i 1) (m 1))
+    (define (loop)
+      (cond ((&gt; 1 n) m)
+            (else
+             (set! m (* i m))
+             (set! i (+ i 1))
+             (loop))))
+    (loop)))
+</pre>
+</div>
+
+<p>
+Note that <code>define</code> ≠ <code>let</code> ≠ <code>set!</code>. Two <code>define</code>​s are illegal, and <code>let</code> sets
+up a scope.
+</p>
+
+<p>
+The following two statements are equivalent.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(let ((var1 e1) (var2 e2))
+  e3)
+
+((lambda (var1 var2)
+   e3)
+ e1
+ e2)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-environment-model" class="outline-2">
+<h2 id="environment-model"><span class="section-number-2">2</span> Environment model</h2>
+<div class="outline-text-2" id="text-environment-model">
+<p>
+The substitution model is dead. Long live the <i>environment model</i>.
+</p>
+</div>
+
+<div id="outline-container-bound-variables" class="outline-3">
+<h3 id="bound-variables"><span class="section-number-3">2.1</span> Bound variables</h3>
+<div class="outline-text-3" id="text-bound-variables">
+<p>
+We say that a variable, <code>v</code>, is <i>bound in an expression</i>, <code>e</code>, if the meaning
+of <code>e</code> is unchanged by the uniform replacement of a variable, <code>w</code> not occurring
+in <code>e</code> for every occurrence of <code>v</code> in <code>e</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-free-variables" class="outline-3">
+<h3 id="free-variables"><span class="section-number-3">2.2</span> Free variables</h3>
+<div class="outline-text-3" id="text-free-variables">
+<p>
+We say that a variable, <code>v</code>, is <i>free in an expression</i>, <code>e</code>, if the meaning
+of <code>e</code> is changed by the uniform replacement of a variable, <code>w</code> not occurring
+in <code>e</code> for every occurrence of <code>v</code> in <code>e</code>.
+</p>
+
+<p>
+In the following expression, <code>x</code> is bound, <code>y</code> is free.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(lambda (x) (* x y))
+</pre>
+</div>
+
+<p>
+In the following expression, <code>*</code> is a free variable.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(lambda (y) ((lambda (x) (* x y)) 3))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-bound-variable-list" class="outline-3">
+<h3 id="bound-variable-list"><span class="section-number-3">2.3</span> Bound variable list</h3>
+<div class="outline-text-3" id="text-bound-variable-list">
+<p>
+If <code>x</code> is a bound variable in <code>e</code> then there is a lambda expression where it is
+bound. We call the list of formal parameters of the lambda expression the
+<i>bound variable list</i> and we say that the lambda expression <i>binds</i> the
+variables <i>declared</i> in its bound variable list. In addition, those parts of
+the expression, where a variable has a value defined by the lambda expression
+which binds it, is called the <i>scope</i> of the variable.
+</p>
+</div>
+</div>
+
+<div id="outline-container-environment-rules" class="outline-3">
+<h3 id="environment-rules"><span class="section-number-3">2.4</span> Environment rules</h3>
+<div class="outline-text-3" id="text-environment-rules">
+<p>
+An <i>environment</i> is a sequence of <i>frames</i> linked together.
+</p>
+</div>
+
+<div id="outline-container-rule-1" class="outline-4">
+<h4 id="rule-1"><span class="section-number-4">2.4.1</span> Rule 1</h4>
+<div class="outline-text-4" id="text-rule-1">
+<p>
+A procedure object is applied to a set of arguments by constructing a frame,
+binding the formal parameters of the procedure to the actual arguments of the
+call, and then evaluating the body of the procedure in the context of the new
+environment constructed. The new frame has as its enclosing environment part of
+the procedure object being applied.
+</p>
+</div>
+</div>
+
+<div id="outline-container-rule-2" class="outline-4">
+<h4 id="rule-2"><span class="section-number-4">2.4.2</span> Rule 2</h4>
+<div class="outline-text-4" id="text-rule-2">
+<p>
+A lambda expression is evaluated relative to a given environment as follows: a
+new procedure object is formed, combining the text (code) of the
+lambda-expression with a pointer to the environment of evaluation.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-objects" class="outline-2">
+<h2 id="objects"><span class="section-number-2">3</span> Objects</h2>
+<div class="outline-text-2" id="text-objects">
+<p>
+Assignment allows us to create separate <i>objects</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define make-counter
+  (lambda (n)
+    (lambda ()
+      (set! n (1+ n))
+      n)))
+(define c1 (make-counter 0))
+(define c2(make-counter 10))
+(c1)
+</pre>
+</div>
+
+<pre class="example">
+1
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-scheme">(c2)
+</pre>
+</div>
+
+<pre class="example">
+11
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-scheme">(c1)
+</pre>
+</div>
+
+<pre class="example">
+2
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-scheme">(c2)
+</pre>
+</div>
+
+<pre class="example">
+12
+</pre>
+
+
+<blockquote>
+<p>
+By introducing assignment and objects, we have opened ourselves up to all of
+the horrible questions of philosophy that have been plaguing philosophers for
+some thousands of years.
+</p>
+</blockquote>
+
+<p>
+Don't use assignment when it can be avoided - it's the wrong way to think.
+</p>
+</div>
+
+<div id="outline-container-actions-and-identity" class="outline-3">
+<h3 id="actions-and-identity"><span class="section-number-3">3.1</span> Actions and identity</h3>
+<div class="outline-text-3" id="text-actions-and-identity">
+<p>
+We say that an action, <code>a</code> had an effect on an object, <code>x</code>, (or equivalently,
+that <code>x</code> was changed by <code>a</code>) if some property, <code>p</code>, which was true of <code>x</code>
+before <code>a</code> became false of <code>x</code> after <code>a</code>.
+</p>
+
+<p>
+We say that two objects, <code>x</code> and <code>y</code>, are the same if any action which has an
+effect on <code>x</code> has the same effect on <code>y</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-cesaros-method-for-estimating-pi" class="outline-2">
+<h2 id="cesaros-method-for-estimating-pi"><span class="section-number-2">4</span> Cesàro's method for estimating pi</h2>
+<div class="outline-text-2" id="text-cesaros-method-for-estimating-pi">
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="\text{Prob}(\text{gcd}(n1,n2)=1)=\frac{6}{\pi^{2}}" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1b">
+      <mtext id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1a.cmml">Prob</mtext>
+      <mrow id="S0.Ex1.m1.1.2" xref="S0.Ex1.m1.1.2.cmml">
+        <mo stretchy="false" id="S0.Ex1.m1.1.2.1" xref="S0.Ex1.m1.1.2.1.cmml">(</mo>
+        <mtext id="S0.Ex1.m1.1.2.2" xref="S0.Ex1.m1.1.2.2a.cmml">gcd</mtext>
+        <mrow id="S0.Ex1.m1.1.2.3" xref="S0.Ex1.m1.1.2.3.cmml">
+          <mo stretchy="false" id="S0.Ex1.m1.1.2.3.1" xref="S0.Ex1.m1.1.2.3.1.cmml">(</mo>
+          <mi id="S0.Ex1.m1.1.2.3.2" xref="S0.Ex1.m1.1.2.3.2.cmml">n</mi>
+          <mn id="S0.Ex1.m1.1.2.3.3" xref="S0.Ex1.m1.1.2.3.3.cmml">1</mn>
+          <mo id="S0.Ex1.m1.1.2.3.4" xref="S0.Ex1.m1.1.2.3.4.cmml">,</mo>
+          <mi id="S0.Ex1.m1.1.2.3.5" xref="S0.Ex1.m1.1.2.3.5.cmml">n</mi>
+          <mn id="S0.Ex1.m1.1.2.3.6" xref="S0.Ex1.m1.1.2.3.6.cmml">2</mn>
+          <mo stretchy="false" id="S0.Ex1.m1.1.2.3.7" xref="S0.Ex1.m1.1.2.3.7.cmml">)</mo>
+        </mrow>
+        <mo id="S0.Ex1.m1.1.2.4" xref="S0.Ex1.m1.1.2.4.cmml">=</mo>
+        <mn id="S0.Ex1.m1.1.2.5" xref="S0.Ex1.m1.1.2.5.cmml">1</mn>
+        <mo stretchy="false" id="S0.Ex1.m1.1.2.6" xref="S0.Ex1.m1.1.2.6.cmml">)</mo>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.3" xref="S0.Ex1.m1.1.3.cmml">=</mo>
+      <mfrac id="S0.Ex1.m1.1.4" xref="S0.Ex1.m1.1.4.cmml">
+        <mn id="S0.Ex1.m1.1.4.2" xref="S0.Ex1.m1.1.4.2.cmml">6</mn>
+        <msup id="S0.Ex1.m1.1.4.3" xref="S0.Ex1.m1.1.4.3.cmml">
+          <mi id="S0.Ex1.m1.1.4.3.2" xref="S0.Ex1.m1.1.4.3.2.cmml">π</mi>
+          <mn id="S0.Ex1.m1.1.4.3.3" xref="S0.Ex1.m1.1.4.3.3.cmml">2</mn>
+        </msup>
+      </mfrac>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1c">
+      <cerror id="S0.Ex1.m1.1d">
+        <csymbol cd="ambiguous" id="S0.Ex1.m1.1e">fragments</csymbol>
+        <ci id="S0.Ex1.m1.1.1a.cmml" xref="S0.Ex1.m1.1.1">
+          <mtext id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">Prob</mtext>
+        </ci>
+        <cerror id="S0.Ex1.m1.1.2.cmml" xref="S0.Ex1.m1.1.2">
+          <csymbol cd="ambiguous" id="S0.Ex1.m1.1.2a.cmml" xref="S0.Ex1.m1.1.2">fragments</csymbol>
+          <ci id="S0.Ex1.m1.1.2.1.cmml" xref="S0.Ex1.m1.1.2.1">(</ci>
+          <ci id="S0.Ex1.m1.1.2.2a.cmml" xref="S0.Ex1.m1.1.2.2">
+            <mtext id="S0.Ex1.m1.1.2.2.cmml" xref="S0.Ex1.m1.1.2.2">gcd</mtext>
+          </ci>
+          <cerror id="S0.Ex1.m1.1.2.3.cmml" xref="S0.Ex1.m1.1.2.3">
+            <csymbol cd="ambiguous" id="S0.Ex1.m1.1.2.3a.cmml" xref="S0.Ex1.m1.1.2.3">fragments</csymbol>
+            <ci id="S0.Ex1.m1.1.2.3.1.cmml" xref="S0.Ex1.m1.1.2.3.1">(</ci>
+            <csymbol cd="unknown" id="S0.Ex1.m1.1.2.3.2.cmml" xref="S0.Ex1.m1.1.2.3.2">n</csymbol>
+            <cn type="integer" id="S0.Ex1.m1.1.2.3.3.cmml" xref="S0.Ex1.m1.1.2.3.3">1</cn>
+            <ci id="S0.Ex1.m1.1.2.3.4.cmml" xref="S0.Ex1.m1.1.2.3.4">,</ci>
+            <csymbol cd="unknown" id="S0.Ex1.m1.1.2.3.5.cmml" xref="S0.Ex1.m1.1.2.3.5">n</csymbol>
+            <cn type="integer" id="S0.Ex1.m1.1.2.3.6.cmml" xref="S0.Ex1.m1.1.2.3.6">2</cn>
+            <ci id="S0.Ex1.m1.1.2.3.7.cmml" xref="S0.Ex1.m1.1.2.3.7">)</ci>
+          </cerror>
+          <eq id="S0.Ex1.m1.1.2.4.cmml" xref="S0.Ex1.m1.1.2.4"/>
+          <cn type="integer" id="S0.Ex1.m1.1.2.5.cmml" xref="S0.Ex1.m1.1.2.5">1</cn>
+          <ci id="S0.Ex1.m1.1.2.6.cmml" xref="S0.Ex1.m1.1.2.6">)</ci>
+        </cerror>
+        <eq id="S0.Ex1.m1.1.3.cmml" xref="S0.Ex1.m1.1.3"/>
+        <apply id="S0.Ex1.m1.1.4.cmml" xref="S0.Ex1.m1.1.4">
+          <divide id="S0.Ex1.m1.1.4.1.cmml" xref="S0.Ex1.m1.1.4"/>
+          <cn type="integer" id="S0.Ex1.m1.1.4.2.cmml" xref="S0.Ex1.m1.1.4.2">6</cn>
+          <apply id="S0.Ex1.m1.1.4.3.cmml" xref="S0.Ex1.m1.1.4.3">
+            <csymbol cd="ambiguous" id="S0.Ex1.m1.1.4.3.1.cmml" xref="S0.Ex1.m1.1.4.3">superscript</csymbol>
+            <ci id="S0.Ex1.m1.1.4.3.2.cmml" xref="S0.Ex1.m1.1.4.3.2">𝜋</ci>
+            <cn type="integer" id="S0.Ex1.m1.1.4.3.3.cmml" xref="S0.Ex1.m1.1.4.3.3">2</cn>
+          </apply>
+        </apply>
+      </cerror>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1f">\text{Prob}(\text{gcd}(n1,n2)=1)=\frac{6}{\pi^{2}}</annotation>
+  </semantics>
+</math>
+
+</p>
+
+<p>
+The proof can be found <a href="http://pi314.net/eng/cesaro.php">here</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (estimate-pi n)
+  (sqrt (/ 6 (monte-carlo n cesaro))))
+(define (cesaro)
+  (= (gcd (rand) (rand)) 1 ))
+(define (monte-carlo trials experiment)
+  (define (iter remaining passed)
+    (cond ((= remaining 0)
+           (/ passed trials))
+          ((experiment)
+           (iter (-1+ remaining)
+                 (1+ passed)))
+          (else
+           (iter (-1+ remaining)
+                 passed))))
+  (iter trials 0))
+(define rand
+  (let ((x random-init))
+    (lambda ()
+      (set! x (rand-update x))
+      x)))
+</pre>
+</div>
+
+<p>
+<code>rand-update</code> is a screwy function, details of which can be found in Knuth's
+books.
+</p>
+
+<p>
+If assignment isn't available, the procedure is a lot worse: it's monolithic.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (estimate-pi n)
+  (sqrt (/ 6 (random-gcd-test n))))
+(define (random-gcd-test trials)
+  (define (iter remaining passed x)
+    (let ((x1 (rand-update x)))
+      (let ((x2 (rand-update x1)))
+        (cond ((= remaining 0)
+               (/ passed trials))
+              ((= (gcd x1 x2) 1)
+               (iter (-1+ remaining)
+                     (1+ passed)
+                     x2))
+              (else
+               (iter (-1+ remaining)
+                     passed
+                     x2))))))
+  (iter trials 0 random-seed))
+</pre>
+</div>
+
+<p>
+The state of the random number generator is no longer confined to the inside of
+the random number generator - it has leaked out. Leaked out into <code>cesaro</code>, and
+then into <code>monte-carlo</code>, meaning none of the functions ca be written generally.
+The assignment version is evidently vastly superior.
+</p>
+
+<blockquote>
+<p>
+Plus ça change, plus c'est la même chose.
+</p>
+</blockquote>
+<p>
+<div class="quoter">Alphonse Kaar</div>
+</p>
+
+<blockquote>
+<p>
+Things are seldom what they seem <br />
+Skim milk masquerades as cream&#x2026;
+</p>
+</blockquote>
+<p>
+<div class="quoter">Gilbert and Sullivan, H.M.S. Pinafore
+</div>
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
