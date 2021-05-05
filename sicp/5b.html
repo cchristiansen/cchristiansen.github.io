@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-05 Wed 21:05 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 5b. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="To understand how to build correspondences between objects in the world, and objects in the computer, let's take the example of electrical systems."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 5b
+<br />
+<span class="subtitle">Computational Objects</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#electrical-systems">1. Electrical systems</a></li>
+<li><a href="#org91862a6">2. Agendas and queues</a></li>
+<li><a href="#org931fdef">3. Danger with lists</a></li>
+<li><a href="#orgb2b004b">4. Church of Alonzo</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-electrical-systems" class="outline-2">
+<h2 id="electrical-systems"><span class="section-number-2">1</span> Electrical systems</h2>
+<div class="outline-text-2" id="text-electrical-systems">
+<p>
+To understand how to build correspondences between objects in the world, and
+objects in the computer, let's take the example of electrical systems.
+</p>
+
+<p>
+<b>Primitive and means of combination</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define a (make-wire))
+(define b (make-wire))
+(define c (make-wire))
+(define d (make-wire))
+(define e (make-wire))
+(define s (make-wire))
+
+(or-gate a b d)
+(and-gate a b c)
+(inverter c e)
+(and-gate d e s)
+</pre>
+</div>
+
+<p>
+<b>Means of abstraction</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (half-adder a b s c)
+  (let ((d (make-wire)) (e (make-wire)))
+    (or-gate a b d)
+    (and-gate a b c)
+    (inverter c e)
+    (and-gate d e s)))
+</pre>
+</div>
+
+<p fallback="./5b-half-adder.svg">
+<object type="image/svg+xml" data="./5b-half-adder.svg" class="org-svg">
+<img src="./5b-half-adder.svg" class="org-svg" /></object>
+<div class="quoter">
+<a href="https://commons.wikimedia.org/wiki/User:%E3%81%99%E3%81%98%E3%81%AB%E3%81%8F%E3%82%B7%E3%83%81%E3%83%A5%E3%83%BC">すじにくシチュー</a>, published under Creative Commons CC0 1.0 Universal Public
+Domain Dedication
+</div>
+</p>
+
+<blockquote>
+<p>
+Lambda is the ultimate glue.
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (full-adder a b c-in sum c-out)
+  (let ((s (make-wire))
+        (c1 (make-wire))
+        (c2 (make-wire)))
+    (half-adder b c-in s c1)
+    (half-adder a s sum c2)
+    (or-gate c1 c2 c-out)))
+</pre>
+</div>
+
+
+<div id="org03607e4" class="figure">
+<p><img src="./5b-full-adder.png" alt="5b-full-adder.png" />
+</p>
+</div>
+
+<p>
+As the means of combination and abstraction are inherited from LISP, only the
+primitives need to be implemented.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (inverter in out)
+  (define (invert-in)
+    (let ((new
+           (logical-not (get-signal in))))
+      (after-delay inverter-delay
+                   (lambda ()
+                     (set-signal! out new)))))
+  (add-action! in invert-in))
+
+(define (logical-not s)
+  (cond ((= s 0) 1)
+        ((= s 1) 0)
+        (else
+         (error "invalid signal" s))))
+
+(define (and-gate a1 a2 output)
+  (define (and-action-procedure)
+    (let ((new-value
+           (logical-and (get-signal a1)
+                        (get-signal a2))))
+      (after-delay and-gate-delay
+                   (lambda ()
+                     (set-signal! output
+                                  new-value)))))
+  (add-action! a1 and-action-procedure)
+  (add-action! a2 and-action-procedure))
+
+(define (make-wire)
+  (let ((signal 0) (action-procs '()))
+    (define (set-my-signal! new)
+      (cons ((= signal new) 'done)
+            (else
+             (set! signal new)
+             (call-each action-procs))))
+    (define (accept-action-proc proc)
+      (set! action-procs
+        (cons proc action-procs))
+      (proc))
+    (define (dispatch m)
+      (cond ((eq? m 'get-signal) signal)
+            ((eq? m 'set-signal!)
+             set-my-signal!)
+            ((eq? m 'add-action!)
+             accept-action-proc)
+            (else
+             (error "Bad message" m))))
+    dispatch))
+
+(define (call-each procedures)
+  (cond ((null? procedures) 'done)
+        (else
+         ((car procedures))
+         (call-each (cdr procedures)))))
+
+(define (get-signal wire)
+  (wire 'get-signal))
+
+(define (set-signal! wire new-value)
+  ((wire 'set-signal!) new-value))
+
+(define (add-action! wire action-proc)
+  ((wire 'add-action!) action-proc))
+
+(define (after-delay delay action)
+  (add-to-agenda!
+   (+ delay (current-time the-agenda))
+   action
+   the-agenda))
+
+(define (propagate)
+  (cond ((empty-agenda? the-agenda)
+         'done)
+        (else
+         ((first-item the-agenda))
+         (remove-first-item! the-agenda)
+         (propagate))))
+</pre>
+</div>
+
+<p>
+Now let's see the machinery in action.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define the-agenda (make-agenda))
+(define inverter-delay 2)
+(define and-gate-delay 3)
+(define or-gate-delay 5)
+
+(define input-1 (make-wire))
+(define input-2 (make-wire))
+(define sum (make-wire))
+(define carry (make-wire))
+
+(probe 'sum sum)
+sum 0 new-value = 0
+(probe 'carry carry)
+carry 0 new-value = 0
+</pre>
+</div>
+
+<p>
+A <code>probe</code> is an object that has the property that when you change a wire that
+it's attached to, it types out a message.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(half-adder input-1 input-2 sum carry)
+(set-signal! input-1 1)
+(propagate)
+sum 8 new-value = 1
+done
+(set-signal input-2 1)
+(propagate)
+carry 11 new-value = 1
+sum 16 new-value = 0
+done
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org91862a6" class="outline-2">
+<h2 id="org91862a6"><span class="section-number-2">2</span> Agendas and queues</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+What functionality is required from agendas and queues?
+</p>
+
+<p>
+<b>Agendas</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(make-agenda)
+(current-time agenda)
+(empty-agenda? agenda)
+(add-to-agenda! time action agenda)
+(first-item agenda)
+(remove-first-item agenda)
+</pre>
+</div>
+
+<p>
+Agendas consist of a header, followed by segments comprised of pairs of times
+and queues.
+</p>
+
+<p>
+<b>Queues</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(make-queue)
+(insert-queue! queue item)
+(delete-queue! queue)
+(front-queue queue)
+(empty-queue? queue)
+</pre>
+</div>
+
+<p>
+In order to insert a new segment in an agenda between the first and last item,
+the front and rear have to be changed. Hence the following procedures are
+required.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(set-car! &lt;pair&gt; &lt;value&gt;)
+(set-cdr! &lt;pair&gt; &lt;value&gt;)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org931fdef" class="outline-2">
+<h2 id="org931fdef"><span class="section-number-2">3</span> Danger with lists</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+With the implementation of <code>set!</code>, care needs to be taken with lists, as
+elements within can be changed.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define a (cons 1 2))
+(define b (cons a a))
+(set-car! (car b) 3)
+(car a)
+</pre>
+</div>
+
+<pre class="example">
+3
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-scheme">(cadr b)
+</pre>
+</div>
+
+<pre class="example">
+3
+</pre>
+
+
+<p>
+It is impossible to mitigate this. If <code>set!</code> is allowed, so are <code>set-car!</code>,
+<code>set-cdr!</code> etc.
+</p>
+<blockquote>
+<p>
+Once you let the camel's nose into the tent, the rest of him follows.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orgb2b004b" class="outline-2">
+<h2 id="orgb2b004b"><span class="section-number-2">4</span> Church of Alonzo</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+<code>cons</code> can be constructed out of hot air. The idea was originally concocted by
+Alonzo Church, the greatest programmer of the 20<sup>th</sup> century (even though he
+never saw a computer).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (cons x y)
+  (lambda (m) (m x y)))
+(define (car x)
+  (x (lambda (a d) a)))
+(define (cdr x)
+  (x (lambda (a d) d)))
+</pre>
+</div>
+
+<p>
+Surely this doesn't work? A step-by-step example must surely prove this to be
+nonsense&#x2026;
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(car (cons 35 47))
+(car (lambda (m) (m 35 47)))
+((lambda (m) (m 35 47)) (lambda (a d) a))
+((lambda (a d) a) 35 47)
+35
+</pre>
+</div>
+
+<p>
+Marry this idea with mutable data.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (cons x y)
+  (lambda (m)
+    (m x
+       y
+       (lambda (n) (set! x n))
+       (lambda (n) (set! y n)))))
+(define (car x)
+  (x (lambda (a d sa sd) a)))
+(define (cdr x)
+  (x (lambda (a d sa sd) d)))
+(define (set-car! x y)
+  (x (lambda (a d sa sd) (sa y))))
+(define (set-cdr! x y)
+  (x (lambda (a d sa sd) (sd y))))
+</pre>
+</div>
+
+<blockquote>
+<p>
+Once I've introduced one assignment operator, I have introduced them all!
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
