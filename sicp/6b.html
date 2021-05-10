@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-10 Mon 20:31 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 6b. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="On-demand computation is built into streams."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 6b
+<br />
+<span class="subtitle">Streams II</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org9791ffe">1. How long is a piece of string?</a></li>
+<li><a href="#org427e834">2. Sieve of Eratosthenes</a></li>
+<li><a href="#orgaac3b04">3. All-in-one inclusive</a></li>
+<li><a href="#orgc296608">4. Drawing hands</a></li>
+<li><a href="#orgce0cbeb">5. Normal-order evaluation</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9791ffe" class="outline-2">
+<h2 id="org9791ffe"><span class="section-number-2">1</span> How long is a piece of string?</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+On-demand computation is built into streams. Let's recap.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (nth-stream n s)
+  (if (= n 0)
+      (head s)
+      (nth-stream (-1+ n) (tail s))))
+
+(define (print-stream s)
+  (cond ((empty-stream? s) "done")
+        (else (print (head s))
+              (print-stream (tail s)))))
+</pre>
+</div>
+
+<p>
+A stream can be infinitely long.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (integers-from n)
+  (cons-stream
+   n
+   (integers-from (+1 n))))
+(define integers (integers-from 1))
+
+(define (no-seven x)
+  (not (= (remainder x 7) 0)))
+(define ns (filter no-seven
+                   integers))
+</pre>
+</div>
+
+<blockquote>
+<p>
+If something is there whenever you look, is it really there or not?
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org427e834" class="outline-2">
+<h2 id="org427e834"><span class="section-number-2">2</span> Sieve of Eratosthenes</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+We saw Hero of Alexandria's method for calculating square roots in lecture <a href="./1a.html">1a</a>.
+Eratosthenes was a fellow Alexandrian, who created a method for calculating
+primes.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (sieve s)
+  (cons-stream
+   (head s)
+   (sieve (filter
+           (lambda (x)
+             (not
+              (divisible? x (head s))))
+           (tail s)))))
+(define primes
+  (sieve (integers-from 2)))
+</pre>
+</div>
+
+<p>
+<code>sieve</code> is an infinitely recursive filter.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgaac3b04" class="outline-2">
+<h2 id="orgaac3b04"><span class="section-number-2">3</span> All-in-one inclusive</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Procedures may process streams in one go. Take a look at two handy procedures.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (add-streams s1 s2)
+  (cond ((empty-stream? s1) s2)
+        ((empty-stream? s2) s1)
+        (else
+         (cons-stream
+          (+ (head s1) (head s2))
+          (add-streams (tail s1)
+                       (tail s2))))))
+
+(define (scale-stream c s)
+  (map-stream (lambda (x) (* x c)) s))
+</pre>
+</div>
+
+<p>
+Using these two procedures, we can create procedures that process streams all
+at once.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define integers
+  (cons-stream 1
+               (add-stream integers ones)))
+</pre>
+</div>
+
+<p>
+This looks an awful lot like a finite state accumulator. We can use the same
+trick for integrals.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (integral s initial-value dt)
+  (define int
+    (cons-stream
+     initial-value
+     (add-streams (scale-stream dt s)
+                  int)))
+  int)
+</pre>
+</div>
+
+<p>
+And also for Fibonacci numbers.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define fibs
+  (cons-stream 0
+     (cons-stream 1
+        (add-streams fibs (tail fibs)))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc296608" class="outline-2">
+<h2 id="orgc296608"><span class="section-number-2">4</span> Drawing hands</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+As we have recursive procedures, it's natural we have recursive data too. We
+can still run into recursive problems however.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define y
+  (integral
+   dy 1 .001))
+(define dy
+  (map square y))
+</pre>
+</div>
+
+<p>
+This doesn't work due to the recursive definition. There is a solution however.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (integral delayed-s
+                  initial-value
+                  dt)
+  (define int
+    (cons-stream
+     initial-value
+     (let ((s (force delayed-s)))
+       (add-streams (scale-stream dt s)
+                    int))))
+  int)
+</pre>
+</div>
+
+<p>
+Change the <code>integral</code> procedure to expect integrand to be a delayed object.
+Then just need one more minor change.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define y
+  (integral
+   (delay dy) 1 0.001))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgce0cbeb" class="outline-2">
+<h2 id="orgce0cbeb"><span class="section-number-2">5</span> Normal-order evaluation</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+The divorce of time in programs from time in computers has yielded powerful
+methods of decomposition, all of which have remained hidden within
+streams until now. By taking full advantage of this new method, we have started
+to pull out the innards of streams, explicitly calling <code>delay</code> and <code>force</code>.
+</p>
+
+<p>
+Spaghetti code can be avoided, by changing the language so that all procedures
+act like <code>cons-stream</code>. In <i>normal-order evaluation</i> languages (in constrast to
+<i>applicative-order evaluation</i> languages), every procedure has an implicit
+delay around its arguments. Streams wouldn't be needed, since lists would be
+streams already. Miranda, by David Turner from the University of
+Kent, is a normal-order evaluation language.
+</p>
+
+<p>
+There is, however, a price.
+</p>
+
+<blockquote>
+<p>
+We're trying to think about programming as a way to specify processes. And if
+we give up too much time, our language becomes more elegant, but it becomes a
+little bit less expressive. There are certain distinctions that we can't draw.
+</p>
+</blockquote>
+
+<p>
+One of the disadvantages is that we can't really express iteration.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (fact-iter a)
+  (define (iter product counter)
+    (if (&gt; counter n)
+        product
+        (iter (* counter product)
+              (+ counter 1))))
+  (iter 1 1))
+</pre>
+</div>
+
+<p>
+With normal-order evaluation, the above code would run nowhere near as
+efficiently. The <i>dragging tail problem</i> is an issue people writing operating
+systems are faced with.
+</p>
+
+<p>
+A more striking issue is that normal-order evaluation and side effects just
+don't mix. It's impossible to model objects with local state and change, and at
+the same time conjure normal-order tricks of decoupling time.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define x 0)
+(define (id n)
+  (set! x n)
+  n)
+(define (inc a) (1+ a))
+(define y (inc (id 3)))
+x
+0
+y
+4
+x
+3
+</pre>
+</div>
+
+<blockquote>
+<p>
+The whole idea of putting in delays is that you throw away time. But when we
+talk about state and set and change, that's exactly what we do want control of.
+</p>
+</blockquote>
+
+<p>
+A so-called purely functional language has no side effects. The price is
+losing assignment.
+</p>
+
+<p>
+Let's take an example which would be naturally thought of in terms of object,
+and approach it with a functional frame of mind.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (make-deposit-account
+         balance deposit-stream)
+  (cons-stream
+   balance
+   (make-deposit-account
+    (+ balance (head deposit-stream))
+    (tail deposit-stream))))
+</pre>
+</div>
+
+<p>
+We don't know if we can do everything without assignment, but there seem to be
+places where functional programming breaks down. Where it starts hurting is
+with objects and sharing and two independent agents being the same.
+</p>
+
+<p>
+Say if we were to extend the bank account so that two users shared the same
+account. The streams could be merged. <i>Fair merge</i> would alternately switch
+between each user, and if one is empty at any point, take from the other stream
+twice. However notice that we can't even explain the situation without talking
+about time.
+</p>
+
+<p>
+Note: it may be that with fair merge, assignment can be effectively simulated.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
