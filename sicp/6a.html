@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-10 Mon 12:03 -->
+<!-- 2021-05-12 Wed 16:19 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SICP 6a. Christian Christiansen.</title>
@@ -23,23 +23,23 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgebbdfca">1. Why?</a></li>
-<li><a href="#org090ccae">2. Streams</a>
+<li><a href="#why">1. Why?</a></li>
+<li><a href="#streams">2. Streams</a>
 <ul>
-<li><a href="#org1392496">2.1. Earth, water, air, fire</a></li>
-<li><a href="#org78bbb08">2.2. Map, filter, etc.</a></li>
+<li><a href="#earth-water-air-fire">2.1. Earth, water, air, fire</a></li>
+<li><a href="#map-filter-etc">2.2. Map, filter, etc.</a></li>
 </ul>
 </li>
-<li><a href="#orgd73dc5e">3. Procedures reimplemented</a></li>
-<li><a href="#orge1d5207">4. Flex</a>
+<li><a href="#procedures-reimplemented">3. Procedures reimplemented</a></li>
+<li><a href="#flex">4. Flex</a>
 <ul>
-<li><a href="#orgce20fed">4.1. Prime sum pairs</a></li>
-<li><a href="#org7063f31">4.2. Eight queens problem</a></li>
+<li><a href="#prime-sum-pairs">4.1. Prime sum pairs</a></li>
+<li><a href="#eight-queens-problem">4.2. Eight queens problem</a></li>
 </ul>
 </li>
-<li><a href="#org61e42a4">5. Catch?</a></li>
-<li><a href="#orgb25faa5">6. Promises</a></li>
-<li><a href="#orgee2a393">7. Memoisation</a></li>
+<li><a href="#catch">5. Catch?</a></li>
+<li><a href="#promises">6. Promises</a></li>
+<li><a href="#memoisation">7. Memoisation</a></li>
 </ul>
 </div>
 </div>
@@ -57,9 +57,9 @@ why adding yet another method of decomposition is useful, let's contrast and
 compare two procedures.
 </p>
 
-<div id="outline-container-orgebbdfca" class="outline-2">
-<h2 id="orgebbdfca"><span class="section-number-2">1</span> Why?</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-why" class="outline-2">
+<h2 id="why"><span class="section-number-2">1</span> Why?</h2>
+<div class="outline-text-2" id="text-why">
 <ol class="org-ol">
 <li>Calculate the sum of the square of odd numbers in the leaves of a tree.</li>
 </ol>
@@ -114,17 +114,17 @@ similar; in the code, this similarity is nowhere to be found.
 </div>
 </div>
 
-<div id="outline-container-org090ccae" class="outline-2">
-<h2 id="org090ccae"><span class="section-number-2">2</span> Streams</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-streams" class="outline-2">
+<h2 id="streams"><span class="section-number-2">2</span> Streams</h2>
+<div class="outline-text-2" id="text-streams">
 <p>
 To represent the way of thinking demonstrated in the diagrams, invent a new language. The arrows in the diagrams will be called streams. A <i>stream</i> is a data abstraction.
 </p>
 </div>
 
-<div id="outline-container-org1392496" class="outline-3">
-<h3 id="org1392496"><span class="section-number-3">2.1</span> Earth, water, air, fire</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-earth-water-air-fire" class="outline-3">
+<h3 id="earth-water-air-fire"><span class="section-number-3">2.1</span> Earth, water, air, fire</h3>
+<div class="outline-text-3" id="text-earth-water-air-fire">
 <p>
 Four minimal elements are required.
 </p>
@@ -151,9 +151,9 @@ y
 </div>
 </div>
 
-<div id="outline-container-org78bbb08" class="outline-3">
-<h3 id="org78bbb08"><span class="section-number-3">2.2</span> Map, filter, etc.</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-map-filter-etc" class="outline-3">
+<h3 id="map-filter-etc"><span class="section-number-3">2.2</span> Map, filter, etc.</h3>
+<div class="outline-text-3" id="text-map-filter-etc">
 <p>
 On top of these building blocks, build the basic pieces.
 </p>
@@ -246,9 +246,9 @@ On top of these building blocks, build the basic pieces.
 </div>
 </div>
 
-<div id="outline-container-orgd73dc5e" class="outline-2">
-<h2 id="orgd73dc5e"><span class="section-number-2">3</span> Procedures reimplemented</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-procedures-reimplemented" class="outline-2">
+<h2 id="procedures-reimplemented"><span class="section-number-2">3</span> Procedures reimplemented</h2>
+<div class="outline-text-2" id="text-procedures-reimplemented">
 <p>
 Let's rewrite the two procedures using the newly invented streams.
 </p>
@@ -291,9 +291,9 @@ procedures together.
 </div>
 </div>
 
-<div id="outline-container-orge1d5207" class="outline-2">
-<h2 id="orge1d5207"><span class="section-number-2">4</span> Flex</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-flex" class="outline-2">
+<h2 id="flex"><span class="section-number-2">4</span> Flex</h2>
+<div class="outline-text-2" id="text-flex">
 <p>
 Take a look at two more complicated examples. Will first need to be able to
 flatten a stream of streams.
@@ -312,9 +312,9 @@ flatten a stream of streams.
 </div>
 
 
-<div id="outline-container-orgce20fed" class="outline-3">
-<h3 id="orgce20fed"><span class="section-number-3">4.1</span> Prime sum pairs</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-prime-sum-pairs" class="outline-3">
+<h3 id="prime-sum-pairs"><span class="section-number-3">4.1</span> Prime sum pairs</h3>
+<div class="outline-text-3" id="text-prime-sum-pairs">
 <p>
 Given <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="N" display="inline">
   <semantics id="p1.1.m1.1a">
@@ -417,9 +417,9 @@ sugar).
 </div>
 </div>
 
-<div id="outline-container-org7063f31" class="outline-3">
-<h3 id="org7063f31"><span class="section-number-3">4.2</span> Eight queens problem</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-eight-queens-problem" class="outline-3">
+<h3 id="eight-queens-problem"><span class="section-number-3">4.2</span> Eight queens problem</h3>
+<div class="outline-text-3" id="text-eight-queens-problem">
 <p>
 Place eight queens on a chessboard, so that no queen more take another queen.
 </p>
@@ -467,9 +467,9 @@ The above procedure provides all the solutions to the eight queens problem.
 </div>
 </div>
 
-<div id="outline-container-org61e42a4" class="outline-2">
-<h2 id="org61e42a4"><span class="section-number-2">5</span> Catch?</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-catch" class="outline-2">
+<h2 id="catch"><span class="section-number-2">5</span> Catch?</h2>
+<div class="outline-text-2" id="text-catch">
 <p>
 So what's the catch?
 </p>
@@ -503,9 +503,9 @@ you this wonderful way that programming might work, except that it doesn't.
 </div>
 </div>
 
-<div id="outline-container-orgb25faa5" class="outline-2">
-<h2 id="orgb25faa5"><span class="section-number-2">6</span> Promises</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-promises" class="outline-2">
+<h2 id="promises"><span class="section-number-2">6</span> Promises</h2>
+<div class="outline-text-2" id="text-promises">
 <p>
 But we can have our cake and eat it. The key is that streams ≠ lists.
 </p>
@@ -577,9 +577,9 @@ from the actual order of events in the computer.
 </div>
 </div>
 
-<div id="outline-container-orgee2a393" class="outline-2">
-<h2 id="orgee2a393"><span class="section-number-2">7</span> Memoisation</h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-memoisation" class="outline-2">
+<h2 id="memoisation"><span class="section-number-2">7</span> Memoisation</h2>
+<div class="outline-text-2" id="text-memoisation">
 <p>
 <code>delay</code> is actually an abbrevation for
 </p>

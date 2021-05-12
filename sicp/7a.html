@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-12 Wed 10:29 -->
+<!-- 2021-05-12 Wed 16:26 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SICP 7a. Christian Christiansen.</title>
@@ -23,19 +23,19 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org9e50401">1. Don a fez</a></li>
-<li><a href="#org9567463">2. Evaluator for LISP</a></li>
-<li><a href="#org48f6dc2">3. Step by step</a></li>
-<li><a href="#org568fa56">4. Fixed points</a></li>
-<li><a href="#org442953c">5. Y combinator</a></li>
-<li><a href="#orgdce252f">6. Trouble with infinity</a></li>
+<li><a href="#don-a-fez">1. Don a fez</a></li>
+<li><a href="#evaluator-for-lisp">2. Evaluator for LISP</a></li>
+<li><a href="#step-by-step">3. Step by step</a></li>
+<li><a href="#fixed-points">4. Fixed points</a></li>
+<li><a href="#y-combinator">5. Y combinator</a></li>
+<li><a href="#trouble-with-infinity">6. Trouble with infinity</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org9e50401" class="outline-2">
-<h2 id="org9e50401"><span class="section-number-2">1</span> Don a fez</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-don-a-fez" class="outline-2">
+<h2 id="don-a-fez"><span class="section-number-2">1</span> Don a fez</h2>
+<div class="outline-text-2" id="text-don-a-fez">
 <p>
 Up until now, we have been thinking of programs as describing machines. Today
 we will describe a <i>universal machine</i>, <code>eval</code>, which can take a description of
@@ -58,9 +58,9 @@ your minds.
 </div>
 </div>
 
-<div id="outline-container-org9567463" class="outline-2">
-<h2 id="org9567463"><span class="section-number-2">2</span> Evaluator for LISP</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-evaluator-for-lisp" class="outline-2">
+<h2 id="evaluator-for-lisp"><span class="section-number-2">2</span> Evaluator for LISP</h2>
+<div class="outline-text-2" id="text-evaluator-for-lisp">
 <p>
 An evaluator takes an expression and environment as its input. An environment
 is a dictionary mapping symbol names to their values.
@@ -248,9 +248,9 @@ look at <code>bind</code>.
 </div>
 </div>
 
-<div id="outline-container-org48f6dc2" class="outline-2">
-<h2 id="org48f6dc2"><span class="section-number-2">3</span> Step by step</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-step-by-step" class="outline-2">
+<h2 id="step-by-step"><span class="section-number-2">3</span> Step by step</h2>
+<div class="outline-text-2" id="text-step-by-step">
 <p>
 To gain a better understanding of how an evaluation functions, let's take it
 slow.
@@ -312,9 +312,9 @@ A new environment <code>e2</code> is created at this point with bind. <code>y = 
 </div>
 </div>
 
-<div id="outline-container-org568fa56" class="outline-2">
-<h2 id="org568fa56"><span class="section-number-2">4</span> Fixed points</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-fixed-points" class="outline-2">
+<h2 id="fixed-points"><span class="section-number-2">4</span> Fixed points</h2>
+<div class="outline-text-2" id="text-fixed-points">
 <p>
 How is building an interpreter for a language we are already able to interpret
 not completely vacuous? Let's revisit the exponential function and describe
@@ -822,9 +822,9 @@ horribly difficult, and best left for denotational semanticists.
 </div>
 </div>
 
-<div id="outline-container-org442953c" class="outline-2">
-<h2 id="org442953c"><span class="section-number-2">5</span> Y combinator</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-y-combinator" class="outline-2">
+<h2 id="y-combinator"><span class="section-number-2">5</span> Y combinator</h2>
+<div class="outline-text-2" id="text-y-combinator">
 <p>
 How can we express infinity? The simplest inifinite loop is:
 </p>
@@ -895,9 +895,9 @@ object which is the fixed point of that function, if it exists.
 </div>
 </div>
 
-<div id="outline-container-orgdce252f" class="outline-2">
-<h2 id="orgdce252f"><span class="section-number-2">6</span> Trouble with infinity</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-trouble-with-infinity" class="outline-2">
+<h2 id="trouble-with-infinity"><span class="section-number-2">6</span> Trouble with infinity</h2>
+<div class="outline-text-2" id="text-trouble-with-infinity">
 <p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="u=1+\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+..." display="block">
   <semantics id="S0.Ex1.m1.1a">
