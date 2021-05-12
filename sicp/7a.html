@@ -1,0 +1,1389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-12 Wed 10:29 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 7a. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="Up until now, we have been thinking of programs as describing machines. Today we will describe a universal machine, eval, which can take a description of another machine as its input."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 7a
+<br />
+<span class="subtitle">Metacircular Evaluation I</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org9e50401">1. Don a fez</a></li>
+<li><a href="#org9567463">2. Evaluator for LISP</a></li>
+<li><a href="#org48f6dc2">3. Step by step</a></li>
+<li><a href="#org568fa56">4. Fixed points</a></li>
+<li><a href="#org442953c">5. Y combinator</a></li>
+<li><a href="#orgdce252f">6. Trouble with infinity</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9e50401" class="outline-2">
+<h2 id="org9e50401"><span class="section-number-2">1</span> Don a fez</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Up until now, we have been thinking of programs as describing machines. Today
+we will describe a <i>universal machine</i>, <code>eval</code>, which can take a description of
+another machine as its input.
+</p>
+
+<blockquote>
+<p>
+We're getting very close to the real spirit in the computer at this point.
+I have to show a certain amount of reverence and respect, so I'm going to wear
+a suit jacket for the only time that you'll ever see me wear a suit jacket
+here. And I think I'm also going to put on an appropriate hat for the
+occasion. Now, this is a lecture I have to warn you - let's see, normally,
+people under 40 and who don't have several children are advised to be careful.
+If they're really worried, they should leave. Because there's a certain amount
+of mysticism that will appear here that may be disturbing and cause trouble in
+your minds.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org9567463" class="outline-2">
+<h2 id="org9567463"><span class="section-number-2">2</span> Evaluator for LISP</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+An evaluator takes an expression and environment as its input. An environment
+is a dictionary mapping symbol names to their values.
+</p>
+
+<p>
+There are several special cases an evaluator needs to take care of.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Special case</th>
+<th scope="col" class="org-left">Example(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Numbers</td>
+<td class="org-left"><code>3</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Symbols</td>
+<td class="org-left"><code>x</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Quotes</td>
+<td class="org-left"><code>'foo</code>, <code>(quote foo)</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Lambdas</td>
+<td class="org-left"><code>(lambda (x) (+ x y))</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Conditionals</td>
+<td class="org-left"><code>(cond (p1 e1) (p2 e2) ...)</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<code>eval</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define eval
+  (lambda (exp env)
+    (cond ((number? exp) exp)
+          ((symbol? exp) (lookup exp env))
+          ((eq? (car exp) 'quote) (cadr exp))
+          ((eq? (car exp) 'lambda)
+           (list 'closure (cdr exp) env))
+          ((eq? (car exp) 'cond)
+           (evcond (cdr exp) env))
+          (else (apply (eval (car exp) env)
+                       (evlist (cdr exp) env))))))
+</pre>
+</div>
+
+<p>
+Now define <code>evcond</code>, <code>apply</code>, <code>evlist</code> and <code>lookup</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define apply
+  (lambda (proc args)
+    (cond ((primitive? proc)
+           (apply-primop proc args))
+          ((eq? (car proc) 'closure)
+           (eval (cadadr proc)
+                 (bind (caadr proc)
+                       args
+                       (caddr proc))))
+          (else error))))
+</pre>
+</div>
+
+<p>
+Putting <code>primitive?</code> and <code>apply-primop</code> to one side for the time being, let's
+look at <code>bind</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define evlist
+  (lambda (l env)
+    (cond ((eq? l '()) '())
+          (else
+           (cons (eval (casr l) env)
+                 (evlist (cdr l) env))))))
+</pre>
+</div>
+
+<p>
+<code>evcond</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define evcond
+  (lambda (clauses env)
+    (cond ((eq? clauses '()) '())
+          ((eq? (caar clauses) 'else)
+           (eval (cadar clauses) env))
+          ((false? (eval (caar clauses) env))
+           (evcond (cdr clauses) env))
+          (else
+           (eval (cadar clauses) env)))))
+</pre>
+</div>
+
+<p>
+<code>bind</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define bind
+  (lambda (vars vals env)
+    (cons (pair-up vars vals)
+          env)))
+</pre>
+</div>
+
+<p>
+<code>pair-up</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define pair-up
+  (lambda (vars vals)
+    (cond
+     ((eq? vars '())
+      (cond ((eq? vals '()) '())
+            (else (error "too many arguments"))))
+     ((eq? vals '()) (error "too few arguments"))
+     (else
+      (cons (cons (car vars)
+                  (car vals))
+            (pair-up (cdr vars)
+                     (cdr vals)))))))
+</pre>
+</div>
+
+<p>
+<code>lookup</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define lookup
+  (lambda (sym env)
+    (cond ((eq? env '()) (error "unbound variable"))
+          (else
+           ((lambda (vcell)
+              (cond ((eq? vcell '())
+                     (lookup sym
+                             (cdr env)))
+                    (else (cdr vcell))))
+            (assq sym (car env)))))))
+</pre>
+</div>
+
+<p>
+<code>assq</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define assq
+  (lambda (sym alist)
+    (cond ((eq? alist '()) '())
+          ((eq? sym (caar alist))
+           (car alist))
+          (else
+           (assq sym (cdr alist))))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org48f6dc2" class="outline-2">
+<h2 id="org48f6dc2"><span class="section-number-2">3</span> Step by step</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+To gain a better understanding of how an evaluation functions, let's take it
+slow.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(eval '(((lambda (x) (lambda (y) (+ x y))) 3) 4) &lt;e0&gt;)
+</pre>
+</div>
+
+<p>
+<code>e0</code> is a <i>global environment</i> containing the procedures <code>+</code> <code>*</code> <code>-</code> <code>/</code> <code>eq?</code>
+<code>cons</code> <code>cdr</code> <code>car</code> etc.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(apply (eval '((lambda (x) (lambda (y) (+ x y))) 3) &lt;e0&gt;)
+       (evlist '(4) &lt;e0&gt;))
+(apply (eval '((lambda (x) (lambda (y) (+ x y))) 3) &lt;e0&gt;)
+       (cons (eval 4 &lt;e0&gt;)
+             (evlist '() &lt;e0&gt;)))
+(apply (eval '((lambda (x) (lambda (y) (+ x y))) 3) &lt;e0&gt;)
+       (cons 4 '() ))
+(apply (eval '((lambda (x) (lambda (y) (+ x y))) 3) &lt;e0&gt;)
+       '(4))
+(apply (apply (eval '(lambda (x) (lambda (y) (+ x y))) &lt;e0&gt;)
+              '(3))
+       '(4))
+(apply (apply '(closure ((lambda (y) (+ x y))) &lt;e0&gt;)
+              '(3))
+       '(4))
+</pre>
+</div>
+
+<p>
+A new environment <code>e1</code> is created at this point with bind. <code>x = 3</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(apply (eval '(lambda (y) (+ x y)) &lt;e1&gt;)
+       '(4))
+(apply '(closure ((y) (+ x y)) &lt;e1&gt;)
+       '(4))
+</pre>
+</div>
+
+<p>
+A new environment <code>e2</code> is created at this point with bind. <code>y = 4</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(eval '(+ x y) &lt;e2&gt;)
+(apply (eval '+ &lt;e2&gt;)
+       (evlist '(x y) &lt;e2&gt;))
+(apply + '(3 4))
+7
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org568fa56" class="outline-2">
+<h2 id="org568fa56"><span class="section-number-2">4</span> Fixed points</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+How is building an interpreter for a language we are already able to interpret
+not completely vacuous? Let's revisit the exponential function and describe
+what happens when a function is defined in terms of itself.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define expt
+  (lambda (x n)
+    (cond ((= n 0) 1)
+          (else
+           (* x (expt x (- n 1)))))))
+</pre>
+</div>
+
+<p>
+Now let's take a look from a mathematical perspective.
+</p>
+
+<p>
+From the below equations, we can see that the 1<sup>st</sup> and 2<sup>nd</sup> equation have
+an infinite number of solutions in <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="x" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">x</mi>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑥</ci>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">x</annotation>
+  </semantics>
+</math>
+ and <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="y" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">y</mi>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑦</ci>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">y</annotation>
+  </semantics>
+</math>
+, equations 2 and 3 have a unique
+solution, and the final two have no solutions.
+</p>
+
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="2x+2y=6" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mrow id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">
+        <mrow id="S0.Ex1.m1.1.1.2.2" xref="S0.Ex1.m1.1.1.2.2.cmml">
+          <mn id="S0.Ex1.m1.1.1.2.2.2" xref="S0.Ex1.m1.1.1.2.2.2.cmml">2</mn>
+          <mo id="S0.Ex1.m1.1.1.2.2.1" xref="S0.Ex1.m1.1.1.2.2.1.cmml">⁢</mo>
+          <mi id="S0.Ex1.m1.1.1.2.2.3" xref="S0.Ex1.m1.1.1.2.2.3.cmml">x</mi>
+        </mrow>
+        <mo id="S0.Ex1.m1.1.1.2.1" xref="S0.Ex1.m1.1.1.2.1.cmml">+</mo>
+        <mrow id="S0.Ex1.m1.1.1.2.3" xref="S0.Ex1.m1.1.1.2.3.cmml">
+          <mn id="S0.Ex1.m1.1.1.2.3.2" xref="S0.Ex1.m1.1.1.2.3.2.cmml">2</mn>
+          <mo id="S0.Ex1.m1.1.1.2.3.1" xref="S0.Ex1.m1.1.1.2.3.1.cmml">⁢</mo>
+          <mi id="S0.Ex1.m1.1.1.2.3.3" xref="S0.Ex1.m1.1.1.2.3.3.cmml">y</mi>
+        </mrow>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mn id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">6</mn>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <apply id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">
+          <plus id="S0.Ex1.m1.1.1.2.1.cmml" xref="S0.Ex1.m1.1.1.2.1"/>
+          <apply id="S0.Ex1.m1.1.1.2.2.cmml" xref="S0.Ex1.m1.1.1.2.2">
+            <times id="S0.Ex1.m1.1.1.2.2.1.cmml" xref="S0.Ex1.m1.1.1.2.2.1"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.2.2.2.cmml" xref="S0.Ex1.m1.1.1.2.2.2">2</cn>
+            <ci id="S0.Ex1.m1.1.1.2.2.3.cmml" xref="S0.Ex1.m1.1.1.2.2.3">𝑥</ci>
+          </apply>
+          <apply id="S0.Ex1.m1.1.1.2.3.cmml" xref="S0.Ex1.m1.1.1.2.3">
+            <times id="S0.Ex1.m1.1.1.2.3.1.cmml" xref="S0.Ex1.m1.1.1.2.3.1"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.2.3.2.cmml" xref="S0.Ex1.m1.1.1.2.3.2">2</cn>
+            <ci id="S0.Ex1.m1.1.1.2.3.3.cmml" xref="S0.Ex1.m1.1.1.2.3.3">𝑦</ci>
+          </apply>
+        </apply>
+        <cn type="integer" id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">6</cn>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">2x+2y=6</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="x+y=3" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mrow id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">
+        <mi id="S0.Ex1.m1.1.1.2.2" xref="S0.Ex1.m1.1.1.2.2.cmml">x</mi>
+        <mo id="S0.Ex1.m1.1.1.2.1" xref="S0.Ex1.m1.1.1.2.1.cmml">+</mo>
+        <mi id="S0.Ex1.m1.1.1.2.3" xref="S0.Ex1.m1.1.1.2.3.cmml">y</mi>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mn id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">3</mn>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <apply id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">
+          <plus id="S0.Ex1.m1.1.1.2.1.cmml" xref="S0.Ex1.m1.1.1.2.1"/>
+          <ci id="S0.Ex1.m1.1.1.2.2.cmml" xref="S0.Ex1.m1.1.1.2.2">𝑥</ci>
+          <ci id="S0.Ex1.m1.1.1.2.3.cmml" xref="S0.Ex1.m1.1.1.2.3">𝑦</ci>
+        </apply>
+        <cn type="integer" id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">3</cn>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">x+y=3</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="x-y=1" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mrow id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">
+        <mi id="S0.Ex1.m1.1.1.2.2" xref="S0.Ex1.m1.1.1.2.2.cmml">x</mi>
+        <mo id="S0.Ex1.m1.1.1.2.1" xref="S0.Ex1.m1.1.1.2.1.cmml">-</mo>
+        <mi id="S0.Ex1.m1.1.1.2.3" xref="S0.Ex1.m1.1.1.2.3.cmml">y</mi>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mn id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">1</mn>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <apply id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">
+          <minus id="S0.Ex1.m1.1.1.2.1.cmml" xref="S0.Ex1.m1.1.1.2.1"/>
+          <ci id="S0.Ex1.m1.1.1.2.2.cmml" xref="S0.Ex1.m1.1.1.2.2">𝑥</ci>
+          <ci id="S0.Ex1.m1.1.1.2.3.cmml" xref="S0.Ex1.m1.1.1.2.3">𝑦</ci>
+        </apply>
+        <cn type="integer" id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">1</cn>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">x-y=1</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="x-y=2" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mrow id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">
+        <mi id="S0.Ex1.m1.1.1.2.2" xref="S0.Ex1.m1.1.1.2.2.cmml">x</mi>
+        <mo id="S0.Ex1.m1.1.1.2.1" xref="S0.Ex1.m1.1.1.2.1.cmml">-</mo>
+        <mi id="S0.Ex1.m1.1.1.2.3" xref="S0.Ex1.m1.1.1.2.3.cmml">y</mi>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mn id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">2</mn>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <apply id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">
+          <minus id="S0.Ex1.m1.1.1.2.1.cmml" xref="S0.Ex1.m1.1.1.2.1"/>
+          <ci id="S0.Ex1.m1.1.1.2.2.cmml" xref="S0.Ex1.m1.1.1.2.2">𝑥</ci>
+          <ci id="S0.Ex1.m1.1.1.2.3.cmml" xref="S0.Ex1.m1.1.1.2.3">𝑦</ci>
+        </apply>
+        <cn type="integer" id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">2</cn>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">x-y=2</annotation>
+  </semantics>
+</math>
+
+</p>
+
+<p>
+The second and third equation can be rewritten in terms of <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="x" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">x</mi>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑥</ci>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">x</annotation>
+  </semantics>
+</math>
+ and <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="y" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">y</mi>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑦</ci>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">y</annotation>
+  </semantics>
+</math>
+ as so.
+</p>
+
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="x=3-y" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mi id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">x</mi>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">
+        <mn id="S0.Ex1.m1.1.1.3.2" xref="S0.Ex1.m1.1.1.3.2.cmml">3</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1" xref="S0.Ex1.m1.1.1.3.1.cmml">-</mo>
+        <mi id="S0.Ex1.m1.1.1.3.3" xref="S0.Ex1.m1.1.1.3.3.cmml">y</mi>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <ci id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">𝑥</ci>
+        <apply id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">
+          <minus id="S0.Ex1.m1.1.1.3.1.cmml" xref="S0.Ex1.m1.1.1.3.1"/>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.2.cmml" xref="S0.Ex1.m1.1.1.3.2">3</cn>
+          <ci id="S0.Ex1.m1.1.1.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3">𝑦</ci>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">x=3-y</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="y=x-1" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mi id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">y</mi>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">
+        <mi id="S0.Ex1.m1.1.1.3.2" xref="S0.Ex1.m1.1.1.3.2.cmml">x</mi>
+        <mo id="S0.Ex1.m1.1.1.3.1" xref="S0.Ex1.m1.1.1.3.1.cmml">-</mo>
+        <mn id="S0.Ex1.m1.1.1.3.3" xref="S0.Ex1.m1.1.1.3.3.cmml">1</mn>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <ci id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">𝑦</ci>
+        <apply id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">
+          <minus id="S0.Ex1.m1.1.1.3.1.cmml" xref="S0.Ex1.m1.1.1.3.1"/>
+          <ci id="S0.Ex1.m1.1.1.3.2.cmml" xref="S0.Ex1.m1.1.1.3.2">𝑥</ci>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3">1</cn>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">y=x-1</annotation>
+  </semantics>
+</math>
+
+</p>
+
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.6" class="ltx_Math" alttext="&lt;x,y&gt;=T&lt;x,y&gt;" display="block">
+  <semantics id="S0.Ex1.m1.6a">
+    <mrow id="S0.Ex1.m1.6.6.2" xref="S0.Ex1.m1.6.6.3.cmml">
+      <mrow id="S0.Ex1.m1.5.5.1.1.2" xref="S0.Ex1.m1.5.5.1.1.3.cmml">
+        <mrow id="S0.Ex1.m1.5.5.1.1.1.1" xref="S0.Ex1.m1.5.5.1.1.1.1.cmml">
+          <mi id="S0.Ex1.m1.5.5.1.1.1.1.2" xref="S0.Ex1.m1.5.5.1.1.1.1.2.cmml"/>
+          <mo id="S0.Ex1.m1.5.5.1.1.1.1.1" xref="S0.Ex1.m1.5.5.1.1.1.1.1.cmml">&lt;</mo>
+          <mi id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">x</mi>
+        </mrow>
+        <mo id="S0.Ex1.m1.5.5.1.1.2.3" xref="S0.Ex1.m1.5.5.1.1.3a.cmml">,</mo>
+        <mrow id="S0.Ex1.m1.5.5.1.1.2.2" xref="S0.Ex1.m1.5.5.1.1.2.2.cmml">
+          <mi id="S0.Ex1.m1.2.2" xref="S0.Ex1.m1.2.2.cmml">y</mi>
+          <mo mathvariant="italic" id="S0.Ex1.m1.5.5.1.1.2.2.2" xref="S0.Ex1.m1.5.5.1.1.2.2.2.cmml">&gt;=</mo>
+          <mi id="S0.Ex1.m1.5.5.1.1.2.2.3" xref="S0.Ex1.m1.5.5.1.1.2.2.3.cmml">T</mi>
+          <mo id="S0.Ex1.m1.5.5.1.1.2.2.4" xref="S0.Ex1.m1.5.5.1.1.2.2.4.cmml">&lt;</mo>
+          <mi id="S0.Ex1.m1.3.3" xref="S0.Ex1.m1.3.3.cmml">x</mi>
+        </mrow>
+      </mrow>
+      <mo id="S0.Ex1.m1.6.6.2.3" xref="S0.Ex1.m1.6.6.3a.cmml">,</mo>
+      <mrow id="S0.Ex1.m1.6.6.2.2" xref="S0.Ex1.m1.6.6.2.2.cmml">
+        <mi id="S0.Ex1.m1.4.4" xref="S0.Ex1.m1.4.4.cmml">y</mi>
+        <mo id="S0.Ex1.m1.6.6.2.2.1" xref="S0.Ex1.m1.6.6.2.2.1.cmml">&gt;</mo>
+        <mi id="S0.Ex1.m1.6.6.2.2.2" xref="S0.Ex1.m1.6.6.2.2.2.cmml"/>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.6b">
+      <apply id="S0.Ex1.m1.6.6.3.cmml" xref="S0.Ex1.m1.6.6.2">
+        <csymbol cd="ambiguous" id="S0.Ex1.m1.6.6.3a.cmml" xref="S0.Ex1.m1.6.6.2.3">formulae-sequence</csymbol>
+        <apply id="S0.Ex1.m1.5.5.1.1.3.cmml" xref="S0.Ex1.m1.5.5.1.1.2">
+          <csymbol cd="ambiguous" id="S0.Ex1.m1.5.5.1.1.3a.cmml" xref="S0.Ex1.m1.5.5.1.1.2.3">formulae-sequence</csymbol>
+          <apply id="S0.Ex1.m1.5.5.1.1.1.1.cmml" xref="S0.Ex1.m1.5.5.1.1.1.1">
+            <lt id="S0.Ex1.m1.5.5.1.1.1.1.1.cmml" xref="S0.Ex1.m1.5.5.1.1.1.1.1"/>
+            <csymbol cd="latexml" id="S0.Ex1.m1.5.5.1.1.1.1.2.cmml" xref="S0.Ex1.m1.5.5.1.1.1.1.2">absent</csymbol>
+            <ci id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">𝑥</ci>
+          </apply>
+          <apply id="S0.Ex1.m1.5.5.1.1.2.2.cmml" xref="S0.Ex1.m1.5.5.1.1.2.2">
+            <and id="S0.Ex1.m1.5.5.1.1.2.2a.cmml" xref="S0.Ex1.m1.5.5.1.1.2.2"/>
+            <apply id="S0.Ex1.m1.5.5.1.1.2.2b.cmml" xref="S0.Ex1.m1.5.5.1.1.2.2">
+              <geq id="S0.Ex1.m1.5.5.1.1.2.2.2.cmml" xref="S0.Ex1.m1.5.5.1.1.2.2.2"/>
+              <ci id="S0.Ex1.m1.2.2.cmml" xref="S0.Ex1.m1.2.2">𝑦</ci>
+              <ci id="S0.Ex1.m1.5.5.1.1.2.2.3.cmml" xref="S0.Ex1.m1.5.5.1.1.2.2.3">𝑇</ci>
+            </apply>
+            <apply id="S0.Ex1.m1.5.5.1.1.2.2c.cmml" xref="S0.Ex1.m1.5.5.1.1.2.2">
+              <lt id="S0.Ex1.m1.5.5.1.1.2.2.4.cmml" xref="S0.Ex1.m1.5.5.1.1.2.2.4"/>
+              <share href="#S0.Ex1.m1.5.5.1.1.2.2.3.cmml" id="S0.Ex1.m1.5.5.1.1.2.2d.cmml" xref="S0.Ex1.m1.5.5.1.1.2.2"/>
+              <ci id="S0.Ex1.m1.3.3.cmml" xref="S0.Ex1.m1.3.3">𝑥</ci>
+            </apply>
+          </apply>
+        </apply>
+        <apply id="S0.Ex1.m1.6.6.2.2.cmml" xref="S0.Ex1.m1.6.6.2.2">
+          <gt id="S0.Ex1.m1.6.6.2.2.1.cmml" xref="S0.Ex1.m1.6.6.2.2.1"/>
+          <ci id="S0.Ex1.m1.4.4.cmml" xref="S0.Ex1.m1.4.4">𝑦</ci>
+          <csymbol cd="latexml" id="S0.Ex1.m1.6.6.2.2.2.cmml" xref="S0.Ex1.m1.6.6.2.2.2">absent</csymbol>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.6c">&lt;x,y&gt;=T&lt;x,y&gt;</annotation>
+  </semantics>
+</math>
+
+</p>
+
+<p>
+The solution is a fixed point of the <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="T" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">T</mi>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑇</ci>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">T</annotation>
+  </semantics>
+</math>
+. Applying this logic to <code>expt</code>, we
+obtain a procedure, call it <code>F</code>.
+</p>
+
+<p>
+<code>F</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(lambda (g)
+  (lambda (x n)
+    (cond ((= n 0) 1)
+          (else
+           (* x
+              (g x (- n 1)))))))
+</pre>
+</div>
+
+<p>
+<code>expt</code> is the fixed point of <code>F</code>. There's a problem that there might be more
+than one fixed point or no fixed points.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">E0 = 1
+E1 = (lambda (x n)
+       (cond ((= n 0) 1)
+             (else
+              (* x (E0 x (- n 1))))))
+E2 = (lambda (x n)
+       (cond ((= n 0) 1)
+             (else
+              (* x (E1 x (- n 1))))))
+E3 = (lambda (x n)
+       (cond ((= n 0) 1)
+             (else
+              (* x (E2 x (- n 1))))))
+...
+</pre>
+</div>
+
+<p>
+We will assert that <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="\texttt{expt}=\lim_{n\to\infty}E_{n}" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mrow id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">
+      <mtext id="p1.1.m1.1.1.2" xref="p1.1.m1.1.1.2a.cmml">𝚎𝚡𝚙𝚝</mtext>
+      <mo id="p1.1.m1.1.1.1" xref="p1.1.m1.1.1.1.cmml">=</mo>
+      <mrow id="p1.1.m1.1.1.3" xref="p1.1.m1.1.1.3.cmml">
+        <msub id="p1.1.m1.1.1.3.1" xref="p1.1.m1.1.1.3.1.cmml">
+          <mo id="p1.1.m1.1.1.3.1.2" xref="p1.1.m1.1.1.3.1.2.cmml">lim</mo>
+          <mrow id="p1.1.m1.1.1.3.1.3" xref="p1.1.m1.1.1.3.1.3.cmml">
+            <mi id="p1.1.m1.1.1.3.1.3.2" xref="p1.1.m1.1.1.3.1.3.2.cmml">n</mi>
+            <mo id="p1.1.m1.1.1.3.1.3.1" xref="p1.1.m1.1.1.3.1.3.1.cmml">→</mo>
+            <mi mathvariant="normal" id="p1.1.m1.1.1.3.1.3.3" xref="p1.1.m1.1.1.3.1.3.3.cmml">∞</mi>
+          </mrow>
+        </msub>
+        <mo id="p1.1.m1.1.1.3a" xref="p1.1.m1.1.1.3.cmml">⁡</mo>
+        <msub id="p1.1.m1.1.1.3.2" xref="p1.1.m1.1.1.3.2.cmml">
+          <mi id="p1.1.m1.1.1.3.2.2" xref="p1.1.m1.1.1.3.2.2.cmml">E</mi>
+          <mi id="p1.1.m1.1.1.3.2.3" xref="p1.1.m1.1.1.3.2.3.cmml">n</mi>
+        </msub>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <apply id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">
+        <eq id="p1.1.m1.1.1.1.cmml" xref="p1.1.m1.1.1.1"/>
+        <ci id="p1.1.m1.1.1.2a.cmml" xref="p1.1.m1.1.1.2">
+          <mtext id="p1.1.m1.1.1.2.cmml" xref="p1.1.m1.1.1.2">𝚎𝚡𝚙𝚝</mtext>
+        </ci>
+        <apply id="p1.1.m1.1.1.3.cmml" xref="p1.1.m1.1.1.3">
+          <apply id="p1.1.m1.1.1.3.1.cmml" xref="p1.1.m1.1.1.3.1">
+            <csymbol cd="ambiguous" id="p1.1.m1.1.1.3.1.1.cmml" xref="p1.1.m1.1.1.3.1">subscript</csymbol>
+            <limit id="p1.1.m1.1.1.3.1.2.cmml" xref="p1.1.m1.1.1.3.1.2"/>
+            <apply id="p1.1.m1.1.1.3.1.3.cmml" xref="p1.1.m1.1.1.3.1.3">
+              <ci id="p1.1.m1.1.1.3.1.3.1.cmml" xref="p1.1.m1.1.1.3.1.3.1">→</ci>
+              <ci id="p1.1.m1.1.1.3.1.3.2.cmml" xref="p1.1.m1.1.1.3.1.3.2">𝑛</ci>
+              <infinity id="p1.1.m1.1.1.3.1.3.3.cmml" xref="p1.1.m1.1.1.3.1.3.3"/>
+            </apply>
+          </apply>
+          <apply id="p1.1.m1.1.1.3.2.cmml" xref="p1.1.m1.1.1.3.2">
+            <csymbol cd="ambiguous" id="p1.1.m1.1.1.3.2.1.cmml" xref="p1.1.m1.1.1.3.2">subscript</csymbol>
+            <ci id="p1.1.m1.1.1.3.2.2.cmml" xref="p1.1.m1.1.1.3.2.2">𝐸</ci>
+            <ci id="p1.1.m1.1.1.3.2.3.cmml" xref="p1.1.m1.1.1.3.2.3">𝑛</ci>
+          </apply>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">\texttt{expt}=\lim_{n\to\infty}E_{n}</annotation>
+  </semantics>
+</math>
+. The proof is
+horribly difficult, and best left for denotational semanticists.
+</p>
+
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.2" class="ltx_Math" alttext="\texttt{expt}=(F(F(F(F...(F&lt;x&gt;)...))))" display="block">
+  <semantics id="S0.Ex1.m1.2a">
+    <mrow id="S0.Ex1.m1.2.2" xref="S0.Ex1.m1.2.2.cmml">
+      <mtext id="S0.Ex1.m1.2.2.3" xref="S0.Ex1.m1.2.2.3a.cmml">𝚎𝚡𝚙𝚝</mtext>
+      <mo id="S0.Ex1.m1.2.2.2" xref="S0.Ex1.m1.2.2.2.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.2.2.1.1" xref="S0.Ex1.m1.2.2.1.1.1.cmml">
+        <mo stretchy="false" id="S0.Ex1.m1.2.2.1.1.2" xref="S0.Ex1.m1.2.2.1.1.1.cmml">(</mo>
+        <mrow id="S0.Ex1.m1.2.2.1.1.1" xref="S0.Ex1.m1.2.2.1.1.1.cmml">
+          <mi id="S0.Ex1.m1.2.2.1.1.1.3" xref="S0.Ex1.m1.2.2.1.1.1.3.cmml">F</mi>
+          <mo id="S0.Ex1.m1.2.2.1.1.1.2" xref="S0.Ex1.m1.2.2.1.1.1.2.cmml">⁢</mo>
+          <mrow id="S0.Ex1.m1.2.2.1.1.1.1.1" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.cmml">
+            <mo stretchy="false" id="S0.Ex1.m1.2.2.1.1.1.1.1.2" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.cmml">(</mo>
+            <mrow id="S0.Ex1.m1.2.2.1.1.1.1.1.1" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.cmml">
+              <mi id="S0.Ex1.m1.2.2.1.1.1.1.1.1.3" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.3.cmml">F</mi>
+              <mo id="S0.Ex1.m1.2.2.1.1.1.1.1.1.2" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.2.cmml">⁢</mo>
+              <mrow id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.cmml">
+                <mo stretchy="false" id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.cmml">(</mo>
+                <mrow id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.cmml">
+                  <mi id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.3" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.3.cmml">F</mi>
+                  <mo id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.2.cmml">⁢</mo>
+                  <mrow id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.cmml">
+                    <mo stretchy="false" id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.cmml">(</mo>
+                    <mrow id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.cmml">
+                      <mi id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.3" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.3.cmml">F</mi>
+                      <mo id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.cmml">⁢</mo>
+                      <mi mathvariant="normal" id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.4" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.4.cmml">…</mi>
+                      <mo id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2a" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.cmml">⁢</mo>
+                      <mrow id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.cmml">
+                        <mo stretchy="false" id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.cmml">(</mo>
+                        <mrow id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.cmml">
+                          <mi id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.2.cmml">F</mi>
+                          <mo id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.cmml">⁢</mo>
+                          <mrow id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3.2" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3.1.cmml">
+                            <mo id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3.2.1" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3.1.1.cmml">&lt;</mo>
+                            <mi id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">x</mi>
+                            <mo id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3.2.2" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3.1.1.cmml">&gt;</mo>
+                          </mrow>
+                        </mrow>
+                        <mo stretchy="false" id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.cmml">)</mo>
+                      </mrow>
+                      <mo id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2b" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.cmml">⁢</mo>
+                      <mi mathvariant="normal" id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.5" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.5.cmml">…</mi>
+                    </mrow>
+                    <mo stretchy="false" id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.3" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.cmml">)</mo>
+                  </mrow>
+                </mrow>
+                <mo stretchy="false" id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.3" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.cmml">)</mo>
+              </mrow>
+            </mrow>
+            <mo stretchy="false" id="S0.Ex1.m1.2.2.1.1.1.1.1.3" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.cmml">)</mo>
+          </mrow>
+        </mrow>
+        <mo stretchy="false" id="S0.Ex1.m1.2.2.1.1.3" xref="S0.Ex1.m1.2.2.1.1.1.cmml">)</mo>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.2b">
+      <apply id="S0.Ex1.m1.2.2.cmml" xref="S0.Ex1.m1.2.2">
+        <eq id="S0.Ex1.m1.2.2.2.cmml" xref="S0.Ex1.m1.2.2.2"/>
+        <ci id="S0.Ex1.m1.2.2.3a.cmml" xref="S0.Ex1.m1.2.2.3">
+          <mtext id="S0.Ex1.m1.2.2.3.cmml" xref="S0.Ex1.m1.2.2.3">𝚎𝚡𝚙𝚝</mtext>
+        </ci>
+        <apply id="S0.Ex1.m1.2.2.1.1.1.cmml" xref="S0.Ex1.m1.2.2.1.1">
+          <times id="S0.Ex1.m1.2.2.1.1.1.2.cmml" xref="S0.Ex1.m1.2.2.1.1.1.2"/>
+          <ci id="S0.Ex1.m1.2.2.1.1.1.3.cmml" xref="S0.Ex1.m1.2.2.1.1.1.3">𝐹</ci>
+          <apply id="S0.Ex1.m1.2.2.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1">
+            <times id="S0.Ex1.m1.2.2.1.1.1.1.1.1.2.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.2"/>
+            <ci id="S0.Ex1.m1.2.2.1.1.1.1.1.1.3.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.3">𝐹</ci>
+            <apply id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1">
+              <times id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.2.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.2"/>
+              <ci id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.3.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.3">𝐹</ci>
+              <apply id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1">
+                <times id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.2"/>
+                <ci id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.3.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.3">𝐹</ci>
+                <ci id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.4.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.4">…</ci>
+                <apply id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1">
+                  <times id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1"/>
+                  <ci id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.2.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.2">𝐹</ci>
+                  <apply id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3.1.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3.2">
+                    <csymbol cd="latexml" id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3.1.1.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.3.2.1">expectation</csymbol>
+                    <ci id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">𝑥</ci>
+                  </apply>
+                </apply>
+                <ci id="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.5.cmml" xref="S0.Ex1.m1.2.2.1.1.1.1.1.1.1.1.1.1.1.1.5">…</ci>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.2c">\texttt{expt}=(F(F(F(F...(F&lt;x&gt;)...))))</annotation>
+  </semantics>
+</math>
+
+</p>
+</div>
+</div>
+
+<div id="outline-container-org442953c" class="outline-2">
+<h2 id="org442953c"><span class="section-number-2">5</span> Y combinator</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+How can we express infinity? The simplest inifinite loop is:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">((lambda (x) (x x)) (lambda (x) (x x)))
+</pre>
+</div>
+
+<p>
+Curry's paradoxical combinator of Y allows a function to apply itself to
+itself.
+</p>
+
+<p>
+<code>Y</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(lambda (f)
+  ((lambda (x) (f (x x)))
+   (lambda (x) (f (x x)))))
+</pre>
+</div>
+
+<p>
+<code>(Y F)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">((lambda (x) (F (x x)))
+ (lambda (x) (F (x x)))))
+(F ((lambda (x) (F (x x))) (lambda (x) (F (x x)))))
+</pre>
+</div>
+
+<p>
+By applying <code>Y</code> to <code>F</code>, we produce an infinite series of <code>F</code>​s.
+</p>
+
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="\texttt{(Y F)}=\texttt{(F (Y F))}" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mtext mathvariant="monospace" id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2a.cmml">(Y F)</mtext>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mtext mathvariant="monospace" id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3a.cmml">(F (Y F))</mtext>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <ci id="S0.Ex1.m1.1.1.2a.cmml" xref="S0.Ex1.m1.1.1.2">
+          <mtext mathvariant="monospace" id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">(Y F)</mtext>
+        </ci>
+        <ci id="S0.Ex1.m1.1.1.3a.cmml" xref="S0.Ex1.m1.1.1.3">
+          <mtext mathvariant="monospace" id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">(F (Y F))</mtext>
+        </ci>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">\texttt{(Y F)}=\texttt{(F (Y F))}</annotation>
+  </semantics>
+</math>
+
+</p>
+
+<p>
+<code>Y</code> is a magical procedure which, when applied to some function, produces an
+object which is the fixed point of that function, if it exists.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdce252f" class="outline-2">
+<h2 id="orgdce252f"><span class="section-number-2">6</span> Trouble with infinity</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="u=1+\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+..." display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mi id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">u</mi>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">
+        <mn id="S0.Ex1.m1.1.1.3.2" xref="S0.Ex1.m1.1.1.3.2.cmml">1</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mfrac id="S0.Ex1.m1.1.1.3.3" xref="S0.Ex1.m1.1.1.3.3.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.3.2" xref="S0.Ex1.m1.1.1.3.3.2.cmml">1</mn>
+          <mn id="S0.Ex1.m1.1.1.3.3.3" xref="S0.Ex1.m1.1.1.3.3.3.cmml">2</mn>
+        </mfrac>
+        <mo id="S0.Ex1.m1.1.1.3.1a" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mfrac id="S0.Ex1.m1.1.1.3.4" xref="S0.Ex1.m1.1.1.3.4.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.4.2" xref="S0.Ex1.m1.1.1.3.4.2.cmml">1</mn>
+          <mn id="S0.Ex1.m1.1.1.3.4.3" xref="S0.Ex1.m1.1.1.3.4.3.cmml">4</mn>
+        </mfrac>
+        <mo id="S0.Ex1.m1.1.1.3.1b" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mfrac id="S0.Ex1.m1.1.1.3.5" xref="S0.Ex1.m1.1.1.3.5.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.5.2" xref="S0.Ex1.m1.1.1.3.5.2.cmml">1</mn>
+          <mn id="S0.Ex1.m1.1.1.3.5.3" xref="S0.Ex1.m1.1.1.3.5.3.cmml">8</mn>
+        </mfrac>
+        <mo id="S0.Ex1.m1.1.1.3.1c" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mi mathvariant="normal" id="S0.Ex1.m1.1.1.3.6" xref="S0.Ex1.m1.1.1.3.6.cmml">…</mi>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <ci id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">𝑢</ci>
+        <apply id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">
+          <plus id="S0.Ex1.m1.1.1.3.1.cmml" xref="S0.Ex1.m1.1.1.3.1"/>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.2.cmml" xref="S0.Ex1.m1.1.1.3.2">1</cn>
+          <apply id="S0.Ex1.m1.1.1.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3">
+            <divide id="S0.Ex1.m1.1.1.3.3.1.cmml" xref="S0.Ex1.m1.1.1.3.3"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.3.2.cmml" xref="S0.Ex1.m1.1.1.3.3.2">1</cn>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3.3">2</cn>
+          </apply>
+          <apply id="S0.Ex1.m1.1.1.3.4.cmml" xref="S0.Ex1.m1.1.1.3.4">
+            <divide id="S0.Ex1.m1.1.1.3.4.1.cmml" xref="S0.Ex1.m1.1.1.3.4"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.4.2.cmml" xref="S0.Ex1.m1.1.1.3.4.2">1</cn>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.4.3.cmml" xref="S0.Ex1.m1.1.1.3.4.3">4</cn>
+          </apply>
+          <apply id="S0.Ex1.m1.1.1.3.5.cmml" xref="S0.Ex1.m1.1.1.3.5">
+            <divide id="S0.Ex1.m1.1.1.3.5.1.cmml" xref="S0.Ex1.m1.1.1.3.5"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.5.2.cmml" xref="S0.Ex1.m1.1.1.3.5.2">1</cn>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.5.3.cmml" xref="S0.Ex1.m1.1.1.3.5.3">8</cn>
+          </apply>
+          <ci id="S0.Ex1.m1.1.1.3.6.cmml" xref="S0.Ex1.m1.1.1.3.6">…</ci>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">u=1+\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+...</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="u-1=\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+..." display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mrow id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">
+        <mi id="S0.Ex1.m1.1.1.2.2" xref="S0.Ex1.m1.1.1.2.2.cmml">u</mi>
+        <mo id="S0.Ex1.m1.1.1.2.1" xref="S0.Ex1.m1.1.1.2.1.cmml">-</mo>
+        <mn id="S0.Ex1.m1.1.1.2.3" xref="S0.Ex1.m1.1.1.2.3.cmml">1</mn>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">
+        <mfrac id="S0.Ex1.m1.1.1.3.2" xref="S0.Ex1.m1.1.1.3.2.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.2.2" xref="S0.Ex1.m1.1.1.3.2.2.cmml">1</mn>
+          <mn id="S0.Ex1.m1.1.1.3.2.3" xref="S0.Ex1.m1.1.1.3.2.3.cmml">2</mn>
+        </mfrac>
+        <mo id="S0.Ex1.m1.1.1.3.1" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mfrac id="S0.Ex1.m1.1.1.3.3" xref="S0.Ex1.m1.1.1.3.3.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.3.2" xref="S0.Ex1.m1.1.1.3.3.2.cmml">1</mn>
+          <mn id="S0.Ex1.m1.1.1.3.3.3" xref="S0.Ex1.m1.1.1.3.3.3.cmml">4</mn>
+        </mfrac>
+        <mo id="S0.Ex1.m1.1.1.3.1a" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mfrac id="S0.Ex1.m1.1.1.3.4" xref="S0.Ex1.m1.1.1.3.4.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.4.2" xref="S0.Ex1.m1.1.1.3.4.2.cmml">1</mn>
+          <mn id="S0.Ex1.m1.1.1.3.4.3" xref="S0.Ex1.m1.1.1.3.4.3.cmml">8</mn>
+        </mfrac>
+        <mo id="S0.Ex1.m1.1.1.3.1b" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mi mathvariant="normal" id="S0.Ex1.m1.1.1.3.5" xref="S0.Ex1.m1.1.1.3.5.cmml">…</mi>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <apply id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">
+          <minus id="S0.Ex1.m1.1.1.2.1.cmml" xref="S0.Ex1.m1.1.1.2.1"/>
+          <ci id="S0.Ex1.m1.1.1.2.2.cmml" xref="S0.Ex1.m1.1.1.2.2">𝑢</ci>
+          <cn type="integer" id="S0.Ex1.m1.1.1.2.3.cmml" xref="S0.Ex1.m1.1.1.2.3">1</cn>
+        </apply>
+        <apply id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">
+          <plus id="S0.Ex1.m1.1.1.3.1.cmml" xref="S0.Ex1.m1.1.1.3.1"/>
+          <apply id="S0.Ex1.m1.1.1.3.2.cmml" xref="S0.Ex1.m1.1.1.3.2">
+            <divide id="S0.Ex1.m1.1.1.3.2.1.cmml" xref="S0.Ex1.m1.1.1.3.2"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.2.2.cmml" xref="S0.Ex1.m1.1.1.3.2.2">1</cn>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.2.3.cmml" xref="S0.Ex1.m1.1.1.3.2.3">2</cn>
+          </apply>
+          <apply id="S0.Ex1.m1.1.1.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3">
+            <divide id="S0.Ex1.m1.1.1.3.3.1.cmml" xref="S0.Ex1.m1.1.1.3.3"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.3.2.cmml" xref="S0.Ex1.m1.1.1.3.3.2">1</cn>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3.3">4</cn>
+          </apply>
+          <apply id="S0.Ex1.m1.1.1.3.4.cmml" xref="S0.Ex1.m1.1.1.3.4">
+            <divide id="S0.Ex1.m1.1.1.3.4.1.cmml" xref="S0.Ex1.m1.1.1.3.4"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.4.2.cmml" xref="S0.Ex1.m1.1.1.3.4.2">1</cn>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.4.3.cmml" xref="S0.Ex1.m1.1.1.3.4.3">8</cn>
+          </apply>
+          <ci id="S0.Ex1.m1.1.1.3.5.cmml" xref="S0.Ex1.m1.1.1.3.5">…</ci>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">u-1=\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+...</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="2(u-1)=1+\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+..." display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mrow id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">
+        <mn id="S0.Ex1.m1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.3.cmml">2</mn>
+        <mo id="S0.Ex1.m1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.2.cmml">⁢</mo>
+        <mrow id="S0.Ex1.m1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">
+          <mo stretchy="false" id="S0.Ex1.m1.1.1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">(</mo>
+          <mrow id="S0.Ex1.m1.1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">
+            <mi id="S0.Ex1.m1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.1.1.1.2.cmml">u</mi>
+            <mo id="S0.Ex1.m1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.1.cmml">-</mo>
+            <mn id="S0.Ex1.m1.1.1.1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.1.1.1.3.cmml">1</mn>
+          </mrow>
+          <mo stretchy="false" id="S0.Ex1.m1.1.1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">)</mo>
+        </mrow>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">
+        <mn id="S0.Ex1.m1.1.1.3.2" xref="S0.Ex1.m1.1.1.3.2.cmml">1</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mfrac id="S0.Ex1.m1.1.1.3.3" xref="S0.Ex1.m1.1.1.3.3.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.3.2" xref="S0.Ex1.m1.1.1.3.3.2.cmml">1</mn>
+          <mn id="S0.Ex1.m1.1.1.3.3.3" xref="S0.Ex1.m1.1.1.3.3.3.cmml">2</mn>
+        </mfrac>
+        <mo id="S0.Ex1.m1.1.1.3.1a" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mfrac id="S0.Ex1.m1.1.1.3.4" xref="S0.Ex1.m1.1.1.3.4.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.4.2" xref="S0.Ex1.m1.1.1.3.4.2.cmml">1</mn>
+          <mn id="S0.Ex1.m1.1.1.3.4.3" xref="S0.Ex1.m1.1.1.3.4.3.cmml">4</mn>
+        </mfrac>
+        <mo id="S0.Ex1.m1.1.1.3.1b" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mfrac id="S0.Ex1.m1.1.1.3.5" xref="S0.Ex1.m1.1.1.3.5.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.5.2" xref="S0.Ex1.m1.1.1.3.5.2.cmml">1</mn>
+          <mn id="S0.Ex1.m1.1.1.3.5.3" xref="S0.Ex1.m1.1.1.3.5.3.cmml">8</mn>
+        </mfrac>
+        <mo id="S0.Ex1.m1.1.1.3.1c" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mi mathvariant="normal" id="S0.Ex1.m1.1.1.3.6" xref="S0.Ex1.m1.1.1.3.6.cmml">…</mi>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2"/>
+        <apply id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1">
+          <times id="S0.Ex1.m1.1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.1.2"/>
+          <cn type="integer" id="S0.Ex1.m1.1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.1.3">2</cn>
+          <apply id="S0.Ex1.m1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1.1.1">
+            <minus id="S0.Ex1.m1.1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.1"/>
+            <ci id="S0.Ex1.m1.1.1.1.1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.2">𝑢</ci>
+            <cn type="integer" id="S0.Ex1.m1.1.1.1.1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.3">1</cn>
+          </apply>
+        </apply>
+        <apply id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">
+          <plus id="S0.Ex1.m1.1.1.3.1.cmml" xref="S0.Ex1.m1.1.1.3.1"/>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.2.cmml" xref="S0.Ex1.m1.1.1.3.2">1</cn>
+          <apply id="S0.Ex1.m1.1.1.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3">
+            <divide id="S0.Ex1.m1.1.1.3.3.1.cmml" xref="S0.Ex1.m1.1.1.3.3"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.3.2.cmml" xref="S0.Ex1.m1.1.1.3.3.2">1</cn>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3.3">2</cn>
+          </apply>
+          <apply id="S0.Ex1.m1.1.1.3.4.cmml" xref="S0.Ex1.m1.1.1.3.4">
+            <divide id="S0.Ex1.m1.1.1.3.4.1.cmml" xref="S0.Ex1.m1.1.1.3.4"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.4.2.cmml" xref="S0.Ex1.m1.1.1.3.4.2">1</cn>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.4.3.cmml" xref="S0.Ex1.m1.1.1.3.4.3">4</cn>
+          </apply>
+          <apply id="S0.Ex1.m1.1.1.3.5.cmml" xref="S0.Ex1.m1.1.1.3.5">
+            <divide id="S0.Ex1.m1.1.1.3.5.1.cmml" xref="S0.Ex1.m1.1.1.3.5"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.5.2.cmml" xref="S0.Ex1.m1.1.1.3.5.2">1</cn>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.5.3.cmml" xref="S0.Ex1.m1.1.1.3.5.3">8</cn>
+          </apply>
+          <ci id="S0.Ex1.m1.1.1.3.6.cmml" xref="S0.Ex1.m1.1.1.3.6">…</ci>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">2(u-1)=1+\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+...</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="2(u-1)=u" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mrow id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">
+        <mn id="S0.Ex1.m1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.3.cmml">2</mn>
+        <mo id="S0.Ex1.m1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.2.cmml">⁢</mo>
+        <mrow id="S0.Ex1.m1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">
+          <mo stretchy="false" id="S0.Ex1.m1.1.1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">(</mo>
+          <mrow id="S0.Ex1.m1.1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">
+            <mi id="S0.Ex1.m1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.1.1.1.2.cmml">u</mi>
+            <mo id="S0.Ex1.m1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.1.cmml">-</mo>
+            <mn id="S0.Ex1.m1.1.1.1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.1.1.1.3.cmml">1</mn>
+          </mrow>
+          <mo stretchy="false" id="S0.Ex1.m1.1.1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">)</mo>
+        </mrow>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">=</mo>
+      <mi id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">u</mi>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2"/>
+        <apply id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1">
+          <times id="S0.Ex1.m1.1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.1.2"/>
+          <cn type="integer" id="S0.Ex1.m1.1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.1.3">2</cn>
+          <apply id="S0.Ex1.m1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1.1.1">
+            <minus id="S0.Ex1.m1.1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.1"/>
+            <ci id="S0.Ex1.m1.1.1.1.1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.2">𝑢</ci>
+            <cn type="integer" id="S0.Ex1.m1.1.1.1.1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.3">1</cn>
+          </apply>
+        </apply>
+        <ci id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">𝑢</ci>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">2(u-1)=u</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="u=2" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mi id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">u</mi>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mn id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">2</mn>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <ci id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">𝑢</ci>
+        <cn type="integer" id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">2</cn>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">u=2</annotation>
+  </semantics>
+</math>
+
+</p>
+
+<p>
+This is correct. However, the below conclusion is false.
+</p>
+
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="v=1+2+4+8..." display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mi id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">v</mi>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">
+        <mn id="S0.Ex1.m1.1.1.3.2" xref="S0.Ex1.m1.1.1.3.2.cmml">1</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mn id="S0.Ex1.m1.1.1.3.3" xref="S0.Ex1.m1.1.1.3.3.cmml">2</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1a" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mn id="S0.Ex1.m1.1.1.3.4" xref="S0.Ex1.m1.1.1.3.4.cmml">4</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1b" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mrow id="S0.Ex1.m1.1.1.3.5" xref="S0.Ex1.m1.1.1.3.5.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.5.2" xref="S0.Ex1.m1.1.1.3.5.2.cmml">8</mn>
+          <mo id="S0.Ex1.m1.1.1.3.5.1" xref="S0.Ex1.m1.1.1.3.5.1.cmml">⁢</mo>
+          <mi mathvariant="normal" id="S0.Ex1.m1.1.1.3.5.3" xref="S0.Ex1.m1.1.1.3.5.3.cmml">…</mi>
+        </mrow>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <ci id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">𝑣</ci>
+        <apply id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">
+          <plus id="S0.Ex1.m1.1.1.3.1.cmml" xref="S0.Ex1.m1.1.1.3.1"/>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.2.cmml" xref="S0.Ex1.m1.1.1.3.2">1</cn>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3">2</cn>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.4.cmml" xref="S0.Ex1.m1.1.1.3.4">4</cn>
+          <apply id="S0.Ex1.m1.1.1.3.5.cmml" xref="S0.Ex1.m1.1.1.3.5">
+            <times id="S0.Ex1.m1.1.1.3.5.1.cmml" xref="S0.Ex1.m1.1.1.3.5.1"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.5.2.cmml" xref="S0.Ex1.m1.1.1.3.5.2">8</cn>
+            <ci id="S0.Ex1.m1.1.1.3.5.3.cmml" xref="S0.Ex1.m1.1.1.3.5.3">…</ci>
+          </apply>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">v=1+2+4+8...</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="v-1=2+4+8..." display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mrow id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">
+        <mi id="S0.Ex1.m1.1.1.2.2" xref="S0.Ex1.m1.1.1.2.2.cmml">v</mi>
+        <mo id="S0.Ex1.m1.1.1.2.1" xref="S0.Ex1.m1.1.1.2.1.cmml">-</mo>
+        <mn id="S0.Ex1.m1.1.1.2.3" xref="S0.Ex1.m1.1.1.2.3.cmml">1</mn>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">
+        <mn id="S0.Ex1.m1.1.1.3.2" xref="S0.Ex1.m1.1.1.3.2.cmml">2</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mn id="S0.Ex1.m1.1.1.3.3" xref="S0.Ex1.m1.1.1.3.3.cmml">4</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1a" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mrow id="S0.Ex1.m1.1.1.3.4" xref="S0.Ex1.m1.1.1.3.4.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.4.2" xref="S0.Ex1.m1.1.1.3.4.2.cmml">8</mn>
+          <mo id="S0.Ex1.m1.1.1.3.4.1" xref="S0.Ex1.m1.1.1.3.4.1.cmml">⁢</mo>
+          <mi mathvariant="normal" id="S0.Ex1.m1.1.1.3.4.3" xref="S0.Ex1.m1.1.1.3.4.3.cmml">…</mi>
+        </mrow>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <apply id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">
+          <minus id="S0.Ex1.m1.1.1.2.1.cmml" xref="S0.Ex1.m1.1.1.2.1"/>
+          <ci id="S0.Ex1.m1.1.1.2.2.cmml" xref="S0.Ex1.m1.1.1.2.2">𝑣</ci>
+          <cn type="integer" id="S0.Ex1.m1.1.1.2.3.cmml" xref="S0.Ex1.m1.1.1.2.3">1</cn>
+        </apply>
+        <apply id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">
+          <plus id="S0.Ex1.m1.1.1.3.1.cmml" xref="S0.Ex1.m1.1.1.3.1"/>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.2.cmml" xref="S0.Ex1.m1.1.1.3.2">2</cn>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3">4</cn>
+          <apply id="S0.Ex1.m1.1.1.3.4.cmml" xref="S0.Ex1.m1.1.1.3.4">
+            <times id="S0.Ex1.m1.1.1.3.4.1.cmml" xref="S0.Ex1.m1.1.1.3.4.1"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.4.2.cmml" xref="S0.Ex1.m1.1.1.3.4.2">8</cn>
+            <ci id="S0.Ex1.m1.1.1.3.4.3.cmml" xref="S0.Ex1.m1.1.1.3.4.3">…</ci>
+          </apply>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">v-1=2+4+8...</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="(v-1)/2=1+2+4+8..." display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mrow id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">
+        <mrow id="S0.Ex1.m1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">
+          <mo stretchy="false" id="S0.Ex1.m1.1.1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">(</mo>
+          <mrow id="S0.Ex1.m1.1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">
+            <mi id="S0.Ex1.m1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.1.1.1.2.cmml">v</mi>
+            <mo id="S0.Ex1.m1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.1.cmml">-</mo>
+            <mn id="S0.Ex1.m1.1.1.1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.1.1.1.3.cmml">1</mn>
+          </mrow>
+          <mo stretchy="false" id="S0.Ex1.m1.1.1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">)</mo>
+        </mrow>
+        <mo id="S0.Ex1.m1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.2.cmml">/</mo>
+        <mn id="S0.Ex1.m1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.3.cmml">2</mn>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">
+        <mn id="S0.Ex1.m1.1.1.3.2" xref="S0.Ex1.m1.1.1.3.2.cmml">1</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mn id="S0.Ex1.m1.1.1.3.3" xref="S0.Ex1.m1.1.1.3.3.cmml">2</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1a" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mn id="S0.Ex1.m1.1.1.3.4" xref="S0.Ex1.m1.1.1.3.4.cmml">4</mn>
+        <mo id="S0.Ex1.m1.1.1.3.1b" xref="S0.Ex1.m1.1.1.3.1.cmml">+</mo>
+        <mrow id="S0.Ex1.m1.1.1.3.5" xref="S0.Ex1.m1.1.1.3.5.cmml">
+          <mn id="S0.Ex1.m1.1.1.3.5.2" xref="S0.Ex1.m1.1.1.3.5.2.cmml">8</mn>
+          <mo id="S0.Ex1.m1.1.1.3.5.1" xref="S0.Ex1.m1.1.1.3.5.1.cmml">⁢</mo>
+          <mi mathvariant="normal" id="S0.Ex1.m1.1.1.3.5.3" xref="S0.Ex1.m1.1.1.3.5.3.cmml">…</mi>
+        </mrow>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2"/>
+        <apply id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1">
+          <divide id="S0.Ex1.m1.1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.1.2"/>
+          <apply id="S0.Ex1.m1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1.1.1">
+            <minus id="S0.Ex1.m1.1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.1"/>
+            <ci id="S0.Ex1.m1.1.1.1.1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.2">𝑣</ci>
+            <cn type="integer" id="S0.Ex1.m1.1.1.1.1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.3">1</cn>
+          </apply>
+          <cn type="integer" id="S0.Ex1.m1.1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.1.3">2</cn>
+        </apply>
+        <apply id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">
+          <plus id="S0.Ex1.m1.1.1.3.1.cmml" xref="S0.Ex1.m1.1.1.3.1"/>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.2.cmml" xref="S0.Ex1.m1.1.1.3.2">1</cn>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.3.cmml" xref="S0.Ex1.m1.1.1.3.3">2</cn>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.4.cmml" xref="S0.Ex1.m1.1.1.3.4">4</cn>
+          <apply id="S0.Ex1.m1.1.1.3.5.cmml" xref="S0.Ex1.m1.1.1.3.5">
+            <times id="S0.Ex1.m1.1.1.3.5.1.cmml" xref="S0.Ex1.m1.1.1.3.5.1"/>
+            <cn type="integer" id="S0.Ex1.m1.1.1.3.5.2.cmml" xref="S0.Ex1.m1.1.1.3.5.2">8</cn>
+            <ci id="S0.Ex1.m1.1.1.3.5.3.cmml" xref="S0.Ex1.m1.1.1.3.5.3">…</ci>
+          </apply>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">(v-1)/2=1+2+4+8...</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="(v-1)/2=v" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mrow id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">
+        <mrow id="S0.Ex1.m1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">
+          <mo stretchy="false" id="S0.Ex1.m1.1.1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">(</mo>
+          <mrow id="S0.Ex1.m1.1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">
+            <mi id="S0.Ex1.m1.1.1.1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.1.1.1.2.cmml">v</mi>
+            <mo id="S0.Ex1.m1.1.1.1.1.1.1.1" xref="S0.Ex1.m1.1.1.1.1.1.1.1.cmml">-</mo>
+            <mn id="S0.Ex1.m1.1.1.1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.1.1.1.3.cmml">1</mn>
+          </mrow>
+          <mo stretchy="false" id="S0.Ex1.m1.1.1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.1.1.1.cmml">)</mo>
+        </mrow>
+        <mo id="S0.Ex1.m1.1.1.1.2" xref="S0.Ex1.m1.1.1.1.2.cmml">/</mo>
+        <mn id="S0.Ex1.m1.1.1.1.3" xref="S0.Ex1.m1.1.1.1.3.cmml">2</mn>
+      </mrow>
+      <mo id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">=</mo>
+      <mi id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">v</mi>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2"/>
+        <apply id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1">
+          <divide id="S0.Ex1.m1.1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.1.2"/>
+          <apply id="S0.Ex1.m1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1.1.1">
+            <minus id="S0.Ex1.m1.1.1.1.1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.1"/>
+            <ci id="S0.Ex1.m1.1.1.1.1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.2">𝑣</ci>
+            <cn type="integer" id="S0.Ex1.m1.1.1.1.1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.1.1.1.1.3">1</cn>
+          </apply>
+          <cn type="integer" id="S0.Ex1.m1.1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.1.3">2</cn>
+        </apply>
+        <ci id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">𝑣</ci>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">(v-1)/2=v</annotation>
+  </semantics>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.1" class="ltx_Math" alttext="v=-1" display="block">
+  <semantics id="S0.Ex1.m1.1a">
+    <mrow id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">
+      <mi id="S0.Ex1.m1.1.1.2" xref="S0.Ex1.m1.1.1.2.cmml">v</mi>
+      <mo id="S0.Ex1.m1.1.1.1" xref="S0.Ex1.m1.1.1.1.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.1.1.3" xref="S0.Ex1.m1.1.1.3.cmml">
+        <mo id="S0.Ex1.m1.1.1.3.1" xref="S0.Ex1.m1.1.1.3.1.cmml">-</mo>
+        <mn id="S0.Ex1.m1.1.1.3.2" xref="S0.Ex1.m1.1.1.3.2.cmml">1</mn>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.1b">
+      <apply id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">
+        <eq id="S0.Ex1.m1.1.1.1.cmml" xref="S0.Ex1.m1.1.1.1"/>
+        <ci id="S0.Ex1.m1.1.1.2.cmml" xref="S0.Ex1.m1.1.1.2">𝑣</ci>
+        <apply id="S0.Ex1.m1.1.1.3.cmml" xref="S0.Ex1.m1.1.1.3">
+          <minus id="S0.Ex1.m1.1.1.3.1.cmml" xref="S0.Ex1.m1.1.1.3.1"/>
+          <cn type="integer" id="S0.Ex1.m1.1.1.3.2.cmml" xref="S0.Ex1.m1.1.1.3.2">1</cn>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.1c">v=-1</annotation>
+  </semantics>
+</math>
+
+</p>
+
+<p>
+When we play with limits, arguments which may work in one case do not
+necessarily generalise to other cases.
+</p>
+
+<p>
+For more information, read Joe Stoy's
+<i>Denotational Semantics: The Scott-Strachey Approach to Programming Language Semantics</i>.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
