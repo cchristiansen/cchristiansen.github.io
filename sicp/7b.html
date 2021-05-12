@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-12 Wed 16:28 -->
+<!-- 2021-05-12 Wed 16:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SICP 7b. Christian Christiansen.</title>
@@ -254,6 +254,28 @@ arguments leads to an error.
 
 <p>
 What we would like instead, is for the following procedure to be constructed.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(cond ((not (= 1 0)) 2)
+      (else (/ 1 0)))
+</pre>
+</div>
+
+<p>
+To construct this, build a kluge.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (unless p (name c) (name a))
+  (cond ((not p) c)
+        (else a)))
+</pre>
+</div>
+
+<p>
+Adding support for delayed parameters is a far more complicated modification of
+the interpreter, compared to adding both of the previous features.
 </p>
 
 <div class="org-src-container">
