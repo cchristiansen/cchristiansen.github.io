@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-12 Wed 16:28 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 7b. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="Metacircular interpreters are convenient for exploring language issues and excellent for exchanging ideas about language design."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 7b
+<br />
+<span class="subtitle">Metacircular Evaluation II</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#indefinite-number-of-arguments">1. Indefinite number of arguments</a></li>
+<li><a href="#dynamic-binding-of-variables">2. Dynamic binding of variables</a></li>
+<li><a href="#delayed-parameters">3. Delayed parameters</a></li>
+</ul>
+</div>
+</div>
+<p>
+Metacircular interpreters are convenient for exploring language issues and
+excellent for exchanging ideas about language design.
+</p>
+
+<div id="outline-container-indefinite-number-of-arguments" class="outline-2">
+<h2 id="indefinite-number-of-arguments"><span class="section-number-2">1</span> Indefinite number of arguments</h2>
+<div class="outline-text-2" id="text-indefinite-number-of-arguments">
+<p>
+One potentially helpful feature to add to a language, is allowing procedures to
+take an indefinite number of arguments.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(+ 3 5 7 5 3)
+</pre>
+</div>
+
+<p>
+To add this feature, we require a <i>syntactic specification</i> to notate the
+additional arguments.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(lambda (x . y)
+  (map (lambda (u) (+ x u))
+       y))
+</pre>
+</div>
+
+<p>
+<code>.</code>: syntax for representing <code>cons</code>​es.
+</p>
+
+<p>
+Note the syntactic difference between these three expressions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(lambda (x y z) ...)
+(lambda (x . y) ...)
+(lambda x x)
+</pre>
+</div>
+
+<p>
+Note <code>(lambda x x)</code> is equivalent to <code>list</code>.
+</p>
+
+<p>
+Now incorporate this feature into the interpreter. For this we need to change
+<code>pair-up</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define pair-up
+  (lambda (vars vals)
+    (cond
+     ((eq? vars '())
+      (cond ((eq? vals '()) '())
+            (else (error "too many arguments"))))
+     ((symbol? vars)               ;new
+      (cons (cons vars vals) '())) ;new
+     ((eq? vals '()) (error "too few arguments"))
+     (else
+      (cons (cons (car vars)
+                  (cdr vals))
+            (pair-up (cdr vars)
+                     (cdr vals)))))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-dynamic-binding-of-variables" class="outline-2">
+<h2 id="dynamic-binding-of-variables"><span class="section-number-2">2</span> Dynamic binding of variables</h2>
+<div class="outline-text-2" id="text-dynamic-binding-of-variables">
+<p>
+Next, we will attempt a more substational variation: <i>dynamic binding of
+variables</i>. First, we'll observe why it may be useful to have.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define sum
+  (lambda (term a next b)
+    (cond ((&gt; a b) 0)
+          (else
+           (+ (term a)
+              (sum term
+                   (next a)
+                   next
+                   b))))))
+(define sum-powers
+  (lambda (a b n)
+    (sum (lambda (x) (expt x n))
+         a
+         1+
+         b)))
+(define product-powers
+  (lambda (a b n)
+   (product (lambda (x) (expt x n))
+            a
+            1+
+            b)))
+</pre>
+</div>
+
+<p>
+Notice that <code>sum-powers</code> and <code>product-powers</code> are essentially the same, which
+is a sure indicator something is awry.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define sum-powers
+  (lambda (a b n)
+    (sum nth-power a 1+ b)))
+(define product-powers
+  (lambda (a b n)
+    (product nth-power a 1+ b)))
+(define nth-power
+  (lambda (x)
+    (expt x n)))
+</pre>
+</div>
+
+<p>
+Upon first glance, it appears this is preferable. However this is currently
+impossible, as <code>n</code> remains undefined.
+</p>
+
+<p>
+<i>Dynamic binding</i>: a free variable in a procedure has its value defined in the
+chain of callers, rather than where the procedure is defined.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define eval
+  (lambda (exp env)
+    (cond ((number? exp) exp)
+          ((symbol? exp) (lookup exp env))
+          ((eq? (car exp) 'quote) (cadr exp))
+          ((eq? (car exp) 'lambda) exp)   ;new
+          ((eq? (car exp) 'cond)
+           (evcond (cdr exp) env))
+          (else (apply (eval (car exp) env)
+                       (evlist (cdr exp) env)
+                       env)))))           ;new
+</pre>
+</div>
+
+<p>
+We no longer have to save the environment upon definition of the procedure so
+no closure is required. However, the environment is required upon the
+application of the procedure.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define apply
+  (lambda (proc args env) ;new
+    (cond
+     ((primitive? proc)
+      (apply-primop proc args))
+     ((eq? (car proc) 'lambda)
+      ;; proc = (LAMBDA bvis body)
+      (eval (caddr proc) ;body
+            (bind (cadr proc) ;bvis
+                  args
+                  env))) ;new
+     (else error-unknown-procedure))))
+</pre>
+</div>
+
+<p>
+The catch is that dynamic binding leads to a modularity crisis. For example, if
+<code>next</code> in <code>sum</code> were to be renamed <code>n</code>, then <code>sum-powers</code> would stop working.
+Dynamic binding removes the ability to have qualifiers.
+</p>
+
+<p>
+So what would be the correct solution? How do we gain the power of dynamic
+binding within a lexical system?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define pgen
+  (lambda (n)
+    (lambda (x) (expt x n))))
+
+(define sum-pairs
+  (lambda (a b n)
+    (sum (pgen n) a 1+ b)))
+(define product-pairs
+  (lambda (a b n)
+    (product (pgen n) a 1+ b)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-delayed-parameters" class="outline-2">
+<h2 id="delayed-parameters"><span class="section-number-2">3</span> Delayed parameters</h2>
+<div class="outline-text-2" id="text-delayed-parameters">
+<p>
+Finally, we will add the ability to delay the calculation of parameters.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (unless p c a)
+  (cond ((not p) c)
+        (else a)))
+</pre>
+</div>
+
+<p>
+Without delayed parameters, the following code can't be run, as evaluating the
+arguments leads to an error.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(unless (= 1 0) 2 (/ 1 0))
+</pre>
+</div>
+
+<p>
+What we would like instead, is for the following procedure to be constructed.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define eval
+  (lambda (exp env)
+    (cond ((number? exp) exp)
+          ((symbol? exp) (lookup exp env))
+          ((eq? (car exp) 'quote) (cadr exp))
+          ((eq? (car exp) 'lambda)
+           (list 'closure (cdr exp) env))
+          ((eq? (car exp) 'cond)
+           (evcond (cdr exp) env))
+          (else
+           (apply (undelay (eval (car exp) ;new
+                                 env))
+                  (cdr exp)
+                  env)))))
+
+(define apply
+  (lambda (proc args env) ;new
+    (cond
+     ((primitive? proc)
+      (apply-primop proc
+                    (evlist ops env))) ;new
+     ((eq? (car proc) 'closure)
+      ;; proc = (CLOSURE (bvrs body) env
+      (eval (cadadr proc)
+            (bind (vnames (caadr proc)) ;new
+                  (gevlist (caadr args) ;new
+                           ops
+                           env)
+                  (caddr proc))))
+     (else error-unknown-procedure))))
+
+(define evlist
+  (lambda (l env)
+    (cond
+     ((eq? l '()) '())
+     (else
+      (cons (undelay (eval (car l) env))
+            (evlist (cdr l) env))))))
+
+(define gevlist
+  (lambda (vars exps env)
+    (cond
+     ((eq? exps '()) '())
+     ((symbol? (car vars)) ;applicative
+      (cons (eval (car exps) env)
+            (gevlist (cdr vars)
+                     (cdr exps)
+                     env)))
+     ((eq? (caar vars) 'name)
+      (cons (make-delay (car exps) env)
+            (gevlist (cdr vars)
+                     (cdr exps)
+                     env)))
+     (else error-unknown-declaration))))
+
+(define evcond
+  (lambda (clauses env)
+    (cond
+     ((eq? clauses '()) '()) ;arbitrary
+     ((eq? (caar clauses) 'else)
+      (eval (cadar clauses) env))
+     ((false? (undelay
+               (eval (caar clauses)
+                     env)))
+      (vcond (cdr clauses) env))
+     (else
+      (eval (cadar clauses) env)))))
+
+(define false?
+  (lambda (x) (eq? x nil)))
+
+(define make-delay
+  (lambda (exp env)
+    (cons 'thunk (cons exp env))))
+
+(define (undelay v)
+  (cond ((pair? v)
+         (cond ((eq? (car v) 'thunk)
+                (undelay
+                 (eval (cadr v)
+                       (cddr v))))
+               (else v)))
+        (else v)))
+</pre>
+</div>
+
+<p>
+Thunk apparently is the sound of hitting a stack.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
