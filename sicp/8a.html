@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-13 Thu 16:17 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 8a. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="The cycle of eval and apply unwinds the means of combination and the means of abstraction in the language. This cycle is the basic structure of any interpreter."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 8a
+<br />
+<span class="subtitle">Logic Programming I</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#recap">1. Recap</a></li>
+<li><a href="#agenda">2. Agenda</a></li>
+<li><a href="#declaritive-imperative-knowledge">3. Declaritive/imperative knowledge</a></li>
+<li><a href="#facts-are-facts">4. Facts are facts</a></li>
+<li><a href="#primitives">5. Primitives</a></li>
+<li><a href="#means-of-combination">6. Means of combination</a></li>
+<li><a href="#means-of-abstraction">7. Means of abstraction</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-recap" class="outline-2">
+<h2 id="recap"><span class="section-number-2">1</span> Recap</h2>
+<div class="outline-text-2" id="text-recap">
+<p>
+<img src="./8a-eval-apply.png" alt="8a-eval-apply.png" />
+<div class="quoter">
+<a href="http://www.sicpdistilled.com/section/4.1/">Tom Hall (SICP Distilled)</a>, published under Creative Commons
+Attribution-ShareAlike 4.0 International License
+</div>
+</p>
+
+<p>
+The cycle of <code>eval</code> and <code>apply</code> unwinds the means of combination and the means
+of abstraction in the language. This cycle is the basic structure of any
+interpreter. Once you have a basic idea of an interpreter, you can build any
+language.
+</p>
+
+<p>
+Inventing a new language can be a method to gain control over complexity.
+Computer programming is primarily a way to express ideas, and only incidentally
+has to do with getting a computer to do something. To communicate new kinds of
+ideas, new modes of expression are required.
+</p>
+</div>
+</div>
+
+<div id="outline-container-agenda" class="outline-2">
+<h2 id="agenda"><span class="section-number-2">2</span> Agenda</h2>
+<div class="outline-text-2" id="text-agenda">
+<p>
+In this lecture, and the following one, we will build a very different
+language, which won't allow us to think about programming in terms of
+procedures.
+</p>
+
+<p>
+Up next:
+</p>
+<ol class="org-ol">
+<li>Show what the language looks like.</li>
+<li>Show how the language is implemented.</li>
+</ol>
+
+<p>
+Thirdly, we'll demonstrate a nice use of streams to avoid backtracking.
+</p>
+</div>
+</div>
+
+<div id="outline-container-declaritive-imperative-knowledge" class="outline-2">
+<h2 id="declaritive-imperative-knowledge"><span class="section-number-2">3</span> Declaritive/imperative knowledge</h2>
+<div class="outline-text-2" id="text-declaritive-imperative-knowledge">
+<p>
+In the first set of lectures, we covered the distinction between the
+declarative knowledge of mathematics, and the imperative knowledge of computer
+science. Can this gap be bridged?
+</p>
+
+<pre class="example">
+son-of adam abel
+son-of adam cain
+son-of cain enoch
+son-of enoch irad
+</pre>
+
+<p>
+One fact <code>son-of adam cain</code> can be used to answer multiple different
+questions: what is the relationship between <code>adam</code> and <code>cain</code>? Who is the son
+of <code>adam</code>? Who is <code>cain</code> a son of?
+</p>
+
+<p>
+One piece of declarative knowledge can be used as the basis of many different
+kinds of imperative knowledge; this is the essence of the power of this
+programming style.
+</p>
+
+<p>
+Rules of inference.
+</p>
+<pre class="example">
+if (son-of ?x ?y) and
+   (son-of ?y ?z)
+then (grandson ?x ?z)
+</pre>
+
+<p>
+Let's take a step back, and look at a procedure for merging two sorted lists.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (merge x y)
+  (cond
+   ((null? x) y)
+   ((null? y) x)
+   (else
+    (let ((a (car x)) (b (car y)))
+      (if (&lt; a b)
+          (cons a
+                (merge (cdr x) y))
+          (cons b
+                (merge x (cdr y))))))))
+</pre>
+</div>
+
+<p>
+Below is the specific bit of logic which allows the program to work.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(let ((a (car x)) (b (car y)))
+  (if (&lt; a b)
+      (cons a (merge (cdr x) y))
+</pre>
+</div>
+
+<p>
+A deduction is happening here.
+</p>
+
+<pre class="example">
+if
+    (cdr-x and y merge-toform z)
+and
+    a &lt; (car y)
+then
+    ((cons a cdr-x) and y
+     merge-to-form (cons a z))
+</pre>
+
+<p>
+The other clause is essentially identical.
+</p>
+
+<pre class="example">
+if
+    (x and cdr-y merge-to-form z)
+and
+    b &lt; (car x)
+then
+    (x and (cons b dry-y)
+     merge-to-form (cons b z))
+</pre>
+
+<p>
+And for completeness, we have these two basic statements.
+</p>
+<pre class="example">
+For all x, (x and () merge-to-form x)
+For all y, (() and y merge-to-form y)
+</pre>
+
+<p>
+The procedural approach could be visualised with <code>merge</code> as a black box, taking
+the inputs <code>x</code> and <code>y</code>, and outputting <code>ans</code>. The rule-based approach, in
+juxtaposition, would be visualised as a cloud containing <code>merge-to-form</code>, <code>x</code>,
+<code>y</code> and <code>z</code>.
+</p>
+
+<p>
+With these fundamental rules of logic, it should be possible to ask:
+</p>
+<pre class="example">
+(1 3 7) and (2 4 8) merge-to-form ?
+(1 3 7) and ? merge-to-form (1 2 3 4 7 8)
+?x and ?y merge-to-form (1 2 3 4 7 8)
+</pre>
+
+<p>
+There are two major differences to procedural programming which are immediately
+apparent.
+</p>
+<ol class="org-ol">
+<li>Not computing functions (using relations instead).</li>
+<li>Due to the use of relations, there's not necessarily one answer.</li>
+</ol>
+
+<p>
+This style of programming is called <i>logic programming</i>. Use logic to express
+what is true, use logic to check if something is true, use logic to find out
+what is true.
+</p>
+
+<p>
+An example of a logic programming languages is Prolog. We will implement a
+query language, which will contain the essence of Prolog, and roughly
+the same power and limitations.
+</p>
+</div>
+</div>
+
+<div id="outline-container-facts-are-facts" class="outline-2">
+<h2 id="facts-are-facts"><span class="section-number-2">4</span> Facts are facts</h2>
+<div class="outline-text-2" id="text-facts-are-facts">
+<p>
+Let's start building and begin with a collection of facts.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(job (Bitdiddle Ben) (computer wizard))
+(salary (Bitdiddle Ben) 40000)
+(supervisor (Bitdiddle Ben)
+            (Warbucks Oliver))
+(address (Bitdiddle Ben)
+         (Slumerville (Ridge Road) 10))
+
+(address (Hacker Alyssa P)
+         (Cambridge (Mass Ave) 78))
+(job (Hacker Alyssa P)
+     (computer programmer))
+(salary (Hacker Alyssa P) 35000)
+(supervisor (Hacker Alyssa P)
+            (Bitdiddle Ben))
+
+(address (Tweakit Len E)
+         (Boston (Bay State Road) 22))
+(job (Tweakit Len E)
+     (computer technician))
+(salary (Tweakit Len E) 15000)
+(supervisor (TweakitLen E)
+            (Bitdiddle Ben))
+
+(address (Reasoner Louis)
+         (Slumerville (Pine Tree Road)
+                      80))
+(job (Reasoner Louis)
+     (computer programmer trainee))
+(salary (Reasoner Louis) 20000)
+(supervisor (Reasoner Louis)
+            (Hacker Alyssa P))
+
+(job (Warbucks Oliver)
+     (administation big wheel))
+(salary (Warbucks Oliver) 100000)
+(address (Warbucks Oliver)
+         (Swellesley (The Manor)))
+</pre>
+</div>
+
+<p>
+As with any language, there are three fundamental questions.
+</p>
+<ol class="org-ol">
+<li>What are the primitives?</li>
+<li>What are the means of combination?</li>
+<li>What are the means of abstraction?</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-primitives" class="outline-2">
+<h2 id="primitives"><span class="section-number-2">5</span> Primitives</h2>
+<div class="outline-text-2" id="text-primitives">
+<p>
+There is one primitive: query.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(job ?x (computer programmer))
+results:
+(job (Hacker Alyssa P)
+     (computer programmer))
+
+(job ?x (computer ?type))
+results:
+(job (Bitdiddle Ben) (computer wizard))
+(job (Hacker Alyssa P) (computer programmer))
+(job (Tweakit Len E) (computer technician))
+</pre>
+</div>
+
+<p>
+However it doesn't match:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(job (Reasoner Louis) (computer programmer trainee))
+</pre>
+</div>
+<p>
+as Louis' job description has three symbols.
+</p>
+
+<p>
+The addition of a full stop rectifies the above issue.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(job ?x (computer . ?type))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-means-of-combination" class="outline-2">
+<h2 id="means-of-combination"><span class="section-number-2">6</span> Means of combination</h2>
+<div class="outline-text-2" id="text-means-of-combination">
+<p>
+List all people who work in the computer division, together with their
+supervisors.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(and (job ?x (computer . ?y))
+     (supervisor ?x ?z))
+</pre>
+</div>
+
+<p>
+List all people whose salary is greater than 30000.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(and (salary ?p ?a)
+     (lisp-value &gt; ?a 30000))
+</pre>
+</div>
+
+<p>
+List all people who work in the computer division, who do not have a supervisor
+who works in the computer division.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(and
+ (job ?x (computer . ?y))
+ (not (and (supervisor (?x ?z)
+                       (job ?z (computer . ?w))))))
+</pre>
+</div>
+
+<p>
+The means of combination are logical operations: <code>and</code>, <code>not</code>, <code>or</code> and a hack,
+<code>lisp-value</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-means-of-abstraction" class="outline-2">
+<h2 id="means-of-abstraction"><span class="section-number-2">7</span> Means of abstraction</h2>
+<div class="outline-text-2" id="text-means-of-abstraction">
+<p>
+Rules are the means of abstraction.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(rule
+ (bigshot ?x ?dept) ; rule conclusion
+ (and               ; rule body
+  (job ?x (?dept . ?y))
+  (not (and (supervisor ?x ?z)
+            (job ?z (?dept . ?w))))))
+</pre>
+</div>
+
+<p>
+Revisit <code>merge</code> in terms of rules.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(rule (merge-to-form () ?y ?y))
+(rule (merge-to-form ?y () ?y))
+</pre>
+</div>
+
+<p>
+A rule with no body is always true.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(rule
+ (merge-to-form
+  (?a . ?x) (?b . ?y) (?b . ?z))
+ (and (merge-to-form (?a . ?x) ?y ?z)
+      (lisp-value &gt; ?a ?b)))
+(rule
+ (merge-to-form
+  (?a . ?x) (?b . ?y) (?a . ?z))
+ (and (merge-to-form ?x (?b . ?y) ?z)
+      (lisp-value &gt; ?b ?a)))
+</pre>
+</div>
+
+<p>
+Now test.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(merge-to-form (1 3) (2 7) ?x)
+results:
+(merge-to-form (1 3) (2 7) (1 2 3 7))
+
+(merge-to-form (2 ?a) ?x (1 2 3 4))
+results:
+(merge-to-form (2 3) (1 4) (1 2 3 4))
+(merge-to-form (2 4) (1 3) (1 2 3 4))
+
+(merge-to-form ?x ?y (1 2 3 4 5))
+</pre>
+</div>
+
+<p>
+With the last query, the slowness is blatantly evident. This is partly due to
+the language being doubly interpreted, but also due to the algorithm for merges
+being doubly recursive
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
