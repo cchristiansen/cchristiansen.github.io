@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-18 Tue 15:29 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 8b. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="By now, pattern-matching syntax should be second nature to us."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 8b
+<br />
+<span class="subtitle">Logic Programming II</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#implementation-of-means-of-combination">1. Implementation of means of combination</a></li>
+<li><a href="#implementation-of-means-of-abstraction">2. Implementation of means of abstraction</a></li>
+<li><a href="#apply">3. Apply</a></li>
+<li><a href="#naming-conflicts">4. Naming conflicts</a></li>
+<li><a href="#not">5. Not</a></li>
+</ul>
+</div>
+</div>
+<p>
+<i>Copyright notice</i>: the two diagrams on this page are sourced from <a href="https://sarabander.github.io/sicp/html/4_002e4.xhtml">Unofficial
+Texinfo Format</a>, licensed under the Creative Commons Attribution-ShareAlike 4.0
+International License.
+</p>
+
+<p>
+By now, pattern-matching syntax should be second nature to us.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(a ?x c)
+(job ?x (computer ?y))
+(job ?x (computer . ?y))
+(a ?x ?x)
+(?x ?y ?y ?x)
+(a . ?x)
+</pre>
+</div>
+
+<p>
+<code>match</code> asks the question: is there any way to match a pattern with data,
+subject to bindings already in a dictionary?
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(match pat data dictionary)
+</pre>
+</div>
+
+<p>
+The matcher was already covered in the lecture on systems with rule-based
+control, so we'll skip it here.
+</p>
+
+<div id="outline-container-implementation-of-means-of-combination" class="outline-2">
+<h2 id="implementation-of-means-of-combination"><span class="section-number-2">1</span> Implementation of means of combination</h2>
+<div class="outline-text-2" id="text-implementation-of-means-of-combination">
+<p>
+<object type="image/svg+xml" data="./8b-and.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+<object type="image/svg+xml" data="./8b-or.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+
+<p>
+We have <i>closure</i>. The means of combination have the same overall structure as
+the primitive things that we're combining.
+</p>
+</div>
+</div>
+
+<div id="outline-container-implementation-of-means-of-abstraction" class="outline-2">
+<h2 id="implementation-of-means-of-abstraction"><span class="section-number-2">2</span> Implementation of means of abstraction</h2>
+<div class="outline-text-2" id="text-implementation-of-means-of-abstraction">
+<p>
+How do we implement a rule? Here's a quick recap of a rule.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(rule (boss ?z ?d)
+      (and (job ?x (?d . ?y))
+           (supervisor ?x?z)))
+</pre>
+</div>
+
+<p>
+We match the conclusion of the rule against something we want to check is true.
+That match gives us a dictionary, and with respect to the dictionary, we
+process the body of the rule.
+</p>
+
+<p>
+Actually, this is not quite true.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(boss ?who computer)
+</pre>
+</div>
+
+<p>
+Here we aren't matching a pattern against data, we are matching two patterns
+and asking if they are consistent. A pattern matcher does not suffice; we
+require a <i>unifier</i>, a slight generalisation of a pattern matcher. A unifier
+takes two patterns and finds the most general thing that can be substituted for
+the variables in those two patterns to satisfy both simultaneously.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">unify (?x ?x)
+with ((a ?y z) (a b ?z))
+results:
+?x : (a b c)
+?y : b
+?z : c
+</pre>
+</div>
+
+<p>
+A more complicated example.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">unify (?x ?x)
+with ((?y a ?w) (b ?v ?z))
+results:
+?y : b
+?v : a
+?w : ?z
+?x : (b a ?w)
+</pre>
+</div>
+
+<p>
+Nothing clever is happening here. Just recursion.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">unify (?x ?x)
+with (?y (a . ?y))
+should result in:
+?x : ?y
+?y : (a a a ...)
+</pre>
+</div>
+
+<p>
+<code>y</code> must be an infinite list of <code>a</code>'s. The logic program can't handle this.
+</p>
+</div>
+</div>
+
+<div id="outline-container-apply" class="outline-2">
+<h2 id="apply"><span class="section-number-2">3</span> Apply</h2>
+<div class="outline-text-2" id="text-apply">
+<p>
+<b>To apply a rule</b> <br />
+Evaluate the rule body relative to an environment formed by unifying the rule
+conclusion with the given query.
+</p>
+
+<p>
+Compare this to applying a procedure.
+</p>
+
+<p>
+<b>To apply a procedure</b> <br />
+Evaluate the procedure body relative to an environment formed by binding the
+procedure parameters to the argument.
+</p>
+
+<p>
+We see the eval apply loop yet again.
+</p>
+</div>
+</div>
+
+<div id="outline-container-naming-conflicts" class="outline-2">
+<h2 id="naming-conflicts"><span class="section-number-2">4</span> Naming conflicts</h2>
+<div class="outline-text-2" id="text-naming-conflicts">
+<p>
+To avoid name conflicts, we use the environment model. A more brutal (and
+inefficient) method is also possible: every time a rule is applied, rename all
+of the variables in the rule to some new unique names that won't conflict with
+anything else.
+</p>
+</div>
+</div>
+
+<div id="outline-container-not" class="outline-2">
+<h2 id="not"><span class="section-number-2">5</span> Not</h2>
+<div class="outline-text-2" id="text-not">
+<p>
+<code>and</code>, <code>or</code>, <code>not</code>, and the logical implication of rules are not quite as they
+seem.
+</p>
+
+<p>
+In logic <code>(and p q)</code> and <code>(and q p)</code> are equivalent statements. This is not the
+case in our language.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(rule (outranked-by ?s ?B)
+      (or (supervisor ?s ?b)
+          (and (supervisor ?s ?m)
+               (outranked-by ?m ?b))))
+(rule (outranked-by ?s ?B)
+      (or (supervisor ?s ?b)
+          (and (outranked-by ?m ?b)
+               (supervisor ?s ?m))))
+</pre>
+</div>
+
+<p>
+The first statement functions as expected; the second leads to an infinite
+loop. Changing <code>and</code>​s and <code>or</code>​s in logic programming can drastically change
+the speed of the queries.
+</p>
+
+<p>
+All humans are mortal.<br />
+All Greeks are humans.<br />
+Socrates is a Greek.<br />
+∴ Socrates is a Greek.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(Greek Socrates)
+(Greek Plato)
+(Greek Zeus)
+(god Zeus)
+(rule (mortal ?x) (human ?x))
+(rule (fallible ?x) (human ?x))
+(rule (human ?x)
+      (and (Greek ?x) (not (god ?x))))
+(rule (address ?x Olympus)
+      (and (Greek ?x) (god ?x)))
+(rule (perfect ?x)
+      (and (not (mortal ?x))
+           (not (fallible ?x))))
+</pre>
+</div>
+
+<p>
+Ask for the address of all perfect beings.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(and (address ?x ?y)
+     (perfect ?x))
+results:
+Olympus
+
+(and (perfect ?x)
+     (address ?x ?y))
+results:
+nothing
+</pre>
+</div>
+
+<p>
+So is it Mount Olympus, or nothing? How do we know that Zeus is not mortal, and
+not fallible? This is not defined anywhere.
+</p>
+
+<p>
+<code>not</code> does not mean the logical not. <code>not</code> means not deducible: there no such
+thing in the database, as opposed to not true. This is called the <i>closed
+world assumption</i>. Under this assumption, all kinds of issues turn up, such as
+<code>not not x</code> not being equal to <code>x</code>. <i>Closed world assumption</i> is dangerous for
+real reasoning problems, marking a chasm between declarative and imperative
+knowledge.
+</p>
+
+<blockquote>
+<p>
+If you start building up real reasoning programs based on this, think how
+dangerous that is. You're saying: "I know I'm in a position to deduce
+everything true that's relevant to this problem. I'm reasoning, and built into
+my reasoning mechanism is the assumption that anything that I don't know can't
+possible be relevant to this problem, right?" There are a lot of big
+organisations that work like that. Most corporate marketing divisions work like
+that.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

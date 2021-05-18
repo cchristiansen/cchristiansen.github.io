@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-18 Tue 15:26 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 9a. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="So far, we have covered how to organise big programs. Now, we will see how those mechanisms work; we shall take simple LISP programs, and build the corresponding machines. The next lecture will show how an evaluator can be turned into hardware."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 9a
+<br />
+<span class="subtitle">Register Machines</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#agenda">1. Agenda</a></li>
+<li><a href="#euclids-algorithm">2. Euclid's algorithm</a>
+<ul>
+<li><a href="#data-paths">2.1. Data paths</a></li>
+<li><a href="#controller">2.2. Controller</a></li>
+<li><a href="#in-writing">2.3. In writing</a></li>
+<li><a href="#reading">2.4. Reading</a></li>
+<li><a href="#remainder">2.5. Remainder</a></li>
+</ul>
+</li>
+<li><a href="#factorial">3. Factorial</a></li>
+<li><a href="#fibonacci">4. Fibonacci</a></li>
+</ul>
+</div>
+</div>
+<p>
+<i>Copyright notice</i>: the two diagrams on this page are sourced from <a href="http://sarabander.github.io/sicp/html/5_002e1.xhtml">Unofficial
+Texinfo Format</a>, licensed under the Creative Commons Attribution-ShareAlike 4.0
+International License.
+</p>
+
+<div id="outline-container-agenda" class="outline-2">
+<h2 id="agenda"><span class="section-number-2">1</span> Agenda</h2>
+<div class="outline-text-2" id="text-agenda">
+<p>
+So far, we have covered how to organise big programs. Now, we will see how
+those mechanisms work; we shall take simple LISP programs, and build the
+corresponding machines. The next lecture will show how an evaluator
+can be turned into hardware.
+</p>
+</div>
+</div>
+
+<div id="outline-container-euclids-algorithm" class="outline-2">
+<h2 id="euclids-algorithm"><span class="section-number-2">2</span> Euclid's algorithm</h2>
+<div class="outline-text-2" id="text-euclids-algorithm">
+<p>
+Let's see how the following iterative algorithm can be expressed as a machine.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
+</pre>
+</div>
+
+<p>
+Every single-processor computer comprises of two major parts: <i>data paths</i> and
+a <i>controller</i>.
+</p>
+</div>
+
+<div id="outline-container-data-paths" class="outline-3">
+<h3 id="data-paths"><span class="section-number-3">2.1</span> Data paths</h3>
+<div class="outline-text-3" id="text-data-paths">
+<p>
+Registers store numbers.
+</p>
+
+
+<div id="org37e9805" class="figure">
+<p><object type="image/svg+xml" data="./9a-euclid-data-paths.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-controller" class="outline-3">
+<h3 id="controller"><span class="section-number-3">2.2</span> Controller</h3>
+<div class="outline-text-3" id="text-controller">
+<p>
+Every machine has a state. The machine state is the state of the controller.
+</p>
+
+
+<div id="org7cab769" class="figure">
+<p><object type="image/svg+xml" data="./9a-euclid-controller.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-in-writing" class="outline-3">
+<h3 id="in-writing"><span class="section-number-3">2.3</span> In writing</h3>
+<div class="outline-text-3" id="text-in-writing">
+<p>
+Diagrams take up a lot of space (and can take a long time to draw on a
+computer!), so we will describe the machine in a language.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define-machine gcd
+  (registers a b t)
+  (controller
+   loop (branch (zero? (fetch b)) done)
+        (assign t (remainder (fetch a) (fetch b)))
+        (assign a (fetch b))
+        (assign b (fetch t))
+        (goto loop)
+   done))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-reading" class="outline-3">
+<h3 id="reading"><span class="section-number-3">2.4</span> Reading</h3>
+<div class="outline-text-3" id="text-reading">
+<p>
+Computers also require input from the outside occasionally. <code>read</code> implements
+this functionality.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define-machine gcd
+  (registers a b t)
+  (controller
+   main (assign a (read))
+        (assign b (read))
+   loop (branch (zero? (fetch b)) done)
+        (assign t
+                (remainder (fetch a) (fetch b)))
+        (assign a (fetch b))
+        (assign b (fetch t))
+        (goto loop)
+   done (perform (print (fetch a)))
+        (goto main)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-remainder" class="outline-3">
+<h3 id="remainder"><span class="section-number-3">2.5</span> Remainder</h3>
+<div class="outline-text-3" id="text-remainder">
+<p>
+We have assumed <code>remainder</code> is a basic operation, but it is actually a
+whole machine in of itself.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (remainder n d)
+  (if (&lt; n d)
+      n
+      (remainder (- n d) d)))
+</pre>
+</div>
+
+<p>
+In a practical computer, the proper way to implement <code>remainder</code> would be using
+binary notation and shift.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-factorial" class="outline-2">
+<h2 id="factorial"><span class="section-number-2">3</span> Factorial</h2>
+<div class="outline-text-2" id="text-factorial">
+<p>
+So far we have seen how an iterative process can be turned into a machine. How
+about a recursive process?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (fact n)
+  (if (= n 1)
+      1
+      (* n (fact (- n 1)))))
+</pre>
+</div>
+
+<p>
+With recursive processes, we have the problem that the machine contains itself
+inside of it, leading to a potentially infinitely large machine.
+We have to create the illusion of infinity somewhere in the machine.
+</p>
+
+<p>
+<b>Organisation of Register Machine</b> <br />
+<pre>
+stack &lt;&#x2014;&gt; data paths &lt;&#x2014;&gt; finite-state controller
+</pre>
+</p>
+
+<ul class="org-ul">
+<li><b>Controller</b>: finite and very simple.</li>
+<li><b>Data paths</b>: registers and operators.</li>
+<li><b>Stack</b>: not infinite, just very large (memory).</li>
+</ul>
+
+<p>
+To create the illusion of infinity, we store the information in the stack
+required after the inner machine runs to resume the operation of the outer
+machine. Since they're nested in a recursive manner, the stack will only be
+accessed in a last-in first-out (LIFO) manner. So only a small part of the
+stack memory needs to be accessible.
+</p>
+
+<p>
+<b>Controller</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">     (assign continue done)
+loop (branch (= (fetch n)) base)
+     (save continue)
+     (save n)
+     (assign n (-1+ (fetch n)))
+     (assign continue aft)
+     (goto loop)
+aft  (restore n)
+     (restore continue)
+     (assign val (+ (fetch n) (fetch val)))
+     (goto (fetch continue))
+base (assign val (fetch n))
+     (goto (fetch continue))
+done
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-fibonacci" class="outline-2">
+<h2 id="fibonacci"><span class="section-number-2">4</span> Fibonacci</h2>
+<div class="outline-text-2" id="text-fibonacci">
+<p>
+Let's see how the stack holds up with a doubly recursive algorithm.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (fib n)
+  (if (&lt; n 2)
+      n
+      (+ (fib (- n 1))
+         (fib (- n 2)))))
+</pre>
+</div>
+
+<p>
+<b>Controller</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">    (assign continue f-bdone)
+fib-loop ; n contains arg, continue is recipient
+    (branch (&lt;(fetch n) 2) immediate-ans)
+    (save continue)
+    (assign continue after-fib-n-1)
+    (save n)
+    (assign n (- (fetch n) 1))
+    (goto fib-loop)
+after-fib-n-1
+    (restore n)
+    (restore continue) ; not needed, since no call before save
+    (assign n (- (fetch n) 2))
+    (save continue) ; since continue not used, can also be removed
+    (assign continue after-fib-n-2)
+    (save val)
+    (goto fib-loop)
+after-fib-n-2
+    (assign n (fetch val))  ; fib(n-2)
+    (restore val)
+    (assign val
+            (+ (fetch val) (fetch n)))
+    (goto (fetch continue))
+immediate-ans
+    (assign val (fetch n))
+    (goto (fetch continue))
+fib-done
+</pre>
+</div>
+
+<p>
+When using the stack, use discipline. Only save things which are needed later.
+</p>
+
+<p>
+Note: there's a fantastic cough at 57:17.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
