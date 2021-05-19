@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-19 Wed 15:14 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 9b. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 9b
+<br />
+<span class="subtitle">Explicit-control Evaluator</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#recap-with-big-hat">1. Recap (with big hat)</a></li>
+<li><a href="#eval-apply">2. Eval/Apply</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-recap-with-big-hat" class="outline-2">
+<h2 id="recap-with-big-hat"><span class="section-number-2">1</span> Recap (with big hat)</h2>
+<div class="outline-text-2" id="text-recap-with-big-hat">
+<p>
+So far, we have seen the magic of building new languages:
+</p>
+<ul class="org-ul">
+<li>Escher picture language (by Peter Henderson),</li>
+<li>digital logic language,</li>
+<li>query language.</li>
+</ul>
+
+<p>
+Even though these have been toy examples, they are kernels for very useful
+things. All of them are based on LISP.
+</p>
+
+<blockquote>
+<p>
+A lot of people ask: what particular problems is LISP good for solving for? The
+answer is LISP is not good for any particular problems. Wht LISP is good for is
+constructing within it the right language to solve the problems you want to
+solve.
+</p>
+</blockquote>
+
+<p>
+What is LISP based on? Whilst examining the meta-circular evaluator, we saw
+that LISP is based on LISP. We saw, through a concoction of magic with Y
+combinators and fixed points, that LISP is the fixed point equation for those
+things that are defined in terms of themselves. We will now peek behind the
+magician's curtain by implementing LISP in terms of the architecture of the
+register machine.
+</p>
+
+<p>
+<b>Organisation of Register Machine</b> <br />
+<pre>
+stack &lt;&#x2014;&gt; data paths &lt;&#x2014;&gt; finite-state controller
+</pre>
+</p>
+
+<blockquote>
+<p>
+If we implement LISP in terms of a register machine, then everything ought to
+become, at this point, completely concrete. All the magic should go away.
+</p>
+</blockquote>
+
+<p>
+To implement LISP in a register machine, use the same technique as in the
+previous lecture: hand-translate the procedures for the meta-circular evaluator
+to the register machine.
+</p>
+
+<p>
+This will be our final most explicit model of LISP, having already covered the
+substitution model, the environment model and the meta-circular evaluator.
+</p>
+
+<p>
+The meta-circular evaluator left unanswered how recursive procedures take space
+that grows, whereas some procedures which look syntactically recursive, do not
+take up that space. We justified it with the substitution model, but did not
+explain how the machine managed to achieve it. This will become extremely
+explicit.
+</p>
+</div>
+</div>
+
+<div id="outline-container-eval-apply" class="outline-2">
+<h2 id="eval-apply"><span class="section-number-2">2</span> Eval/Apply</h2>
+<div class="outline-text-2" id="text-eval-apply">
+
+<div id="orgf0abc69" class="figure">
+<p><img src="./9b-computer.jpg" alt="9b-computer.jpg" />
+</p>
+</div>
+
+<p>
+We will cover <code>eval</code> today. Primitive operators have very little to do with
+LISP; reader and printer are rather complicated, but we will ignore them; list
+structure memory will be covered in the next lecture.
+</p>
+
+<p>
+<b>Register usage in evaluator machine</b>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><code>exp</code></td>
+<td class="org-left">expression to be evaluated</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>env</code></td>
+<td class="org-left">evaluation environment</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>fun</code></td>
+<td class="org-left">procedure to be applied</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>argl</code></td>
+<td class="org-left">list of evluated arguments</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>continue</code></td>
+<td class="org-left">place to go to next</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>val</code></td>
+<td class="org-left">result of evaluation</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>unev</code></td>
+<td class="org-left">temporary register for expressions</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<b>Sample evaluator-machine operations</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(assign val (fetch exp))
+
+(branch
+ (conditional? (fetch exp))
+ ev-cond)
+
+(assign exp (first-clause (fetch exp)))
+
+(assign val
+        (lookup-variable-value (fetch exp)
+                               (fetch env)))
+</pre>
+</div>
+
+<p>
+There are a fixed and finite number of operations in the register machine.
+</p>
+
+<p>
+Let's quickly recap what <code>eval</code> and <code>apply</code> are.
+</p>
+
+<p>
+<code>eval</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (eval exp env)
+  (cond ((self-evaluating? exp) exp)
+        ((quoted? exp)
+         (text-of-quotation exp))
+        &lt;&lt; ... more special forms .. &gt;&gt;
+        ((application? exp)
+         (apply
+          (eval (operator exp) env)
+          (list-of-values (operands exp)
+                          env)))
+        (else
+         (error "Unknown expression."))))
+</pre>
+</div>
+
+<p>
+<code>apply</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (apply proc args)
+  (cond ((primitive-proc? proc)
+         (primitive-apply proc args))
+        ((compound-proc? proc)
+         (eval-sequence
+          (proc-body proc)
+          (extend-environment
+           (parameters proc)
+           args
+           (proc-environment proc))))
+        (else
+         (error "Unknown proc type"))))
+</pre>
+</div>
+
+
+<div id="org1e53e71" class="figure">
+<p><img src="./8a-eval-apply.png" alt="8a-eval-apply.png" />
+</p>
+</div>
+
+<p>
+We will have to capture this cycle in the register machine, by creating
+<code>eval-dispatch</code> and <code>apply-dispatch</code>.
+</p>
+
+<p>
+<b>Contract that <code>eval-dispatch</code> fulfills</b>
+</p>
+<ul class="org-ul">
+<li>The <code>exp</code> register holds an expression to be evaluated.</li>
+<li>The <code>env</code> register holds the environment in which the expression is to be
+evaluated.</li>
+<li>The <code>continue</code> register holds a place to go to next.</li>
+<li>The result will be left in the <code>val</code> register. Contents of all other
+registers may be destroyed.</li>
+</ul>
+
+<p>
+<b>Contract that <code>apply-dipatch</code> fulfills</b>
+</p>
+<ul class="org-ul">
+<li>The <code>argl</code> register contains a list of arguments.</li>
+<li>The <code>fun</code> register contains a procedure to be applied.</li>
+<li>The top of the stack holds a place to go to next.</li>
+<li>The result will be left in the <code>val</code> register. The stack will be popped.
+Contents of all other registers may be destroyed.</li>
+</ul>
+
+<p>
+In the video, the following expressions are covered step-by-step:
+</p>
+<ol class="org-ol">
+<li><code>1</code></li>
+<li><code>x</code></li>
+<li><code>(+ x y)</code></li>
+</ol>
+<p>
+in the environment e<sub>0</sub> where <code>x = 3</code>, <code>y = 4</code>.
+</p>
+
+<p>
+As text isn't able to convey the information anywhere near as well as the
+video, please watch the video to glean how the above expressions are evaluated.
+Below is the code necessary to evaluate the three expressions above.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">eval-dispatch
+  (branch (self-evaluating? (fetch exp))
+          ev-self-eval)
+  (branch (variable? (fetch exp))
+          ev-variable)
+  &lt; ... more special forms ... &gt;
+  (branch (application? (fetch exp))
+          ev-application)
+  (goto unknown-expression-error)
+ev-self-eval
+  (assign val (fetch exp))
+  (goto (fetch continue))
+ev-variable
+  (assign
+   val
+   (lookup-variable-value (fetch exp)))
+  (goto (fetch continue))
+ev-application
+  (assign unev (operands (fetch exp)))
+  (assign exp (operator (fetch exp)))
+  (save continue)
+  (save env)
+  (save unev)
+  (assign continue eval-args)
+  (goto eval-dispatch)
+eval-args
+  (restore unev)
+  (restore env)
+  (assign fun (fetch val))
+  (save fun)
+  (assign argl '())
+  (goto eval-arg-loop)
+eval-arg-loop
+  (save argl)
+  (assign
+   exp
+   (first-operand (fetch unev)))
+  (branch (last-operand? (fetch unev))
+          eval-last-arg)
+  (save env)
+  (save unev)
+  (assign continue accumulate-arg)
+  (goto eval-dispatch)
+accumulate-arg
+  (restore unev)
+  (restore env)
+  (resetore argl)
+  (assign
+   argl
+   (cons (fetch val) (fetch argl)))
+  (assign
+   unev
+   (rest-operands (fetch unev)))
+  (goto eval-arg-loop)
+eval-last-arg
+  (assign continue accumulate-last-arg)
+  (goto eval-dispatch)
+accumulate-last-arg
+  (restore argl)
+  (assign
+   argl
+   (cons (fetch val) (fetch argl)))
+  (restore fun)
+  (goto apply-dispatch)
+apply-dispatch
+  (branch (primitive-proc? (fetch fun))
+          primitive-apply)
+  (branch (compound-proc? (fetch fun))
+          compound-apply)
+  (goto unknown-proc-type-error)
+primitive-apply
+  (assign
+   val
+   (apply-primitive-proc (fetch fun)
+                         (fetch argl)))
+  (restore continue)
+  (goto (fetch continue))
+</pre>
+</div>
+
+<blockquote>
+<p>
+The reason that you need recursion in the evaluator is because the evaluation
+process, itself, is recursive.
+</p>
+</blockquote>
+
+<p>
+We haven't yet seen an eval/apply loop. The following example will rectify
+this.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(define (f a b)
+  (+ a b))
+(f x y)
+</pre>
+</div>
+
+<p>
+In the environment e<sub>0</sub> where <code>x = 3</code>, <code>y = 4</code> and <code>f</code> = proc in envirnoment e<sub>0</sub>
+with args: <code>a</code> <code>b</code> and body: <code>(+ a b)</code>.
+</p>
+
+<p>
+This example is essentially the same as the previous example, apart from that
+we no longer deal with a primitive procedure, so a new environment will need to
+be manufactured at some point: e<sub>1</sub> where <code>a = 3</code> and <code>b = 4</code>.
+</p>
+
+<p>
+The evaluator will also have to be expanded.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">compound-apply
+  (assign
+   exp
+   (procedure-body (fetch fun)))
+  (assign
+   env
+   (make-bindings (fetch fun)
+                  (fetch argl)))
+  (restore continue)
+  (goto eval-dispatch)
+</pre>
+</div>
+
+<p>
+Et voilà! The expression will be completely reduced with nothing left on the
+stack.
+</p>
+
+<p>
+Let's see how the evaluator deals with two different kinds of procedures.
+</p>
+
+<p>
+<code>fact-iter</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (fact-iter n)
+  (define (iter product counter)
+    (if (&gt; counter)
+        product
+        (iter (* counter product)
+              (+ counter 1))))
+  (iter 1 1))
+</pre>
+</div>
+
+<p>
+<code>fact-rec</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (fact-rec n)
+  (if (= n 0)
+      1
+      (* n (fact-rec (- n 1)))))
+</pre>
+</div>
+
+<p>
+The evaluator is able to take procedures which look syntactically like
+recursive procedures, and execute some iteratively and some recursively. It
+achieves this by only saving what it needs later.
+</p>
+
+<p>
+The above evaluator is only able to read one expression at a time. The more
+complete version, capable of dealing with multiple expressions in a sequence,
+is described below.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">compound-apply
+  (assign
+   unev
+   (procedure-body (fetch fun)))
+  (assign
+   env(make-bindings (fetch fun)
+                     (fetch argl)))
+  (goto eval-sequence)
+eval-sequence
+  (assign exp (first-exp (fetch unev)))
+  (branch (last-exp? (fetch unev))
+          last-exp)
+  (save unev) (save env)
+  (assign continue eval-sequence-cont)
+  (goto eval-dispatch)
+eval-sequence
+  (restore env) (restore unev)
+  (assign unev (rest-exps (fetch env)))
+  (goto-eval-sequence)
+last-exp
+  (restore continue)
+  (goto eval-dispatch)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
