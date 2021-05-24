@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-24 Mon 15:28 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 10a. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="An interpreter configures itself to emulate a machine whose description is fed in. In essence, the general strategy of interpretation is to raise the machine to the level of the programs. Compilation is different. In compilation, the program is lowered to the language of the machine."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 10a
+<br />
+<span class="subtitle">Compilation</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#interpreter-vs-compiler">1. Interpreter vs compiler</a></li>
+<li><a href="#dumb-compiler">2. Dumb compiler</a></li>
+<li><a href="#less-dumb-compiler">3. Less dumb compiler</a></li>
+<li><a href="#implementation">4. Implementation</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-interpreter-vs-compiler" class="outline-2">
+<h2 id="interpreter-vs-compiler"><span class="section-number-2">1</span> Interpreter vs compiler</h2>
+<div class="outline-text-2" id="text-interpreter-vs-compiler">
+
+<div id="org4f440a9" class="figure">
+<p><img src="./10a-interpreter.jpg" alt="10a-interpreter.jpg" />
+</p>
+</div>
+
+<p>
+An interpreter configures itself to emulate a machine whose description is fed
+in. In essence, the general strategy of interpretation is to raise the machine
+to the level of the programs. Compilation is different. In compilation, the
+program is lowered to the language of the machine.
+</p>
+
+
+<div id="org045bd7a" class="figure">
+<p><img src="./10a-compiler.jpg" alt="10a-compiler.jpg" />
+</p>
+</div>
+
+<p>
+Compilers generally produce code which executes more efficiently, as an
+interpreter has to produce register operations that are general enough to
+execute any procedure, whereas a compiler only has to worry about producing
+a special bunch of register operations for the particular procedure selected
+for compilation.
+</p>
+
+<p>
+Interpreters, which are essentially general purpose simulators, provide a nicer
+environment for debugging. Most LISPS may be both interpreted and compiled.
+</p>
+
+<p>
+In the following compilers, compiled code and interpreted code may call each
+other; the compiler has exactly the same register conventions as the
+interpreter.
+</p>
+</div>
+</div>
+
+<div id="outline-container-dumb-compiler" class="outline-2">
+<h2 id="dumb-compiler"><span class="section-number-2">2</span> Dumb compiler</h2>
+<div class="outline-text-2" id="text-dumb-compiler">
+<p>
+In a zero<sup>th</sup> order compiler: take the evaluator, run over the code, and
+instead of executing, just save the execution for later.
+</p>
+
+<p>
+<b>Register operations in interpreting <code>(f x)</code></b>
+</p>
+
+<p>
+19 lines in total.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(assign unev (operands (fetch exp)))
+(assign exp (operator (fetch exp)))
+(save continue)
+(save env)
+(save unev)
+(assign continue eval-args)
+(assign val (lookup-var-val (fetch exp) (fetch env)))
+(restore unev)
+(restore env)
+(assign fun (fetch val))
+(save fun)
+(assign argl '())
+...
+apply-dispatch
+</pre>
+</div>
+
+<p>
+The zero<sup>th</sup> compiler runs the evaluator, and stashes away these operations
+instead of actually executing them. For predicates, i.e. <code>(if p a b)</code>, every
+branch will have to be compiled since the predicate is not a foregone
+conclusion.
+</p>
+
+<p>
+<code>(if p a b)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">  &lt;code for p - result in val&gt;
+  branch if val is true to label 1
+  &lt;code for b&gt;
+  goto next thing
+label 1 &lt;code for a&gt;
+  goto next thing
+</pre>
+</div>
+
+<p>
+Apart from stashing and branching, a zero<sup>th</sup> order compiler is the same as an
+evaluator. Despite this, there is already an efficiency gain: an interpreter
+has to simultaneously analyse the code to decide what to do, as well as run the
+operation; compiled code only executes.
+</p>
+</div>
+</div>
+
+<div id="outline-container-less-dumb-compiler" class="outline-2">
+<h2 id="less-dumb-compiler"><span class="section-number-2">3</span> Less dumb compiler</h2>
+<div class="outline-text-2" id="text-less-dumb-compiler">
+<p>
+How can this compiler be improved? Both <code>exp</code> and <code>unev</code> are superfluous, as
+they are not registers of the actual machine; <code>exp</code> and <code>unev</code> are registers
+for simulation. From the compiler's point of view, the values contained in
+<code>exp</code> and <code>unev</code> are constants.
+</p>
+
+<p>
+Also, many assignments to <code>continue</code> are irrelevant, as often <code>continue</code> simply
+keeps track of where the evaluator analysis should continue. This is irrelevant
+for compiled code.
+</p>
+
+<p>
+The 19 lines of code can now be reduced to:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(save env)
+(assign val
+        (lookup-var-val 'f (fetch env)))
+(restore env)
+(assign fun (fetch val))
+(save fun)
+(assign argl '())
+(save argl)
+(assign val
+        (lookup-var-val 'x (fetch env)))
+(restore argl)
+(assign argl
+        (cons (fetch val)
+              (fetch argl)))
+(restore fun)
+</pre>
+</div>
+
+<p>
+There is still space for improvement. A compiler can be more judicious with
+saving and restoring. An evluator has to be maximally pessimistic. A compiler
+does not need to be as careful as an evalutor.
+</p>
+
+<p>
+Eliminating unnecessary stack operations:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(assign fun
+        (lookup-var-val 'f (fetch env)))
+(assign val
+        (lookup-var-val 'x (fetch env)))
+(assign argl (cons (fetch val) '()))
+computation proceeds at apply-dispatch
+</pre>
+</div>
+
+<p>
+For a more complicated expression, <code>(f (y x) 1)</code>, watch the video lecture.
+</p>
+</div>
+</div>
+
+<div id="outline-container-implementation" class="outline-2">
+<h2 id="implementation"><span class="section-number-2">4</span> Implementation</h2>
+<div class="outline-text-2" id="text-implementation">
+<p>
+So far we have seen what a compiler is supposed to do. Let's peer inside and
+see how these objectives are accomplished.
+</p>
+
+<p>
+<code>(op a1 a2)</code>
+</p>
+
+<pre class="example">
+// preserving env
+{compile op; result in fun}
+
+// preserving fun until apply-dispatch
+// preserving env
+{compile a1; result in val}
+(assign (cons (fetch val) '()))
+
+// preserving argl until assign
+{compile a2; result in val}
+(assign argl (cons (fetch val) (fetch argl)))
+
+(go-to apply-dispatch)
+</pre>
+
+<p>
+The basic means of combination is to append code sequences.
+</p>
+
+<pre class="example">
+append seq1 and seq2 preserving reg
+
+if seq needs reg and seq1 modifies reg:
+  (save reg)
+  &lt;seq1&gt;
+  (restore reg)
+  &lt;seq2&gt;
+otherwise:
+  &lt;seq1&gt;
+  &lt;seq2&gt;
+</pre>
+
+<p>
+A code sequence to a compiler looks like this:
+</p>
+<pre class="example">
+&lt;sequence of instructions; set of registers modified; set of registers needed&gt;
+</pre>
+
+<p>
+Example:
+</p>
+<pre class="example">
+&lt;(assign r1 (fetch r2)); {r1}; {r2}&gt;
+</pre>
+
+<p>
+Combining two sequences:
+</p>
+<pre class="example">
+&lt;s1; m1; n1&gt; and &lt;s2; m2; n2&gt;
+&lt;s1 and s2; m1 ∪ m2; n1 ∪ [n2-m1]&gt;
+</pre>
+
+<blockquote>
+<p>
+So there's the basic structure of the compiler. The way you do register
+optimisations is you have some strategies for what needs to be preserved&#x2026;
+That's the whole thing apart from thirty pages of detail in the book.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

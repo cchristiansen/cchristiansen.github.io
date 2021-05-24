@@ -3,12 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-19 Wed 15:14 -->
+<!-- 2021-05-24 Mon 15:45 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SICP 9b. Christian Christiansen.</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Christian Christiansen" />
+<meta name="description" content="So far, we have wseen the magic of building new languages: Escher picture language (by Peter Henderson), digital logic language, query language. Even though these have been toy examples, they are kernels for very useful things. All of them are based on LISP."
+ />
 <link rel="stylesheet" type="text/css" href="../main.css">
 </head>
 <body>
@@ -101,7 +103,7 @@ explicit.
 <h2 id="eval-apply"><span class="section-number-2">2</span> Eval/Apply</h2>
 <div class="outline-text-2" id="text-eval-apply">
 
-<div id="orgf0abc69" class="figure">
+<div id="org77af1f1" class="figure">
 <p><img src="./9b-computer.jpg" alt="9b-computer.jpg" />
 </p>
 </div>
@@ -245,11 +247,13 @@ Let's quickly recap what <code>eval</code> and <code>apply</code> are.
 </pre>
 </div>
 
-
-<div id="org1e53e71" class="figure">
-<p><img src="./8a-eval-apply.png" alt="8a-eval-apply.png" />
-</p>
+<p>
+<img src="./8a-eval-apply.png" alt="8a-eval-apply.png" />
+<div class="quoter">
+<a href="http://www.sicpdistilled.com/section/4.1/">Tom Hall (SICP Distilled)</a>, published under Creative Commons
+Attribution-ShareAlike 4.0 International License
 </div>
+</p>
 
 <p>
 We will have to capture this cycle in the register machine, by creating

@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-05-24 Mon 15:34 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SICP 10b. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="Gödel invented a method for encoding statements as numbers. Using a similar method, we can represent expressions as numbers."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">SICP 10b
+<br />
+<span class="subtitle">Storage Allocation &amp; Garbage Collection</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#encoding-expressions">1. Encoding expressions</a></li>
+<li><a href="#allocation">2. Allocation</a></li>
+<li><a href="#garbage-collection">3. Garbage collection</a></li>
+<li><a href="#halt">4. Halt</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-encoding-expressions" class="outline-2">
+<h2 id="encoding-expressions"><span class="section-number-2">1</span> Encoding expressions</h2>
+<div class="outline-text-2" id="text-encoding-expressions">
+<p>
+Gödel invented a method for encoding statements as numbers. Using a similar
+method, we can represent expressions as numbers:
+</p>
+
+<p>
+<code>(cons x y)</code> &rarr; <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="2^{x}3^{y}" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mrow id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">
+      <msup id="p1.1.m1.1.1.2" xref="p1.1.m1.1.1.2.cmml">
+        <mn id="p1.1.m1.1.1.2.2" xref="p1.1.m1.1.1.2.2.cmml">2</mn>
+        <mi id="p1.1.m1.1.1.2.3" xref="p1.1.m1.1.1.2.3.cmml">x</mi>
+      </msup>
+      <mo id="p1.1.m1.1.1.1" xref="p1.1.m1.1.1.1.cmml">⁢</mo>
+      <msup id="p1.1.m1.1.1.3" xref="p1.1.m1.1.1.3.cmml">
+        <mn id="p1.1.m1.1.1.3.2" xref="p1.1.m1.1.1.3.2.cmml">3</mn>
+        <mi id="p1.1.m1.1.1.3.3" xref="p1.1.m1.1.1.3.3.cmml">y</mi>
+      </msup>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <apply id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">
+        <times id="p1.1.m1.1.1.1.cmml" xref="p1.1.m1.1.1.1"/>
+        <apply id="p1.1.m1.1.1.2.cmml" xref="p1.1.m1.1.1.2">
+          <csymbol cd="ambiguous" id="p1.1.m1.1.1.2.1.cmml" xref="p1.1.m1.1.1.2">superscript</csymbol>
+          <cn type="integer" id="p1.1.m1.1.1.2.2.cmml" xref="p1.1.m1.1.1.2.2">2</cn>
+          <ci id="p1.1.m1.1.1.2.3.cmml" xref="p1.1.m1.1.1.2.3">𝑥</ci>
+        </apply>
+        <apply id="p1.1.m1.1.1.3.cmml" xref="p1.1.m1.1.1.3">
+          <csymbol cd="ambiguous" id="p1.1.m1.1.1.3.1.cmml" xref="p1.1.m1.1.1.3">superscript</csymbol>
+          <cn type="integer" id="p1.1.m1.1.1.3.2.cmml" xref="p1.1.m1.1.1.3.2">3</cn>
+          <ci id="p1.1.m1.1.1.3.3.cmml" xref="p1.1.m1.1.1.3.3">𝑦</ci>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">2^{x}3^{y}</annotation>
+  </semantics>
+</math>
+   <br />
+<code>(car x)</code> &rarr; number of factors of 2 in <code>x</code>. <br />
+<code>(cdr x)</code> &rarr; number of factors of 3 in <code>x</code>.
+</p>
+
+<p>
+The representation of expressions is not viable in the practical world.
+</p>
+
+<p>
+We are accustomed to visualising expressions in terms of tree structures, but
+semiconductor manufacturers provide linear memory. How can we represent trees
+in a linear space?
+</p>
+
+<p>
+Representation of <code>((1 2) 3 4)</code> in linear memory:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Index</td>
+<td class="org-left">0</td>
+<td class="org-left">1</td>
+<td class="org-left">2</td>
+<td class="org-left">3</td>
+<td class="org-left">4</td>
+<td class="org-left">5</td>
+<td class="org-left">6</td>
+<td class="org-left">7</td>
+<td class="org-left">8</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>the-cars</code></td>
+<td class="org-left">--</td>
+<td class="org-left">p5</td>
+<td class="org-left">n3</td>
+<td class="org-left">--</td>
+<td class="org-left">n4</td>
+<td class="org-left">n1</td>
+<td class="org-left">--</td>
+<td class="org-left">n2</td>
+<td class="org-left">--</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>the-cdrs</code></td>
+<td class="org-left">--</td>
+<td class="org-left">p2</td>
+<td class="org-left">p4</td>
+<td class="org-left">--</td>
+<td class="org-left">e0</td>
+<td class="org-left">p7</td>
+<td class="org-left">--</td>
+<td class="org-left">e0</td>
+<td class="org-left">--</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+This implementation requires vectors.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">(vector-ref &lt;vector&gt; &lt;index&gt;)
+
+(assign a (car (fetch b)))
+====&gt;
+(assign a (vector-ref (fetch the-cars)
+                      (fetch b)))
+
+(assign a (cdr (fetch b)))
+====&gt;
+(assign a (vector-ref (fetch the-cdrs)
+                      (fetch b)))
+
+(perform (set-car! (fetch a) (fetch b)))
+====&gt;
+(perform (vector-set! (fetch the-cars)
+                      (fetch a)
+                      (fetch b)))
+
+(perform (set-cdr! (fetch a) (fetch b)))
+====&gt;
+(perform (vector-set! (fetch the-cdrs)
+                      (fetch a)
+                      (fetch b)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-allocation" class="outline-2">
+<h2 id="allocation"><span class="section-number-2">2</span> Allocation</h2>
+<div class="outline-text-2" id="text-allocation">
+<p>
+<i>Free list allocation scheme</i> is a method for allocating memory. All of the
+free memory is linked together in a linked list. When a new list needs to be
+made, grab the first element in the linked list to be allocated, and re-assign
+the free list to be the cdr of the free list.
+</p>
+
+<p>
+With free list method of allocation:
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(assign a (cons (fetch b) (fetch c)))
+====&gt;
+(assign a (fetch free))
+(assign free
+        (vector-ref (fetch the-cdrs)
+                    (fetch free)))
+(perform (vector-set! (fetch the-cars)
+                      (fetch a)
+                      (fetch b)))
+(perform (vector-set! (fetch the-cdrs)
+                      (fetch a)
+                      (fetch c)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-garbage-collection" class="outline-2">
+<h2 id="garbage-collection"><span class="section-number-2">3</span> Garbage collection</h2>
+<div class="outline-text-2" id="text-garbage-collection">
+<p>
+Unfortunately, memory is finite. Previous allocations no longer in use will
+need to be reallotted.
+</p>
+
+<p>
+An example source of garbage.
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define (rev-loop x y)
+  (if (null? x)
+      y
+      (rev-loop (cdr x)
+                (cons (car x) y))))
+(define (append u v)
+  (rev-loop (rev-loop u'()) v))
+</pre>
+</div>
+
+<p>
+Many pieces of memory allocated in the intermediate steps will not and can not
+be accessed again. There is a technique to prove that this piece of junk will
+never be accessed again.
+</p>
+
+<p>
+The entire consciousness of machine is in its registers. If we start with all
+of the lead pointers that are in all of the registers and recursively go
+through marking all of the places we can get to by the selectors, then
+eventually we will mark everything that can be reached. Everything else is
+<i>garbage</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">gc
+  (assign thing (fetch root))
+  (assign continue sweep)
+mark
+  (branch (not-part? (fetch thing))
+          done)
+pair
+  (assign mark-flag
+          (vector-ref (fetch the-marks)
+                      (fetch thing)))
+  (branch (= (fetch mark-flag) 1)
+          done)
+  (perform
+   (vector-set! (fetch the-marks)
+                (fetch thing)
+                1))
+mcar
+  (push thing)
+  (push continue)
+  (assign continue mcdr)
+  (assign thing
+          (vector-ref (fetch the-cars)
+                      (fetch thing)))
+  (goto mark)
+mcdr
+  (pop continue)
+  (pop thing)
+  (assign thing
+          (vector-ref (fetch the-cdrs)
+                      (fetch thing)))
+  (goto mark)
+done
+  (goto (fetch continue))
+</pre>
+</div>
+
+<p>
+Because of the recursive nature of this algorithm, the garbage collector
+requires auxiliary memory of its own to run, putting limitations on the depth
+of nesting allowed in LISP systems.
+</p>
+
+<p>
+Peter Deutsch, Herb Schorr and Waite found a clever modification which allows
+for the algorithm to run without auxiliary memory.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scheme">sweep
+  (assign free '())
+  (assign scan (-1+ (fetch memtop)))
+slp
+  (branch (negative? (fetch scan))
+          end)
+  (assign mark-flag
+          (vector-ref (fetch the-marks)
+                      (fetch scan)))
+  (branch (= (fetch mark-flag) 1)
+          unmk)
+unmk
+  (perform
+   (vector-set! (fetch the-marks)
+                (fetch scan)
+                0))
+  (assign scan (-1+ (fetch scan)))
+  (goto slp)
+</pre>
+</div>
+
+<p>
+One serious disadvantage of mark-sweep algorithms is their unsuitability for
+systems with a lot of memory. The larger the memory, the more costly it becomes
+to scan all of the memory. Ideally, only the useful sections would be scanned.
+</p>
+
+<p>
+The Minksy-Feinchel-Yochelson garbage collector is the fastest known. It
+depends on having double the address space actively in use. The transition from
+FROMSPACE to TOSPACE is explained in depth in the book and demonstrated in the
+video.
+</p>
+
+<p>
+Henry Baker tinkered with this algorithm so that it can run in realtime.
+</p>
+
+<blockquote>
+<p>
+One thing you should realise is that garbage collectors have to be small. Not
+because they have to be fast, but because no one can debug a complicated
+garbage collector. A garbage collector, if it doesn't work, will trash your
+memory in such a way that you cannot figure out what the hell happened. You
+need an audit trail. Because it rearranges everything, and how do you know what
+happened there? So this is the only kind of program where it really seriously
+matters that if you stare at it long enough, you believe that it works.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-halt" class="outline-2">
+<h2 id="halt"><span class="section-number-2">4</span> Halt</h2>
+<div class="outline-text-2" id="text-halt">
+<p>
+Are there any impossible programs? Yes. One example is an evaluator, which
+takes a procedure as input and can determine whether that procedure will
+terminate or run forever.
+</p>
+
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" id="S0.Ex1.m1.3" class="ltx_Math" alttext="s[p,a]=\left\{\begin{array}[]{ll}\text{true if (p a) halts}\\&#10;\text{false if (p a) loops forever}\end{array}\right\@add@PDF@RDFa@triples\par" display="block">
+  <semantics id="S0.Ex1.m1.3a">
+    <mrow id="S0.Ex1.m1.3.4" xref="S0.Ex1.m1.3.4.cmml">
+      <mrow id="S0.Ex1.m1.3.4.2" xref="S0.Ex1.m1.3.4.2.cmml">
+        <mi id="S0.Ex1.m1.3.4.2.2" xref="S0.Ex1.m1.3.4.2.2.cmml">s</mi>
+        <mo id="S0.Ex1.m1.3.4.2.1" xref="S0.Ex1.m1.3.4.2.1.cmml">⁢</mo>
+        <mrow id="S0.Ex1.m1.3.4.2.3.2" xref="S0.Ex1.m1.3.4.2.3.1.cmml">
+          <mo stretchy="false" id="S0.Ex1.m1.3.4.2.3.2.1" xref="S0.Ex1.m1.3.4.2.3.1.cmml">[</mo>
+          <mi id="S0.Ex1.m1.1.1" xref="S0.Ex1.m1.1.1.cmml">p</mi>
+          <mo id="S0.Ex1.m1.3.4.2.3.2.2" xref="S0.Ex1.m1.3.4.2.3.1.cmml">,</mo>
+          <mi id="S0.Ex1.m1.2.2" xref="S0.Ex1.m1.2.2.cmml">a</mi>
+          <mo stretchy="false" id="S0.Ex1.m1.3.4.2.3.2.3" xref="S0.Ex1.m1.3.4.2.3.1.cmml">]</mo>
+        </mrow>
+      </mrow>
+      <mo id="S0.Ex1.m1.3.4.1" xref="S0.Ex1.m1.3.4.1.cmml">=</mo>
+      <mrow id="S0.Ex1.m1.3.4.3.2" xref="S0.Ex1.m1.3.4.3.1.cmml">
+        <mo id="S0.Ex1.m1.3.4.3.2.1" xref="S0.Ex1.m1.3.4.3.1.1.cmml">{</mo>
+        <mtable columnspacing="5pt" displaystyle="true" rowspacing="0pt" id="S0.Ex1.m1.3.3" xref="S0.Ex1.m1.3.3.cmml">
+          <mtr id="S0.Ex1.m1.3.3a" xref="S0.Ex1.m1.3.3.cmml">
+            <mtd columnalign="left" id="S0.Ex1.m1.3.3b" xref="S0.Ex1.m1.3.3.cmml">
+              <mtext id="S0.Ex1.m1.3.3.1.1.1" xref="S0.Ex1.m1.3.3.1.1.1a.cmml">true if (p a) halts</mtext>
+            </mtd>
+            <mtd id="S0.Ex1.m1.3.3c" xref="S0.Ex1.m1.3.3.cmml"/>
+          </mtr>
+          <mtr id="S0.Ex1.m1.3.3d" xref="S0.Ex1.m1.3.3.cmml">
+            <mtd columnalign="left" id="S0.Ex1.m1.3.3e" xref="S0.Ex1.m1.3.3.cmml">
+              <mtext id="S0.Ex1.m1.3.3.2.1.1" xref="S0.Ex1.m1.3.3.2.1.1a.cmml">false if (p a) loops forever</mtext>
+            </mtd>
+            <mtd id="S0.Ex1.m1.3.3f" xref="S0.Ex1.m1.3.3.cmml"/>
+          </mtr>
+        </mtable>
+        <mi id="S0.Ex1.m1.3.4.3.2.2" xref="S0.Ex1.m1.3.4.3.1.1.cmml"/>
+      </mrow>
+    </mrow>
+    <annotation-xml encoding="MathML-Content" id="S0.Ex1.m1.3b">
+      <apply id="S0.Ex1.m1.3.4.cmml" xref="S0.Ex1.m1.3.4">
+        <eq id="S0.Ex1.m1.3.4.1.cmml" xref="S0.Ex1.m1.3.4.1"/>
+        <apply id="S0.Ex1.m1.3.4.2.cmml" xref="S0.Ex1.m1.3.4.2">
+          <times id="S0.Ex1.m1.3.4.2.1.cmml" xref="S0.Ex1.m1.3.4.2.1"/>
+          <ci id="S0.Ex1.m1.3.4.2.2.cmml" xref="S0.Ex1.m1.3.4.2.2">𝑠</ci>
+          <interval closure="closed" id="S0.Ex1.m1.3.4.2.3.1.cmml" xref="S0.Ex1.m1.3.4.2.3.2">
+            <ci id="S0.Ex1.m1.1.1.cmml" xref="S0.Ex1.m1.1.1">𝑝</ci>
+            <ci id="S0.Ex1.m1.2.2.cmml" xref="S0.Ex1.m1.2.2">𝑎</ci>
+          </interval>
+        </apply>
+        <apply id="S0.Ex1.m1.3.4.3.1.cmml" xref="S0.Ex1.m1.3.4.3.2">
+          <csymbol cd="latexml" id="S0.Ex1.m1.3.4.3.1.1.cmml" xref="S0.Ex1.m1.3.4.3.2.1">cases</csymbol>
+          <matrix id="S0.Ex1.m1.3.3.cmml" xref="S0.Ex1.m1.3.3">
+            <matrixrow id="S0.Ex1.m1.3.3a.cmml" xref="S0.Ex1.m1.3.3">
+              <ci id="S0.Ex1.m1.3.3.1.1.1a.cmml" xref="S0.Ex1.m1.3.3.1.1.1">
+                <mtext id="S0.Ex1.m1.3.3.1.1.1.cmml" xref="S0.Ex1.m1.3.3.1.1.1">true if (p a) halts</mtext>
+              </ci>
+              <cerror id="S0.Ex1.m1.3.3b.cmml" xref="S0.Ex1.m1.3.3">
+                <csymbol cd="ambiguous" id="S0.Ex1.m1.3.3c.cmml" xref="S0.Ex1.m1.3.3">missing-subexpression</csymbol>
+              </cerror>
+            </matrixrow>
+            <matrixrow id="S0.Ex1.m1.3.3d.cmml" xref="S0.Ex1.m1.3.3">
+              <ci id="S0.Ex1.m1.3.3.2.1.1a.cmml" xref="S0.Ex1.m1.3.3.2.1.1">
+                <mtext id="S0.Ex1.m1.3.3.2.1.1.cmml" xref="S0.Ex1.m1.3.3.2.1.1">false if (p a) loops forever</mtext>
+              </ci>
+              <cerror id="S0.Ex1.m1.3.3e.cmml" xref="S0.Ex1.m1.3.3">
+                <csymbol cd="ambiguous" id="S0.Ex1.m1.3.3f.cmml" xref="S0.Ex1.m1.3.3">missing-subexpression</csymbol>
+              </cerror>
+            </matrixrow>
+          </matrix>
+        </apply>
+      </apply>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="S0.Ex1.m1.3c">s[p,a]=\left\{\begin{array}[]{ll}\text{true if (p a) halts}\\
+\text{false if (p a) loops forever}\end{array}\right\@add@PDF@RDFa@triples\par</annotation>
+  </semantics>
+</math>
+
+</p>
+
+<p>
+Supposing we could create such a procedure called <code>safe?</code> which computes the
+value of <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="s" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">s</mi>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑠</ci>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">s</annotation>
+  </semantics>
+</math>
+ (where <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="p" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">p</mi>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑝</ci>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">p</annotation>
+  </semantics>
+</math>
+ is a procedure and <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="a" display="inline">
+  <semantics id="p1.1.m1.1a">
+    <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">a</mi>
+    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
+      <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑎</ci>
+    </annotation-xml>
+    <annotation encoding="application/x-tex" id="p1.1.m1.1c">a</annotation>
+  </semantics>
+</math>
+ its arguments), we quickly run
+into contradictions.
+</p>
+
+<p>
+<b>Proof 1</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define diag1
+  (lambda (p)
+    (if (safe? p p)
+        (inf)
+        3)))
+(define inf
+  (lambda ()
+    ((lambda (x) (x x))
+     (lambda (x) (x x)))))
+(diag1 diag1)
+</pre>
+</div>
+
+<p>
+Is <code>diag1</code> safe? If yes, it returns an infinite loop, which is a contradiction.
+If no, it returns 3, so it is safe, which is also a contradiction. Hence no
+such procedure <code>safe?</code> may exist.
+</p>
+
+<p>
+<b>Proof 2</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-scheme">(define diag2
+  (lambda (p)
+    (if (safe? p p)
+        (other-than (p p))
+        false)))
+(defien other-than
+  (lambda (x)
+    (if (eq? x 'a)
+        'b
+        'a)))
+</pre>
+</div>
+
+<p>
+Then <code>(diag2 diag2)</code> = <code>(other-than (diag2 diag2))</code> which is evidently
+nonsensical.
+</p>
+
+<p>
+Both proofs use the procedure <code>diag</code> as the proofs bear similarity to
+Cantor's diagonal argument for the existence of multiple infinities.
+</p>
+
+
+<blockquote>
+<p>
+So I suppose that pretty much wraps it up. I've just proved what we call the
+halting theorem, and I suppose with that we're going to halt. I hope you've had
+a good time.
+</p>
+</blockquote>
+
+<p>
+And with that, I suppose this is the last sentence.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.png"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
