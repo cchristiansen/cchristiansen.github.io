@@ -30,7 +30,7 @@ class Entry:
     @property
     def content(self):
         return re.search(
-            ".*?<div id=\"content\">(.*?)</div>\n<div id=\"postamble\".*?",
+            ".*?<div id=\"content\">(.*?)</div>\n<div class=\"footer\".*?",
             self.text,
             re.DOTALL).group(1)
 
