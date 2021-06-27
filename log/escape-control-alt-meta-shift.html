@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-06-16 Wed 16:18 -->
+<!-- 2021-06-28 Mon 08:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Escape Control Alt Meta Shift. Christian Christiansen.</title>
@@ -17,7 +17,7 @@
 <div id="content">
 <h1 class="title">Escape Control Alt Meta Shift</h1>
 
-<div id="orgd74d719" class="figure">
+<div id="orgec7ac2b" class="figure">
 <p><img src="./pinky.jpg" alt="pinky.jpg" />
 </p>
 </div>
@@ -173,6 +173,42 @@ sudo systemctl start udevmon
 Et voilà! My thumb and right pinky can now relieve my left pinky of most of its
 duties. And I'll soon be back on the wall, cursing crimpy dynamic slabs.
 </p>
+</div>
+</div>
+
+<div id="outline-container-update" class="outline-2">
+<h2 id="update"><b>UPDATE</b></h2>
+<div class="outline-text-2" id="text-update">
+<p>
+To only set <code>dual-function-keys</code> on for one user, and leave the keyboard
+unchanged for other users, use <a href="https://gitlab.com/interception/linux/plugins/uswitch"><code>uswitch</code></a>. Install <code>uswitch</code> via the AUR and
+edit the below configuration file.
+</p>
+
+<p>
+<code>/etc/interception/udevmon.d/keys.yaml</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-yaml">- CMD: mux -c kbd -c dfk
+- JOB:
+  - mux -i dfk | dual-function-keys -c /path/to/dfk.yaml | mux -o kbd
+  - mux -i kbd | uinput -c /etc/interception/keyboard.yaml
+- JOB: intercept -g $DEVNODE | uswitch -o kbd -u christian -o dfk
+  DEVICE:
+    EVENTS:
+      EV_KEY: [KEY_CAPSLOCK, KEY_SPACE, KEY_ENTER]
+</pre>
+</div>
+
+<p>
+To create <code>/etc/interception/keyboard.yaml</code>, run the following command.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo uinput -p -d /dev/input/by-path/*-kbd | \
+sudo tee /etc/interception/keyboard.yaml
+</pre>
+</div>
 </div>
 </div>
 </div>
