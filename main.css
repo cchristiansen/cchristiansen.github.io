@@ -107,7 +107,7 @@ h3, h4 {
 p, .verse {
     margin-left: 0em;
     line-height: 1.4;
-    font-size: 1.4em;
+    font-size: 1.2em;
 }
 
 p, blockquote, li, table, .verse {
@@ -121,8 +121,6 @@ p, blockquote, li, table, .verse {
 }
 
 li, table {
-    line-height: 1.4;
-    font-size: 16pt;
 }
 
 table {
