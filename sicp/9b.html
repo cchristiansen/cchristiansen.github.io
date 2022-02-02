@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-24 Mon 15:45 -->
+<!-- 2022-02-03 Thu 08:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SICP 9b. Christian Christiansen.</title>
@@ -36,9 +36,9 @@
 So far, we have seen the magic of building new languages:
 </p>
 <ul class="org-ul">
-<li>Escher picture language (by Peter Henderson),</li>
-<li>digital logic language,</li>
-<li>query language.</li>
+<li><p>Escher picture language (by Peter Henderson),</p></li>
+<li><p>digital logic language,</p></li>
+<li><p>query language.</p></li>
 </ul>
 
 <p>
@@ -103,7 +103,7 @@ explicit.
 <h2 id="eval-apply"><span class="section-number-2">2</span> Eval/Apply</h2>
 <div class="outline-text-2" id="text-eval-apply">
 
-<div id="org77af1f1" class="figure">
+<div id="org9e3bec5" class="figure">
 <p><img src="./9b-computer.jpg" alt="9b-computer.jpg" />
 </p>
 </div>
@@ -264,32 +264,32 @@ We will have to capture this cycle in the register machine, by creating
 <b>Contract that <code>eval-dispatch</code> fulfills</b>
 </p>
 <ul class="org-ul">
-<li>The <code>exp</code> register holds an expression to be evaluated.</li>
-<li>The <code>env</code> register holds the environment in which the expression is to be
-evaluated.</li>
-<li>The <code>continue</code> register holds a place to go to next.</li>
-<li>The result will be left in the <code>val</code> register. Contents of all other
-registers may be destroyed.</li>
+<li><p>The <code>exp</code> register holds an expression to be evaluated.</p></li>
+<li><p>The <code>env</code> register holds the environment in which the expression is to be
+evaluated.</p></li>
+<li><p>The <code>continue</code> register holds a place to go to next.</p></li>
+<li><p>The result will be left in the <code>val</code> register. Contents of all other
+registers may be destroyed.</p></li>
 </ul>
 
 <p>
 <b>Contract that <code>apply-dipatch</code> fulfills</b>
 </p>
 <ul class="org-ul">
-<li>The <code>argl</code> register contains a list of arguments.</li>
-<li>The <code>fun</code> register contains a procedure to be applied.</li>
-<li>The top of the stack holds a place to go to next.</li>
-<li>The result will be left in the <code>val</code> register. The stack will be popped.
-Contents of all other registers may be destroyed.</li>
+<li><p>The <code>argl</code> register contains a list of arguments.</p></li>
+<li><p>The <code>fun</code> register contains a procedure to be applied.</p></li>
+<li><p>The top of the stack holds a place to go to next.</p></li>
+<li><p>The result will be left in the <code>val</code> register. The stack will be popped.
+Contents of all other registers may be destroyed.</p></li>
 </ul>
 
 <p>
 In the video, the following expressions are covered step-by-step:
 </p>
 <ol class="org-ol">
-<li><code>1</code></li>
-<li><code>x</code></li>
-<li><code>(+ x y)</code></li>
+<li><p><code>1</code></p></li>
+<li><p><code>x</code></p></li>
+<li><p><code>(+ x y)</code></p></li>
 </ol>
 <p>
 in the environment e<sub>0</sub> where <code>x = 3</code>, <code>y = 4</code>.
