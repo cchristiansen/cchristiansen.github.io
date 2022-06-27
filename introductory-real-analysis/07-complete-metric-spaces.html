@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-06-27 Mon 10:37 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Metric Spaces: Complete Metric Spaces. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Metric Spaces: Complete Metric Spaces</h1>
+<p>
+<i>Cauchy criterion:</i> for all \(\epsilon > 0\) there exists \(N_\epsilon\) such that
+\(\rho(x_n, x_{n^\prime}) < \epsilon\) for all \(n, n^\prime > N_\epsilon\). A
+sequence satisfying this criterion is called a <i>Cauchy sequence</i> or <i>fundamental</i>.
+</p>
+
+<p>
+<b>Theorem 1</b>
+</p>
+<div class="theorem" id="org523925c">
+<p>
+Every convergent sequence \(\{x_n\}\) is fundamental.
+</p>
+
+</div>
+
+<p>
+<i>Complete</i> if every Cauchy sequence in \(R\) converges to an element of \(R\).
+<i>Incomplete</i> otherwise.
+</p>
+
+<p>
+<b>Theorem 2</b> (Nested sphere theorem)
+Complete if and only if every nested sequence
+\[\{S_n\} = \{S_\infty [x_n, r_n]\}\]
+of closed spheres such that \(r_n \rightarrow 0\) as \(n \rightarrow \infty\) has a
+nonempty intersection \(\cap_{n=1}^\infty S_n\).
+</p>
+
+<p>
+<b>Theorem 3</b> (Baire)
+A complete metric space cannot be represented as the union of a countable
+number of nowhere dense sets.
+</p>
+
+<p>
+\(R^*\) <i>completion</i> of \(R\) if \(R \subseteq R^*\) and \([R] = R^*\).
+</p>
+
+<p>
+<b>Theorem 4</b>
+Every metric space \(R\) has a completion. This completion is unique to within
+an isometric mapping carrying every point \(x \in R\) into itself.
+</p>
+
+<div id="outline-container-complete-metric-spaces-problems" class="outline-2">
+<h2 id="complete-metric-spaces-problems">Problems</h2>
+<div class="outline-text-2" id="text-complete-metric-spaces-problems">
+<ol class="org-ol">
+<li><p><p>
+Prove that the limit \(f(t)\) of a uniformly convergent sequence of functions
+\(\{f_n(t)\}\) continuous on \([a, b]\) is itself a function continuous on \([a,
+   b]\).
+</p>
+
+<p>
+<i>Hint.</i> Clearly
+\[|f(t) - f(t_0)| \leq |f(t) - f_n(t)| + |f_n(t) - f_n(t_0)| + |f_n(t_0) -
+   f(t_0)|\]
+where \(t, t_0 \in [a, b]\). Use the uniform convergence to make the sum of
+the first and third terms on the right small for sufficiently large \(n\).
+Then use the continuity of \(f_n(t)\) to make the second term small for \(t\)
+sufficiently close to \(t_0\).
+</p>
+
+<p>
+Do as the hint says.
+</p></p></li>
+<li><p><p>
+Prove that the space \(m\) is complete.
+</p>
+
+<p>
+\(\rho(x_n, x_{n^\prime}) = \sup_k (x_{n_k} - x_{{n^\prime}_k}) < \epsilon\)
+</p></p></li>
+<li><p><p>
+Prove that if \(R\) is ocmplete, then the intersection \(\cap_{n = 1}^\infty
+   S_n\) riguring in Theorem 2 consists of a single point.
+</p>
+
+<p>
+\(R\) complete, so limit in \(R\) by definition. And by Theorem 2, intersection
+nonempty.
+</p></p></li>
+<li><p><p>
+The <i>diameter</i> of a subset \(A\) of a metric space \(R\) is
+\[d(A) = \sup_{x, y \in A} \rho(x, y)\]
+Suppose \(R\) complete, and let \(\{A_n\}\) be a sequence of nested of closed
+subsets of \(R\). Suppose further that \(\lim_{d \rightarrow \infty} d(A_n) =
+   0\). Prove that the intersection \(\cap_{n = 1}^\infty A_n\) is nonempty.
+</p>
+
+<p>
+Same as the nested sphere theorem. Also use definition of complete.
+</p></p></li>
+<li><p><p>
+A subset \(A\) of a metric space \(R\) is said to be <i>bounded</i> if its diameter
+\(d(A)\) is finite. Prove that the union of a finite number of bounded sets is
+bounded.
+</p>
+
+<p>
+There’ll always still be a lowest and hightest number.
+</p></p></li>
+<li><p><p>
+Give an example of a complete metric space \(R\) and a nested sequence
+\(\{A_n\}\) of closed subsets of \(R\) such that \(\cap_{n=1}^\infty A_n =
+   \emptyset\). Reconcile this example with Problem 4.
+</p>
+
+<p>
+Take all of the subsets to be the empty set. The diameter limit no longer
+holds.
+</p></p></li>
+<li><p><p>
+Prove that a subspace of a complete metric space \(R\) is complete if and only
+if it is closed.
+</p>
+
+<p>
+Both ways by definitions.
+</p></p></li>
+<li><p><p>
+Prove that the real line equipped with the distance
+\[\rho(x, y) = |\arctan x - \arctan y|\]
+is an incomplete metric space.
+</p>
+
+<p>
+\(\frac{\pi}{2}\).
+</p></p></li>
+<li><p><p>
+Give anxample of a complete metric space homeomorphic to an incomplete
+metric space.
+</p>
+
+<p>
+\(f(x) = \frac{2}{\pi} \arctan x\)
+</p></p></li>
+<li><p><p>
+Construct the real number system.
+</p>
+
+<p>
+<i>Hint.</i> If \(\{x_n\}\) and \(\{y_n\}\) are Cauchy sequences of rational numbers
+serving as ‘representatives’ of real numbers \(x^*\) and \(y^*\), respectively,
+define \(x^* + y^*\) as the real number with representative \(\{x_n + y_n\}\).
+</p>
+
+<p>
+Also need to define the products, and verify that the usual axioms of
+arithmetic are satisfied.
+</p></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

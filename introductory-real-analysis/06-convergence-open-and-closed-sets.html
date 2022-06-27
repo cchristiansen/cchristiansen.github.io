@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-06-26 Sun 13:04 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Metric Spaces: Convergence. Open and Closed Sets. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Metric Spaces: Convergence. Open and Closed Sets</h1>
+<p>
+Definitions for <i>open ball</i>, <i>center</i>, <i>radius</i>, \(\epsilon\)​-<i>neighbourhood</i>,
+<i>contact point</i>, <i>closure</i>, <i>closure operator</i>.
+</p>
+
+<p>
+<b>Theorem 1</b>
+</p>
+<div class="theorem" id="org293bec6">
+<p>
+Closure has 4 properties:
+</p>
+<ol class="org-ol">
+<li><p>If \(M \subseteq N\) then \([M] \subseteq [N]\);</p></li>
+<li><p>\([[M]​] = [M]\);</p></li>
+<li><p>\([M \cup N] = [M] \cup [N]\);</p></li>
+<li><p>\([\emptyset] = \emptyset\).</p></li>
+</ol>
+
+</div>
+
+<p>
+Definitions for <i>limit point</i>, <i>isolated point</i>, <i>converge</i>, <i>limit</i>.
+</p>
+
+<p>
+<b>Theorem 2</b>
+</p>
+<div class="theorem" id="org174f6d0">
+<p>
+Necessary and sufficient condition for \(x\) to be contact point of \(M\) is the
+existence of a sequence \(\{x_n\}\) of points of \(M\) converging to \(x\).
+</p>
+
+</div>
+
+<p>
+<b>Theorem 2’</b>
+</p>
+<div class="theorem" id="org9c0f17f">
+<p>
+Same but with limit point.
+</p>
+
+</div>
+
+<p>
+Definitions of <i>dense</i>, <i>everywhere dense</i>, <i>nowhere dense</i>, <i>separable</i>,
+<i>closed</i>.
+</p>
+
+<p>
+<b>Theorem 3</b>
+</p>
+<div class="theorem" id="org088b1b5">
+<p>
+Intersection of arbitrary number of closed sets is closed. Union of finite
+number of closed sets is closed.
+</p>
+
+</div>
+
+<p>
+Definition of <i>interior point</i>.
+</p>
+
+<p>
+<b>Theorem 4</b>
+</p>
+<div class="theorem" id="org7373d9c">
+<p>
+Subset \(M\) of metric space \(R\) is open iff \(R-M\) is closed.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 5</b>
+</p>
+<div class="theorem" id="org2364186">
+<p>
+Union of arbitrary number of open sets is open. Intersection of finite number
+of open sets is open.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 6</b>
+</p>
+<div class="theorem" id="org2ab87ed">
+<p>
+Every open set \(G\) on the real line is the union of a finite or countable
+system of pairwise disjoint open intervals.
+</p>
+
+</div>
+
+<div id="outline-container-convergence-open-and-closed-sets-problems" class="outline-2">
+<h2 id="convergence-open-and-closed-sets-problems">Problems</h2>
+<div class="outline-text-2" id="text-convergence-open-and-closed-sets-problems">
+<ol class="org-ol">
+<li><p><p>
+Give an example of a metric space \(R\) and two open spheres \(S(x, r_1)\) and
+\(S(y, r_2)\) in \(R\) such that \(S(x, r_1) \subseteq S(y, r_2)\) although \(r_1 >
+   r_2\).
+</p>
+
+<p>
+\(R\) unit sphere. \(r_1 = 2\), \(r_2 = 1\).
+</p></p></li>
+<li><p><p>
+Prove that every contact point of a set \(M\) is either a limit point of \(M\)
+or an isolated point of \(M\).
+</p>
+
+<p>
+Theorem 2 and definition.
+</p></p></li>
+<li><p><p>
+Prove that if \(x_n \rightarrow x\) and \(y_n \rightarrow y\) as \(n \rightarrow
+   \infty\), then \(\rho(x_n, y_n) \rightarrow \rho(x, y)\).
+</p>
+
+<p>
+\(|\rho(x_n, x) = 0|\), \(|\rho(y_n, y) = 0|\), \(|\rho(x_n, y_n) - \rho(x, y)|
+   \leq \rho(x_n, x) + \rho(y_n, y)|\)
+</p></p></li>
+<li><p><p>
+\(f: X \rightarrow Y\) mapping between metric spaces. Prove that \(f\) is
+continuous at a point \(x_0\) if and only if the sequence \(\{y_n\} =
+   \{f(x_n)\}\) converges to \(y = f(x_0)\) whenever the sequence \(\{x_n\}\)
+converges to \(x_0\).
+</p>
+
+<p>
+Show implication both ways.
+</p></p></li>
+<li><p>Prove the statements:
+<ol class="org-ol">
+<li><p><p>
+The closure of any set \(M\) is closed.
+</p>
+
+<p>
+By definition.
+</p></p></li>
+<li><p><p>
+\([M]\) is the smallest closed set containing \(M\).
+</p>
+
+<p>
+Trivial.
+</p></p></li>
+</ol></p></li>
+<li><p><p>
+Is the union of infinitely many closed sets necessarily closed? How about
+the intersection of inifinitely many open sets? Give examples.
+</p>
+
+<p>
+No.
+</p></p></li>
+<li><p><p>
+Prove directly that the point \(\frac{1}{4}\) belongs to the Cantor set \(F\),
+although it is not an end point of any of the open intervals deleted in
+constructing \(F\).
+</p>
+
+<p>
+0, 2, 0, 2, …
+</p></p></li>
+<li><p>\(F\) Cantor set. Prove:
+<ol class="org-ol">
+<li><p><p>
+The points of the first kind
+\[0, 1, \frac{1}{3}, \frac{2}{3}, \frac{1}{9}, \frac{2}{9}, \frac{7}{9},
+      \frac{8}{9}\]
+form an everywhere dense subset of \(F\).
+</p>
+
+<p>
+For any \(\epsilon\) can find \(k\) and \(n\) s.t.
+$$x-&epsilon; &lt; \frac{3k}{3^n} &lt; x &lt; \frac{3k+1}{3^n} &lt; x + &epsilon;$.
+</p></p></li>
+<li><p><p>
+The numbers of the form \(t_1 + t_2\), where \(t_1, t_2 \in F\), fill the
+whole interval \([0, 2]\).
+</p>
+
+<p>
+Jeffrey had the great idea of switching it into \(\frac{t_1+t_2}{2} \in
+      [0, 1]\). Then for each digit (i.e. 0, 1, 2), can choose for \(t_1\) and
+\(t_2\) to average out to it.
+</p></p></li>
+</ol></p></li>
+<li><p>Given a metric space \(R\), let \(A\) be a subset of \(R\) and \(x\) a point of \(R\).
+Then the number
+\[\rho(A, x) = \inf_{a \in A} \rho(a, x)\]
+is called the <i>distance between A and x</i>. Prove that:
+<ol class="org-ol">
+<li><p><p>
+\(x \in A\) imples \(\rho(A, x) = 0\) but not conversely.
+</p>
+
+<p>
+Easy.
+</p></p></li>
+<li><p><p>
+\(\rho(A, x)\) is a continuous function of \(x\) (for fixed \(A\)).
+</p>
+
+<p>
+Step through the steps.
+</p></p></li>
+<li><p><p>
+\(\rho(A, x) = 0\) if and only if \(x\) is a contact point of A.
+</p>
+
+<p>
+Easy.
+</p></p></li>
+<li><p><p>
+\([A] = A \cup M\), where \(M\) is the set of all points \(x\) such that
+\(\rho(A, x) = 0\).
+</p>
+
+<p>
+Show implication both ways. Also use result from directly above.
+</p></p></li>
+</ol></p></li>
+<li><p><p>
+Let \(A\) and \(B\) be two subsets of a metric space \(R\). Then the number
+\[\rho(A, B) = \inf_{a \in A; b \in B} \rho(a, b)\]
+is called the <i>distance between A and B</i>. Show that \(\rho(A, B) = 0\) if \(A
+    \cup B \neq \emptyset\), but not conversely.
+</p>
+
+<p>
+Easy enough.
+</p></p></li>
+<li><p>Let \(M_K\) be the set of all functions \(f\) in \(C_{[a, b]}\) satisfying a
+<i>Lipschitz condition</i>, i.e. the set of all \(f\) such that
+\[|f(t_1) - f(t_2)| \leq K|t_1 - t_2|\]
+for all \(t_1, t_2 \in [a, b]\), where \(K\) is a fixed positive number. Prove
+that
+<ol class="org-ol">
+<li><p>\(M_K\) is closed and in fact is the closure of the set of all
+differentiable functions on \([a, b]\) such that \(|f \prime (t)| \leq K\).</p></li>
+<li><p>The set
+\[M = \cup_K M_K\]
+of all functions satisfying a Lipschitz condition for some \(K\) is not
+closed.</p></li>
+<li><p><p>
+The closure of \(M\) is the whole space \(C_{[a, b]}\).
+</p>
+
+<p>
+<b>TODO</b> solutions.
+</p></p></li>
+</ol></p></li>
+<li><p><p>
+An open set \(G\) in \(n\)​-dimensional Euclidean space \(R^n\) is said to be
+<i>connected</i> if any points \(x, y \in G\) can be joined by a polygonal line
+lying entirely in \(G\). For example, the (open) disk \(x^2 + y^2 < 1\) is
+connected, but not the union of the two disks
+\[x^2 + y^2 < 1, \quad (x-2)^2 + y^2 < 1\]
+(even though they share a contact point). An open subset of an open set \(G\)
+is called a <i>component</i> of \(G\) if it is connected and is not contained in a
+larger connected subset of \(G\). Use Zorn’s lemma to prove that every open
+set \(G\) in \(R^n\) is the union of no more than countably many pairwise
+disjoint components.
+</p>
+
+<p>
+<b>TODO</b> solution.
+</p></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

@@ -3,15 +3,36 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-02-08 Tue 19:49 -->
+<!-- 2022-06-27 Mon 11:13 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Introductory Real Analysis. Christian Christiansen.</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Christian Christiansen" />
-<meta name="description" content="/Introductory Real Analysis/ is a translation, and revision, by Richard A. Silverman of Элементы теории функций и функционального анализа (Elements of the Theory of Functions and Functional Analysis), written by Андре́й Никола́евич Колмого́ров (Andrey Nikolaevich Kolmogorov) and Серге́й Васи́льевич Фоми́н (Sergei Vasilyevich Fomin). Based off of a cursory glance, Silverman’s translation is superior to the overly literal translation available called /Elements of the Theory of the Theory of Functions and Functional Analysis/."
+<meta name="description" content="/Introductory Real Analysis/ is a translation, and revision, by Richard A. Silverman of the second edition of Элементы теории функций и функционального анализа (Elements of the Theory of Functions and Functional Analysis), written by Андрей Николаевич Колмогоров (Andrey Nikolaevich Kolmogorov) and Сергей Васильевич Фомни (Sergei Vasilyevich Fomin)."
  />
 <link rel="stylesheet" type="text/css" href="../main.css">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://christianchristiansen.net/mathjax/tex-chtml.js"></script>
 </head>
 <body>
 <div id="content">
@@ -20,182 +41,42 @@
 <i>Introductory Real Analysis</i> is a translation, and revision, by Richard A.
 Silverman of the second edition of Элементы теории функций и функционального
 анализа (Elements of the Theory of Functions and Functional Analysis), written
-by Андре́й Никола́евич Колмого́ров (Andrey Nikolaevich Kolmogorov) and Серге́й
-Васи́льевич Фоми́н (Sergei Vasilyevich Fomin). The original Russian ran to a
-total of four editions. Based off of a cursory glance, Silverman’s translation
-is more fluent (and up to date) than the overly literal translation by Leo F.
-Boron of the first edition called <i>Elements of the Theory of the Theory of
-Functions and Functional Analysis</i>. However, Silverman appears to have
-introduced several mathematical errors.
+by Андрей Николаевич Колмогоров (Andrey Nikolaevich Kolmogorov) and Сергей
+Васильевич Фомни (Sergei Vasilyevich Fomin).
 </p>
 
 <p>
-The prose and diagrammes are terse, clear, and enlightening. The problems
-within bite. What more could a budding mathematician hope for?
+The original Russian ran to a total of four editions. Based off of a cursory
+glance, Silverman’s translation is more fluent (and up to date) than the overly
+literal translation by Leo F. Boron of the first edition called <i>Elements of
+the Theory of the Theory of Functions and Functional Analysis</i>. However,
+Silverman appears to have introduced several mathematical errors.
 </p>
 
 <div id="outline-container-errata" class="outline-2">
 <h2 id="errata">Errata</h2>
 <div class="outline-text-2" id="text-errata">
 <p>
-As (seemingly) no official errata page is available (though a collection
-uploaded by Charlie Hoang is available <a href="https://idoc.pub/documents/errata-for-kolmogorov-real-analysis-34wmxxgr68l7">here</a>), I will collate errors Jeffrey
-Kwan and I come across below:
+As no official errata page is available (though a collection uploaded by
+Charlie Hoang is available <a href="https://idoc.pub/documents/errata-for-kolmogorov-real-analysis-34wmxxgr68l7">here</a>), I will collate errors Jeffrey Kwan and I come
+across below:
 </p>
 
 <ul class="org-ul">
-<li><p>Page 11: <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="\dfrac{0}{1}=0" display="inline">
-  <semantics id="p1.1.m1.1a">
-    <mrow id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">
-      <mstyle displaystyle="true" id="p1.1.m1.1.1.2" xref="p1.1.m1.1.1.2.cmml">
-        <mfrac id="p1.1.m1.1.1.2a" xref="p1.1.m1.1.1.2.cmml">
-          <mn id="p1.1.m1.1.1.2.2" xref="p1.1.m1.1.1.2.2.cmml">0</mn>
-          <mn id="p1.1.m1.1.1.2.3" xref="p1.1.m1.1.1.2.3.cmml">1</mn>
-        </mfrac>
-      </mstyle>
-      <mo id="p1.1.m1.1.1.1" xref="p1.1.m1.1.1.1.cmml">=</mo>
-      <mn id="p1.1.m1.1.1.3" xref="p1.1.m1.1.1.3.cmml">0</mn>
-    </mrow>
-    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
-      <apply id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">
-        <eq id="p1.1.m1.1.1.1.cmml" xref="p1.1.m1.1.1.1"/>
-        <apply id="p1.1.m1.1.1.2.cmml" xref="p1.1.m1.1.1.2">
-          <divide id="p1.1.m1.1.1.2.1.cmml" xref="p1.1.m1.1.1.2"/>
-          <cn type="integer" id="p1.1.m1.1.1.2.2.cmml" xref="p1.1.m1.1.1.2.2">0</cn>
-          <cn type="integer" id="p1.1.m1.1.1.2.3.cmml" xref="p1.1.m1.1.1.2.3">1</cn>
-        </apply>
-        <cn type="integer" id="p1.1.m1.1.1.3.cmml" xref="p1.1.m1.1.1.3">0</cn>
-      </apply>
-    </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">\dfrac{0}{1}=0</annotation>
-  </semantics>
-</math>
- has a rational number height of <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="1" display="inline">
-  <semantics id="p1.1.m1.1a">
-    <mn id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">1</mn>
-    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
-      <cn type="integer" id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">1</cn>
-    </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">1</annotation>
-  </semantics>
-</math>
-, not <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="0" display="inline">
-  <semantics id="p1.1.m1.1a">
-    <mn id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">0</mn>
-    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
-      <cn type="integer" id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">0</cn>
-    </annotation-xml>
-  </semantics>
-</math>
-.</p></li>
-<li><p>Page 17: <i>On the other hand…</i> should discuss if <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="x\in X" display="inline">
-  <semantics id="p1.1.m1.1a">
-    <mrow id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">
-      <mi id="p1.1.m1.1.1.2" xref="p1.1.m1.1.1.2.cmml">x</mi>
-      <mo id="p1.1.m1.1.1.1" xref="p1.1.m1.1.1.1.cmml">∈</mo>
-      <mi id="p1.1.m1.1.1.3" xref="p1.1.m1.1.1.3.cmml">X</mi>
-    </mrow>
-    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
-      <apply id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">
-        <in id="p1.1.m1.1.1.1.cmml" xref="p1.1.m1.1.1.1"/>
-        <ci id="p1.1.m1.1.1.2.cmml" xref="p1.1.m1.1.1.2">𝑥</ci>
-        <ci id="p1.1.m1.1.1.3.cmml" xref="p1.1.m1.1.1.3">𝑋</ci>
-      </apply>
-    </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">x\in X</annotation>
-  </semantics>
-</math>
-, then <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="x\notin X" display="inline">
-  <semantics id="p1.1.m1.1a">
-    <mrow id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">
-      <mi id="p1.1.m1.1.1.2" xref="p1.1.m1.1.1.2.cmml">x</mi>
-      <mo id="p1.1.m1.1.1.1" xref="p1.1.m1.1.1.1.cmml">∉</mo>
-      <mi id="p1.1.m1.1.1.3" xref="p1.1.m1.1.1.3.cmml">X</mi>
-    </mrow>
-    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
-      <apply id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">
-        <notin id="p1.1.m1.1.1.1.cmml" xref="p1.1.m1.1.1.1"/>
-        <ci id="p1.1.m1.1.1.2.cmml" xref="p1.1.m1.1.1.2">𝑥</ci>
-        <ci id="p1.1.m1.1.1.3.cmml" xref="p1.1.m1.1.1.3">𝑋</ci>
-      </apply>
-    </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">x\notin X</annotation>
-  </semantics>
-</math>
-, instead of repeating the same scenario twice.</p></li>
-<li><p>Page 23: Definition 1. <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="\mu" display="inline">
-  <semantics id="p1.1.m1.1a">
-    <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">μ</mi>
-    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
-      <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝜇</ci>
-    </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">\mu</annotation>
-  </semantics>
-</math>
- such that <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="\mu\leq a" display="inline">
-  <semantics id="p1.1.m1.1a">
-    <mrow id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">
-      <mi id="p1.1.m1.1.1.2" xref="p1.1.m1.1.1.2.cmml">μ</mi>
-      <mo id="p1.1.m1.1.1.1" xref="p1.1.m1.1.1.1.cmml">≤</mo>
-      <mi id="p1.1.m1.1.1.3" xref="p1.1.m1.1.1.3.cmml">a</mi>
-    </mrow>
-    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
-      <apply id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">
-        <leq id="p1.1.m1.1.1.1.cmml" xref="p1.1.m1.1.1.1"/>
-        <ci id="p1.1.m1.1.1.2.cmml" xref="p1.1.m1.1.1.2">𝜇</ci>
-        <ci id="p1.1.m1.1.1.3.cmml" xref="p1.1.m1.1.1.3">𝑎</ci>
-      </apply>
-    </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">\mu\leq a</annotation>
-  </semantics>
-</math>
- not <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="\mu&lt;a" display="inline">
-  <semantics id="p1.1.m1.1a">
-    <mrow id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">
-      <mi id="p1.1.m1.1.1.2" xref="p1.1.m1.1.1.2.cmml">μ</mi>
-      <mo id="p1.1.m1.1.1.1" xref="p1.1.m1.1.1.1.cmml">&lt;</mo>
-      <mi id="p1.1.m1.1.1.3" xref="p1.1.m1.1.1.3.cmml">a</mi>
-    </mrow>
-    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
-      <apply id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">
-        <lt id="p1.1.m1.1.1.1.cmml" xref="p1.1.m1.1.1.1"/>
-        <ci id="p1.1.m1.1.1.2.cmml" xref="p1.1.m1.1.1.2">𝜇</ci>
-        <ci id="p1.1.m1.1.1.3.cmml" xref="p1.1.m1.1.1.3">𝑎</ci>
-      </apply>
-    </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">\mu&lt;a</annotation>
-  </semantics>
-</math>
-.</p></li>
+<li><p>Page 11: \(\dfrac{0}{1} = 0\) has a rational number height of \(1\), not \(0\).</p></li>
+<li><p>Page 17: <i>On the other hand…</i> should discuss if \(x \in X\), then \(x \notin
+   X\), instead of repeating the same scenario twice.</p></li>
+<li><p>Page 23: Definition 1. \(\mu\) such that \(\mu \leq a\) not \(\mu < a\).</p></li>
 <li><p>Page 27: <i>It follows from the well-ordering theorem and</i> Theorem 4, not
 Theorem 5.</p></li>
 <li><p>Page 28, 29: There are two Theorem 4s. The second Theorem 4 (mathematical
 induction) should be Theorem 5, and accordingly the transfinite induction
 theorem should be renamed Theorem 5’.</p></li>
-<li><p>Page 29: <i>Suppose <math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="P(a)" display="inline">
-  <semantics id="p1.1.m1.1a">
-    <mrow id="p1.1.m1.1.2" xref="p1.1.m1.1.2.cmml">
-      <mi id="p1.1.m1.1.2.2" xref="p1.1.m1.1.2.2.cmml">P</mi>
-      <mo id="p1.1.m1.1.2.1" xref="p1.1.m1.1.2.1.cmml">⁢</mo>
-      <mrow id="p1.1.m1.1.2.3.2" xref="p1.1.m1.1.2.cmml">
-        <mo stretchy="false" id="p1.1.m1.1.2.3.2.1" xref="p1.1.m1.1.2.cmml">(</mo>
-        <mi id="p1.1.m1.1.1" xref="p1.1.m1.1.1.cmml">a</mi>
-        <mo stretchy="false" id="p1.1.m1.1.2.3.2.2" xref="p1.1.m1.1.2.cmml">)</mo>
-      </mrow>
-    </mrow>
-    <annotation-xml encoding="MathML-Content" id="p1.1.m1.1b">
-      <apply id="p1.1.m1.1.2.cmml" xref="p1.1.m1.1.2">
-        <times id="p1.1.m1.1.2.1.cmml" xref="p1.1.m1.1.2.1"/>
-        <ci id="p1.1.m1.1.2.2.cmml" xref="p1.1.m1.1.2.2">𝑃</ci>
-        <ci id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">𝑎</ci>
-      </apply>
-    </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">P(a)</annotation>
-  </semantics>
-</math>
- fails to be true</i> for, not tor.</p></li>
+<li><p>Page 29: <i>Suppose \(P(a)\) fails to be true</i> for, not tor.</p></li>
 <li><p>Page 30: Problem 4. <i>By a lattice is meant a partially ordered set</i> which
 <i>has both a greatest</i> …</p></li>
+<li><p>Page 64: \(\leq \epsilon\) should be \(< \epsilon\).</p></li>
+<li><p>Page 65: Definition 2. A sequence, not a subsequence.</p></li>
 </ul>
 </div>
 </div>
@@ -204,21 +85,33 @@ theorem should be renamed Theorem 5’.</p></li>
 <h2 id="sketched-notes">Sketched notes</h2>
 <div class="outline-text-2" id="text-sketched-notes">
 <p>
-My notes are simply for the purposes of jogging my memory.
-CoveredInChocolate has more substantial notes <a href="https://coveredinchocolate.github.io/KolmReAn/">here</a>. Nalin Pithwa also has notes
-<a href="https://nalinkpithwa.com/">here</a>, although Jeffrey has spotted some errors in a couple of Pithwa’s
-solutions.
+My notes are simply for the purposes of jogging my memory. CoveredInChocolate
+has more substantial notes <a href="https://coveredinchocolate.github.io/KolmReAn/">here</a>. Nalin Pithwa also has notes <a href="https://nalinkpithwa.com/">here</a>, although
+Jeffrey has spotted some errors in a couple of Pithwa’s solutions.
 </p>
 
 <p>
 My solutions for problems may simply be sketched out too, especially in cases
-where the LaTeX is particularly cumbersome. Any corrections, or clarification
+where the \(\LaTeX\) is particularly cumbersome. Any corrections, or clarification
 of open ends, would be greatly welcomed.
 </p>
 
 <ol class="org-ol">
-<li><p><a href="./01-set-theory.html">Set theory</a></p></li>
-<li><p>…</p></li>
+<li><p>Set theory
+<ol class="org-ol">
+<li><p><a href="./01-sets-and-functions.html">Sets and Functions</a></p></li>
+<li><p><a href="./02-equivalence-of-sets-the-power-of-a-set.html">Equivalence of Sets. The Power of a Set</a></p></li>
+<li><p><a href="./03-ordered-sets-and-ordinal-numbers.html">Ordered Sets and Ordinal Numbers</a></p></li>
+<li><p><a href="./04-systems-of-sets.html">Systems of Sets</a></p></li>
+</ol></p></li>
+
+<li><p>Metric Spaces
+<ol class="org-ol">
+<li value="5"><p><a href="./05-metric-spaces-basic-concepts.html">Basic Concepts</a></p></li>
+<li><p><a href="./06-convergence-open-and-closed-sets.html">Convergence. Open and Closed Sets</a></p></li>
+<li><p><a href="./07-complete-metric-spaces.html">Complete Metric Spaces</a></p></li>
+<li><p>More to come…</p></li>
+</ol></p></li>
 </ol>
 </div>
 </div>

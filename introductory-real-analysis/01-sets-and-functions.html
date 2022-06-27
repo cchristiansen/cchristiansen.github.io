@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-06-27 Mon 10:46 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Set Theory: Sets and Functions. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Set Theory: Sets and Functions</h1>
+<p>
+Definitions of \(\{\} \in \notin \subset \subseteq = \emptyset\).
+</p>
+
+<p>
+Further definitions on \(\cup \cap\), arbitrary, disjoint, pairwise disjoint.
+Shows how union and intersection are associative, commutative, and
+distributive. Defines difference, symmetric difference, complement. Shows the
+duality principle, leading to dual theorems.
+</p>
+
+<p>
+Definitions of (real) function \(f\) on \(X\), domain, range, mapping of \(M\) into
+\(N\), image, preimage, image of \(A\), preimage of \(B\), map into, map onto,
+one-to-one, one-to-one correspondence, inverse of \(f\).
+</p>
+
+<p>
+<b>Theorem 1</b>
+</p>
+<div class="theorem" id="org3bb3a84">
+<p>
+\(f^{-1}(A \cup B) = f^{-1}(A) \cup f^{-1}(B)\)
+</p>
+
+</div>
+
+<p>
+<b>Theorem 2</b>
+</p>
+<div class="theorem" id="orgd95ad7f">
+<p>
+\(f^{-1}(A \cap B) = f^{-1}(A) \cap f^{-1}(B)\)
+</p>
+
+</div>
+
+<p>
+<b>Theorem 3</b>
+</p>
+<div class="theorem" id="orgc935e97">
+<p>
+\(f(A \cup B) = f(A) \cup f(B)\)
+</p>
+
+</div>
+
+<p>
+Note \(f(A \cap B) \neq f(A) \cap f(B)\). Also note that Theorems 1-3 hold for an
+arbitrary number of sets.
+</p>
+
+<p>
+Definitions of decomposition or partition into classes, <i>a</i> is related to <i>b</i>
+by the (binary) relation <i>R</i>, equivalence relation, reflexitivity, symmetry,
+transitivity.
+</p>
+
+<p>
+<b>Theorem 4</b>
+</p>
+<div class="theorem" id="orgf2af757">
+<p>
+\(M\) can be partitioned into classes by a relation \(R\) \(\Leftrightarrow\) \(R\) is
+an equivalence relation on \(M\).
+</p>
+
+</div>
+
+<div id="outline-container-sets-and-functions-problems" class="outline-2">
+<h2 id="sets-and-functions-problems">Problems</h2>
+<div class="outline-text-2" id="text-sets-and-functions-problems">
+<ol class="org-ol">
+<li><p><p>
+Show \(A \cup B = A\) and \(A \cap B = A\) \(\Rightarrow\) \(A = B\)
+</p>
+
+<p>
+\(B \subseteq A\) since \(A \cup B = A\) and \(A \subseteq B\) since \(A \cap B =
+   A\). Hence, \(A = B\)
+</p></p></li>
+<li><p><p>
+Show \((A - B) \cup B \neq A\)
+</p>
+
+<p>
+Take \(A\) to be the empty set and \(B\) to be any non-empty set.
+</p></p></li>
+<li><p><p>
+Let \(A = \{2, 4, ..., 2n, ...\}\) and \(B = \{3, 6, ..., 3n, ... \}\). Find \(A
+   \cap B\) and \(A - B\)
+</p>
+
+<p>
+\(A \cap B = \{6, 12, ..., 6n, ...\}\). \(A - B = \{2, 4, 8, 10, 14, 16, ...\}\)
+</p></p></li>
+<li><p><p>
+Prove that \((A - B) \cap C = (A \cap C) - (B \cap C)\) and \(A \triangle B =
+   (A \cup B) - (A \cap B)\)
+</p>
+
+<p>
+Step through using definitions, complements, idempotence, duality principle,
+distributivity, associativity, commutativity.
+</p></p></li>
+<li><p><p>
+Prove \(\cup_{\alpha} A_{\alpha} - \cup_{\alpha} B_{\alpha} \subseteq
+   \cup_{\alpha} (A_{\alpha} - B_{\alpha})\)
+</p>
+
+<p>
+Evident once some thought has been applied.
+</p></p></li>
+<li><p><p>
+Let \(A_n\) be the set of all positive integers divisible by \(n\). What are
+\(\cup_{n = 2}^{\infty} A_n\) and \(\cap_{n = 2}^{\infty} A_n\)?
+</p>
+
+<p>
+\(\cup_{n = 2}^{\infty} A_n = \{2, 3, 4, ..., n, ...\}\) <br />
+\(\cap_{n = 2}^{\infty} A_n = \emptyset\)
+</p></p></li>
+<li><p><p>
+What are \(\cup_{n = 1}^{\infty} [a+\dfrac{1}{n}, b-\dfrac{1}{n}]\) and
+\(\cap_{n = 1}^{\infty} (a-\dfrac{1}{n}, b+\dfrac{1}{n})\)?
+</p>
+
+<p>
+If \(b-a > 1\) \(\cup_{n = 1}^{\infty} [a+\dfrac{1}{n}, b-\dfrac{1}{n}] = (a,
+   b)\) <br />
+If \(b-a \leq 1\) \(\cup_{n = 1}^{\infty} [a+\dfrac{1}{n}, b-\dfrac{1}{n}] =
+   [b-1, a+1]\) <br />
+\(\cap_{n = 1}^{\infty} (a-\dfrac{1}{n}, b+\dfrac{1}{n}) = [a, b]\)
+</p></p></li>
+<li><p><p>
+Let \(A_{\alpha}\) be the set of points lying on the curve \(y =
+   \dfrac{1}{x^{\alpha}}\) with \(0 < x < \infty\). What is \(\cap_{\alpha \geq 1}
+   A_{\alpha}\)?
+</p>
+
+<p>
+\((1, 1)\)
+</p></p></li>
+<li><p><p>
+\(y = f(x) = \{x\}\) (fractional part of \(x\)). Prove every closed interval
+of length one has the same image under \(f\). What is this image? Is \(f\)
+one-to-one? What is the preimage of the interval \(\dfrac{1}{4} \leq y \leq
+   \dfrac{3}{4}\)? Partition the real line into classes of points with the same
+image.
+</p>
+
+<p>
+Simple enough.
+</p></p></li>
+<li><p><p>
+Given set \(M\), let \(\mathcal{R}\) be the set of all ordered pairs \((a, a)\)
+with \(a \in M\). Let \(aRb \Leftrightarrow (a, b) \in \mathcal{R}\). Interpret
+\(R\).
+</p>
+
+<p>
+Equality.
+</p></p></li>
+<li><p><p>
+Find a binary relation which is:
+</p>
+<ol class="org-ol">
+<li><p>Reflexive and symmetric, but not transitive.</p></li>
+<li><p>Reflexive, but neither symmetric nor transitive.</p></li>
+<li><p>Symmetric, but neither reflexive nor transitive.</p></li>
+<li><p>Transitive, but neither reflexive nor symmetric.</p></li>
+</ol>
+
+<p>
+Blood relative. Remembers name of (provided everybody knows their own
+name). Not equal to. Strictly greater than. (Credit to <a href="https://coveredinchocolate.github.io/KolmReAn/ch01_1.1_SetsAndFunctions.html">CoveredInChocolate</a>
+for the first two answers.)
+</p></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

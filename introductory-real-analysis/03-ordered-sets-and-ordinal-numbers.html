@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-06-27 Mon 10:46 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Set Theory: Ordered Sets and Ordinal Numbers. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Set Theory: Ordered Sets and Ordinal Numbers</h1>
+<p>
+Definitions of <i>partial ordering</i>, <i>partially ordered</i> (reflexive, transitive,
+antisymmetric), <i>maximal</i>, <i>minimal</i>.
+</p>
+
+<p>
+A bijective function \(f\) is <i>order-preserving</i> if \(a \leq b \Rightarrow f(a)
+\leq f(b)\). An order-preserving function \(f\) is an isomorphism if \(f(a) \leq
+f(b) \Leftrightarrow a \leq b\). Two partially ordered sets are <i>isomorphic</i> if
+there exists an isomorphism between them.
+</p>
+
+<p>
+<i>Noncomparable</i> if neither \(a \leq b\) nor \(b \leq a\). A set is <i>ordered</i> if it
+contains no noncomparable elements. Two isomorphic sets have the same (<i>order</i>)
+<i>type</i>. Order of \(\mathbb{N}\) (in the normal manner) is \(\omega\). The power
+\(\aleph_0\) corresponds to the order type \(\omega\).
+</p>
+
+<p>
+<b>Definition 1</b>
+An ordered set \(M\) is <i>well-ordered</i> if every nonempty subset \(A\) of \(M\) has a
+<i>smallest</i> (or “​<i>first</i>​”) <i>element</i>, i.e., an element \(\mu\) such that \(\mu \leq
+a\) for every \(a \in A\).
+</p>
+
+<p>
+<b>Definition 2</b>
+The order type of a well-ordered set is an <i>ordinal number</i> or simply an
+<i>ordinal</i>. If the set is infinite, the ordinal is <i>transfinite</i>.
+</p>
+
+<p>
+<b>Theorem 1</b>
+</p>
+<div class="theorem" id="org99722a9">
+<p>
+The ordered sum of a finite number of well-ordered sets \(M_1, M_2, \ldots, M_n\)
+is itself a well-ordered set.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org377b01c">
+<p>
+Let \(M\) be an arbitrary subset of the ordered sum \(M_1+M_2+\ldots+M_n\), and let
+\(M_k\) be the first set containing elements of \(M\). Then \(M \cap M_k\) is a
+subset of the well-ordered set \(M_k\), and therefore has a smallest element
+\(\mu\). Clearly \(\mu\) is also the smallest element of \(M\).
+</p>
+
+</div>
+
+<p>
+Need to check whether this holds for the sum of countably many well-ordered
+sets, and why?
+</p>
+
+<p>
+<b>Corollary</b>
+</p>
+<div class="theorem" id="orga5ffe55">
+<p>
+The ordered sum of a finite number of ordinal numbers is itself an ordinal
+number.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 2</b>
+</p>
+<div class="theorem" id="org99aac4d">
+<p>
+The ordered product of two well-ordered sets \(M_1\) and \(M_2\) is well-ordered.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orga0ae2e9">
+<p>
+Let \(M\) be an arbitrary subset of \(M_1 \cdot M_2\), with \((a, b)\) such that \(a
+\in M_1\), \(b \in M_2\). The set of all second elements \(b\) in \(M\) is a subset of
+\(M_2\), and therefore has a least element \(b_1\) since \(M_2\) is well-ordered.
+Then look at all \((a, b_1)\). Again, the set of all first elements \(a\) is a
+subset of \(M_1\), hence has a smallest element \(a_1\) since \(M_1\) is
+well-ordered. \((a_1, b_1)\) is clearly the smallest element of \(M\).
+</p>
+
+</div>
+
+<p>
+<b>Corollary 1</b>
+</p>
+<div class="theorem" id="orge952cd0">
+<p>
+The ordered product of a finite number of well-ordered sets is itself a
+well-ordered set.
+</p>
+
+</div>
+
+<p>
+<b>Corollary 2</b>
+</p>
+<div class="theorem" id="orgb558a2a">
+<p>
+The ordered product of a finite number of ordinal numbers is itself an ordinal
+number.
+</p>
+
+</div>
+
+<p>
+Every element of a well-ordered set \(M\) determines an (<i>initial</i>) <i>section</i>
+\(P\), the set of all \(x \in M\) such that \(x < a\), and a <i>remainder</i> \(Q\), the set
+of all \(x \in M\) such that \(x \geq a\). Given two well-ordered sets \(M\) and \(N\)
+of order type \(\alpha\) and \(\beta\) respectively, then:
+</p>
+<ol class="org-ol">
+<li><p>\(\alpha = \beta\) if \(M\) and \(N\) are isomorphic.</p></li>
+<li><p>\(\alpha < \beta\) if \(M\) is isomorphic to some section of \(N\).</p></li>
+<li><p>\(\alpha > \beta\) if \(N\) is isomorphic to some section of \(M\).</p></li>
+</ol>
+
+<p>
+<b>Lemma</b>
+</p>
+<div class="theorem" id="org9896351">
+<p>
+Let \(f\) be an isomorphism of a well-ordered set \(A\) onto some subset \(B
+\subseteq A\). Then \(f(a) \geq a\) for all \(a \in A\).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org2202cc2">
+<p>
+If there exists \(a \in A\) such that \(f(a) < a\), then there is a least such
+element \(a_0\) since \(A\) is well-ordered. Let \(b_0 = f(a_0)\), then \(b_0 < a_0\),
+and \(f(b_0) < f(a_0) = b_0\) since \(f\) is an isomorphism. But then \(a_0\) is not
+the smallest element such that \(f(a) < a\). Contradiction.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 3</b>
+</p>
+<div class="theorem" id="orgfcba902">
+<p>
+Two given ordinal numbers \(\alpha\) and \(\beta\) satisfy one and only one of the
+relations \(\alpha < \beta\), \(\alpha = \beta\), \(\alpha > \beta\).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgdf2d612">
+<p>
+Let \(W(\alpha)\) be the set of all ordinals \(<\alpha\). Any two numbers \(\gamma\)
+and \(\gamma^{\prime}\) in \(W(\alpha)\) are comparable and the corresponding
+ordering of \(W(\alpha)\) makes it a well-ordered set of type \(\alpha\). If a set
+\(A\) is of type \(\alpha\), then by definition, the ordinals less than \(\alpha\)
+are the types of well-ordered sets isomorphic to sections of \(A\). Hence, the
+ordinals are in one-to-one correspondence with the elements of \(A\).
+</p>
+
+<p>
+Let \(\alpha\), \(\beta\) be two ordinals, then \(W(\alpha)\), \(W(\beta)\) are
+well-ordered sets of type \(\alpha\), \(\beta\) respectively. Let \(C = A \cap B\).
+Then \(C\) is well-ordered, of type \(\gamma\), say. We now show \(\gamma \leq
+\alpha\). If \(C = A\), then obviously \(\gamma = \alpha\). Otherwise, if \(C \neq
+A\), then \(C\) is a section of \(A\) and hence \(\gamma < \alpha\).
+</p>
+
+<p>
+[Let \(\xi \in C\), \(\eta \in A - C\). Then \(\xi\),  \(\eta\) are comparable, i.e.,
+either \(\xi < \eta\) or \(\xi > \eta\). But \(\eta < \xi < \alpha\) is
+impossible, since then \(\eta \in C\). Therefore \(\xi < \eta\) and hence \(C\) is a
+section of \(A\), which implies \(\gamma < \alpha\). Moreover, \(\gamma\) is the
+first element of \(A-C\).]
+</p>
+
+<p>
+Thus \(\gamma \leq \alpha\). Similarly \(\gamma \leq \beta\). The case \(\gamma <
+\alpha\), \(\gamma < \beta\) is impossible, since then \(\gamma \in A-C\), \(\gamma
+\in B-C\). But then \(\gamma \notin C\) on the one hand and \(\gamma \in A \cap B =
+C\) on the other hand.
+</p>
+
+<p>
+It follows that there are only three possibilities:
+</p>
+
+<p>
+\[\gamma = \alpha, \gamma = \beta, \alpha = \beta\]
+\[\gamma = \alpha, \gamma < \beta, \alpha < \beta\]
+\[\gamma < \alpha, \gamma = \beta, \alpha > \beta\]
+</p>
+
+<p>
+i.e., \(\alpha\) and \(\beta\) are comparable.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 4</b>
+</p>
+<div class="theorem" id="org0abb1fa">
+<p>
+Let \(A\) and \(B\) be well-ordered sets. Then either \(A\) is equivalent to \(B\) or
+one of the sets is of greater power than the other, i.e., the powers of \(A\) and
+\(B\) are comparable.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgd98e320">
+<p>
+A definite power corresponds to each ordinal. As ordinals are comparable, so
+are the corresponding powers.
+</p>
+
+</div>
+
+<p>
+<b>Well-ordering theorem</b>
+</p>
+<div class="theorem" id="org3b3d944">
+<p>
+Every set can be well-ordered.
+</p>
+
+</div>
+
+<p>
+<b>Axiom of choice</b>
+</p>
+<div class="theorem" id="org9404e11">
+<p>
+Given any set \(M\), there is a “choice function” \(f\) such that \(f(A)\) is an
+element of \(A\) for every nonempty subset \(A \subseteq M\).
+</p>
+
+</div>
+
+<p>
+<b>Definition 3</b>
+Let \(M\) be a partially ordered set, and let \(A\) be any subset of \(M\) such that
+\(a\) and \(b\) are comparable for every \(a\), \(b \in A\). Then \(A\) is a <i>chain</i> (in
+\(M\)). A chain \(C\) is <i>maximal</i> if there is no other chain \(C^{\prime}\) in \(M\)
+containing \(C\) as a proper subset.
+</p>
+
+<p>
+<b>Definiton 4</b>
+An element \(a\) of a partially ordered set \(M\) is an <i>upper bound</i> of a subset
+\(M^{\prime} \subseteq M\) if \(a^{\prime} \leq a\) for every \(a^{\prime} \in
+M^{\prime}\).
+</p>
+
+<p>
+The below two assertions are equivalent to the axiom of choice.
+</p>
+
+<p>
+<b>Hausdorff’s maximal principle</b>
+</p>
+<div class="theorem" id="org64e8c08">
+<p>
+Every chain in a partially ordered set \(M\) is contained in a maximal chain in
+\(M\).
+</p>
+
+</div>
+
+<p>
+<b>Zorn’s Lemma</b>
+</p>
+<div class="theorem" id="orgb8c5a18">
+<p>
+If every chain in a partially ordered set \(M\) has an upper bound, then \(M\)
+contains a maximal element.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 5</b> (Mathematical induction)
+</p>
+<div class="theorem" id="orgc4b77a8">
+<p>
+Given a proposition \(P(n)\) formulated fo every positive integer \(n\), suppose
+that
+</p>
+
+<ol class="org-ol">
+<li><p>\(P(1)\) is true.</p></li>
+<li><p>The validity of \(P(k)\) for all \(k \leq n\) implies the validity of \(P(n+1)\).</p></li>
+</ol>
+
+<p>
+Then \(P(n)\) is true for all \(n = 1, 2, \ldots\)
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgf8a51c5">
+<p>
+Suppose \(P(n)\) fails to be true for all \(n = 1, 2, \ldots\) Let \(n_1\) be the
+smallest integer for which \(P(n)\) is false (\(n_1\) exists due to the
+well-ordering of the positive integers). Clearly \(n_1 > 1\), so \(n_1 - 1\) is a
+positive integer. Therefore \(P(n)\) is valid for all \(k \leq n_1 -1\), but not
+for \(n_1\). Contradiction.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 5’</b> (Transfinite induction)
+</p>
+<div class="theorem" id="orgff18f7b">
+<p>
+Given a well-ordered set \(A\), let \(P(a)\) be a proposition formulated for every
+element \(a \in A\). Suppose that
+</p>
+<ol class="org-ol">
+<li><p>\(P(a)\) is true for the smallest element of \(A\).</p></li>
+<li><p>The validity of \(P(a)\) for all \(a < a^*\) implies the validity of \(P(a^*)\).</p></li>
+</ol>
+
+<p>
+Then \(P(a)\) is true for all \(a \in A\).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgc5b439f">
+<p>
+Suppose \(P(a)\) fails to be true for all \(a \in A\). Then \(P(a)\) is false for all
+\(a\) in some nonempty subset \(A^* \subseteq A\). By well-ordering, \(A^*\) has a
+smallest element \(a^*\). Therefore \(P(a)\) is valid for all \(a< a^*\) but not for
+\(a^*\). Contradiction.
+</p>
+
+</div>
+
+<div id="outline-container-ordered-sets-and-ordinal-numbers-problems" class="outline-2">
+<h2 id="ordered-sets-and-ordinal-numbers-problems">Problems</h2>
+<div class="outline-text-2" id="text-ordered-sets-and-ordinal-numbers-problems">
+<ol class="org-ol">
+<li><p><p>
+Exhibit both a partial ordering and a simple ordering of the set of all
+complex numbers.
+</p>
+
+<p>
+Partial ordering: only order reals. Simple: order reals, then complex.
+</p></p></li>
+<li><p><p>
+What is the minimal element of the set of all subsets of a given set \(X\),
+partially ordered by set inclusion? What is the maximal element?
+</p>
+
+<p>
+\(\emptyset\) and \(X\).
+</p></p></li>
+<li><p><p>
+A partially ordered set \(M\) is a <i>directed set</i> if, given any two element
+\(a\), \(b \in M\), there is an element \(c \in M\) such that \(a \leq c\), \(b \leq
+   c\). Are the partially ordered sets in Examples 1-4, Section 3.1 all directed
+sets?
+</p>
+
+<p>
+No, yes, yes, yes.
+</p></p></li>
+<li><p><p>
+The <i>greatest lower bound</i> of two elements \(a\) and \(b\) of a partially
+ordered set \(M\) is \(c \in M\) such that \(c \leq a\), \(c \leq b\) and there is
+no element \(d \in M\) such that \(c < d \leq a\), \(d \leq b\). Define
+<i>least upper bound</i> similarly. A <i>lattice</i> is a partially ordered set with
+both a greatest lower bound and a least upper bound. Prove that the set of
+all subsets of a given set \(X\), partially ordered by set inclusion, is a
+lattice. What is the set-theoretic meaning of the greatest lower bound and
+least upper bound of two elements of this set?
+</p>
+
+<p>
+Same as 2.
+</p></p></li>
+<li><p><p>
+Prove that an order-preserving mapping of one ordered set onto another is
+automatically an isomorphism.
+</p>
+
+<p>
+All order-mapping preserving mappings are bijective. Hence an inverse
+exists. Need to show how the inverse also preserves order. Hence
+isomorphism.
+</p></p></li>
+<li><p><p>
+Prove that ordered sums and products of ordered sets are associative.
+</p>
+
+<p>
+Just step through to show that they are the same.
+</p></p></li>
+<li><p><p>
+Construct well-ordered sets with ordinals \(\omega + n\), … Show that the sets
+are all countable.
+</p>
+
+<p>
+\(\mathbb{N} + \{a_1, \ldots, a_n\}\), …
+Line each one up on a row, and zigzag up and down.
+</p></p></li>
+<li><p><p>
+Construct well-ordered sets with ordinals \(\omega \cdot n\), … Show that the
+sets are all countable.
+</p>
+
+<p>
+\(\mathbb{N} \cdot \{a_1, \ldots, a_n\}\), …
+Similar proof to countability of the rationals.
+</p></p></li>
+<li><p><p>
+Show that \(\omega + \omega = \omega \cdot 2\).
+</p>
+
+<p>
+Let \(f\) send \(a \in \mathbb{N}_1 + \mathbb{N}_2\) to \((a, 1)\) if \(a \in
+   \mathbb{N}_1\) and to \((a, 2)\) if \(a \in \mathbb{N}_2\). Evidently bijective,
+and order-preserving, hence isomorphic, and hence they have equivalent
+ordinals too.
+</p></p></li>
+<li><p><p>
+Prove that the set \(W(\alpha)\) of all ordinals less than a given ordinal
+\(\alpha\) is well-ordered.
+</p>
+
+<p>
+Each ordinal less than \(\alpha\) corresponds to a section of \(A\). There is a
+least section of \(A\), the empty set, as all other sections of \(A\) are
+greater than or equal to it. Hence the corresponding ordinal to the empty
+set is the least element of \(W(\alpha)\) and we also know that ordinals are
+comparable.  Therefore \(W(\alpha)\) is well-ordered.
+</p></p></li>
+<li><p><p>
+Prove that any nonempty set of ordinals is well-ordered.
+</p>
+
+<p>
+\(A\) subset. Nonempty and ordinals are comparable so exists \(\mu \in A\) such
+that \(\mu \leq a\) for all \(a \in A\). Therefore well-ordered.
+</p></p></li>
+<li><p><p>
+Prove that the set \(M\) of all ordinals corresponding to a countable set is
+itself countable.
+</p>
+
+<p>
+Line them up. Then use Cantor diagonal argument.
+</p></p></li>
+<li><p><p>
+Let \(\aleph_1\) be the power of the set \(M\) in the preceding problem. Prove
+that there is no power \(m\) such that \(\aleph_0 < m < \aleph_1\).
+</p>
+
+<p>
+Impossible as there is no set which is strictly bigger than countable and
+yet strictly smaller than uncountable.
+</p></p></li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-ordered-sets-and-ordinal-numbers-open-ends" class="outline-2">
+<h2 id="ordered-sets-and-ordinal-numbers-open-ends">Open ends</h2>
+<div class="outline-text-2" id="text-ordered-sets-and-ordinal-numbers-open-ends">
+<ol class="org-ol">
+<li><p>Why do Theorems 1 and 2 hold for just finitely many? Do they also hold for
+countably many? If not, why not?</p></li>
+<li><p><p>
+What well-ordered set has ordinal \(\omega^{\omega}\)?
+</p>
+
+<p>
+I found this link
+<a href="https://en.wikipedia.org/wiki/Ordinal_analysis#Theories_with_proof-theoretic_ordinal_%CF%89%CF%89">https://en.wikipedia.org/wiki/Ordinal_analysis#Theories_with_proof-theoretic_ordinal_%CF%89%CF%89</a>
+but it still leaves me none the wiser.
+This link
+<a href="https://math.stackexchange.com/questions/1412153/let-omega-be-the-ordinal-of-the-well-ordered-set-mathbbn-what-does-mean">https://math.stackexchange.com/questions/1412153/let-omega-be-the-ordinal-of-the-well-ordered-set-mathbbn-what-does-mean</a>
+is a tiny bit clearer.
+</p></p></li>
+<li><p>For Problem 5, how is it shown that the inverse preserves order?</p></li>
+<li><p>Is the proof for Problem 13 correct?</p></li>
+</ol>
+
+<p>
+I would greatly appreciate any help.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

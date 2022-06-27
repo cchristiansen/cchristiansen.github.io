@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-06-27 Mon 10:46 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Set Theory: Equivalence of Sets. The Power of a Set. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Set Theory: Equivalence of Sets. The Power of a Set</h1>
+<p>
+Definitions of finite, infinite, countable, uncountable. Demonstration of how
+the rationals are countable.
+</p>
+
+<p>
+<b>Theorem 1</b>
+</p>
+<div class="theorem" id="orgba26cf9">
+<p>
+Every subset of a countable subset is countable.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 2</b>
+</p>
+<div class="theorem" id="orgbd96cd7">
+<p>
+The union of a finite or countable number of countable sets is itself
+countable.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgd7d1a64">
+<p>
+Line the elements of the sets parallel to each other, and count all of the
+elements ‘diagonally’.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 3</b>
+</p>
+<div class="theorem" id="org7773d3a">
+<p>
+Every infinite set has a countable subset.
+</p>
+
+</div>
+
+<p>
+Definition of equivalence.
+</p>
+
+<p>
+Demonstration of how the points on a sphere can be mapped one-to-one with the
+points in the complex plane with <a href="https://en.wikipedia.org/wiki/Stereographic_projection">stereographic projection</a>.
+</p>
+
+<p>
+<b>Theorem 4</b>
+</p>
+<div class="theorem" id="org9f587a7">
+<p>
+Every infinite set \(M\) is equivalent to one of its proper subsets.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgfe55c81">
+<p>
+By Theorem 3, every infinite set contains a countable subset \(A\). Partition
+this subset into two countable subsets \(A_1\) and \(A_2\). A one-to-one
+correspondence can be set between \(A\) and \(A_1\). Hence \(M = A \cup (M - A)
+\sim A_1 \cup (M - A) = M - A_2\) and \(M - A_2\) is a proper subset of \(M\).
+</p>
+
+</div>
+
+<p>
+<b>Theorem 5</b>
+</p>
+<div class="theorem" id="org9155960">
+<p>
+The set of real numbers in the closed unit interval \([0, 1]\) is uncountable.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org4b3b454">
+<p>
+Cantor’s diagonal. Make sure to disallow setting a digit as \(0\) or \(9\).
+</p>
+
+</div>
+
+<p>
+Definition of power, aleph null, continuum.
+</p>
+
+<p>
+<b>Theorem 6</b>
+</p>
+<div class="theorem" id="org8e4e43d">
+<p>
+Given any set \(M\), let \(\mathcal{M}\) be the set whose elements are all possible
+subsets of \(M\). Then the power of \(\mathcal{M}\) is greater than the power of
+the original set \(M\).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orge4f60bd">
+<p>
+Attempt to setup \(X\) to be the set of elements of \(M\) which do not belong to
+their ‘associated subsets’. Then we reach an argument similar to Russel’s
+paradox.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 7</b> (Cantor-Bernstein)
+</p>
+<div class="theorem" id="org9e883d2">
+<p>
+Given any two sets \(A\) and \(B\), suppose \(A\) contains a subset \(A_1\) equivalent
+to \(B\), while \(B\) contains a subset \(B_1\) equivalent to \(A\). Then \(A\) and \(B\)
+are equivalent.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgae95e67">
+<p>
+The proof is beautifully shown in the book. A sketch would be a disservice.
+</p>
+
+</div>
+
+<div id="outline-container-equivalence-of-sets-the-power-of-a-set-problems" class="outline-2">
+<h2 id="equivalence-of-sets-the-power-of-a-set-problems">Problems</h2>
+<div class="outline-text-2" id="text-equivalence-of-sets-the-power-of-a-set-problems">
+<ol class="org-ol">
+<li><p><p>
+Prove that a set with an uncountable subset is itself uncountable.
+</p>
+
+<p>
+Suppose the set is countable, and very quickly reach a contradiction.
+</p></p></li>
+<li><p><p>
+Let \(M\) be any infinite set and \(A\) any countable set. Prove that \(M \sim M
+   \cup A\).
+</p>
+
+<p>
+Use Theorem 3.
+</p></p></li>
+<li><p>Prove that the following sets are countable:
+<ol class="org-ol">
+<li><p><p>
+The set of all numbers with two distinct decimal expansions.
+</p>
+
+<p>
+Since all of the numbers can either be shown as \(n.x00000\) or \(n.y99999\),
+only consider the \(n.x00000\) representation. Evident that this is a
+subset of the rationals, hence countable.
+</p></p></li>
+<li><p><p>
+The set of all rational points in the plane.
+</p>
+
+<p>
+Simply extend the technique used for demonstrating that the rationals are
+countable.
+</p></p></li>
+<li><p><p>
+The set of all rational intervals.
+</p>
+
+<p>
+This can be transposed to be a subset of the the set of all rational
+points in the plane, i.e. the previous question.
+</p></p></li>
+<li><p><p>
+The set of all polynomials with rational coefficients.
+</p>
+
+<p>
+This can be transposed to a subset of the set of all rational points in
+\(n\) dimensions. Extend the argument for problem 3.2. from 2 dimensions to
+\(n\) dimensions.
+</p></p></li>
+</ol></p></li>
+<li><p><p>
+A number \(\alpha\) is called <i>algebraic</i> if it is a root of a polynomial
+equation with rational coefficients. Prove that the set of all algebraic
+numbers is countable.
+</p>
+
+<p>
+The set of all polynomials with rational coefficients is countable, and each
+polynomial has a maximum of \(n\) solutions. Hence countable by Theorem 2.
+</p></p></li>
+<li><p><p>
+Prove that the existence of uncountably many <i>transcendental</i> numbers, i.e.,
+numbers which are not algebraic.
+</p>
+
+<p>
+From Theorem 5, we know that there are uncountably many numbers between \([0,
+   1]\). And from Theorem 2, we know that no union of countable sets will ever
+become uncountable. Hence there must exist numbers within \([0, 1]\) which are
+not algebraic. We call these <i>transcendental</i>.
+</p></p></li>
+<li><p><p>
+Prove that the set of all real functions (more generally, functions taking
+values in a set containing at least two elements) defined on a set \(M\) is of
+power greater than the power of \(M\). In particular, prove that the power of
+the set of <i>all</i> real functions (continuous and discontinuous) defined in
+the interval \([0, 1]\) is greater than \(c\).
+</p>
+
+<p>
+Just look at the identity functions. The set of all identities has a
+one-to-one correspondence with the power set.
+</p></p></li>
+<li><p><p>
+Give an indirect proof of the equivalence of the closed interval \([a, b]\),
+the open interval \((a, b)\) and the half-open interval \([a, b)\) or \((a, b]\).
+</p>
+
+<p>
+Need to find suitable functions to use with Theorem 7.
+</p></p></li>
+<li><p><p>
+Prove that the union of a finite or countable number of sets each of power
+\(c\) is itself of power \(c\).
+</p>
+
+<p>
+Since \([0, 1]\) is uncountable, and by problem 7, so is \([0, 1)\), map each
+set to \([0, 1)\), \([1, 2)\), … respectively. Evidently the union is a subset
+within the real line, and is itself of power \(c\).
+</p></p></li>
+<li><p>Prove that each of the following sets has the power of the continuum:
+<ol class="org-ol">
+<li><p><p>
+The set of all infinite sequences of positive integers.
+</p>
+
+<p>
+Place \( 0. \) in front of the integers to get the set \((0, 1)\).
+</p></p></li>
+<li><p><p>
+The set of all ordered \(n\)​-tuples of real numbers.
+</p>
+
+<p>
+Use a similar argument to problem 8.
+</p></p></li>
+<li><p><p>
+The set of all infinite sequences of real numbers.
+</p>
+
+<p>
+Need to check how to deal with the uncountable sequences of real numbers.
+</p></p></li>
+</ol></p></li>
+<li><p><p>
+Develop a contradiction inherent in the notion of the “set of all sets
+which are not members of themselves”.
+</p>
+
+<p>
+Russell's paradox.
+</p></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
