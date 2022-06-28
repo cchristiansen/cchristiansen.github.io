@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-06-28 Tue 10:40 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Metric Spaces: Contraction Mappings. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://christianchristiansen.net/mathjax/tex-chtml.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Metric Spaces: Contraction Mappings</h1>
+<p>
+<b>Definition</b>
+Let \(A\) be a mapping of a metric space \(R\) onto itself. Then \(x\) is a <i>fixed
+point</i> of \(A\) if \(Ax = x\). Suppose there exists \(\alpha < 1\) such that
+\(\rho(Ax, Ay)\) for all \(x, y \in R\), then \(A\) is a <i>contraction mapping</i>. Every
+contraction mapping is automatically continuous, since \(Ax_n \rightarrow AX\)
+whenever \(x_n \rightarrow x\).
+</p>
+
+<p>
+<b>Theorem 1</b> (Fixed point theorem)
+</p>
+<div class="theorem" id="org21524e7">
+<p>
+Every contraction mapping \(A\) defined on a complete metric space \(R\) has a
+unique fixed point.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orga3e8f65">
+<p>
+Keep contracting, i.e. applying \(A\).
+</p>
+
+</div>
+
+<p>
+<b>Theorem 1’</b>
+</p>
+<div class="theorem" id="org679982f">
+<p>
+Given a continuous mapping of a complete metric space \(R\) onto itself, suppose
+\(A^n\) is a contraction mapping (\(n\) an integer \(>1\)). Then \(A\) has a unique
+fixed point.
+</p>
+
+</div>
+
+<div class="proof" id="org92210ad">
+<p>
+Let \(x = \lim_{x \rightarrow \infty} A^{kn} x_0\) and \(Ax = \lim_{k \rightarrow
+\infty} A A^{kn} x_0\).
+</p>
+
+</div>
+
+<p>
+<b>Theorem 2</b> (Picard)
+</p>
+<div class="theorem" id="orgf3ea2f7">
+<p>
+Given \(n\) functions \(f_i (x, y_1, \ldots, y_n)\) defined and continuous on an
+\((n+1)\)​-dimensional domain \(G\) containing the point
+\[(x_n, y_{01}, \ldots, y_{0n})\]
+suppose each \(f_i\) satisfies a Lipschitz condition of the form
+\[|f_i(x, y_1, \ldots, y_n) - f_i(x, \tilde{y}_1, \ldots, \tilde{y}_n)| \leq M
+\max_{1 \leq i \leq n} |y_i - \tilde{y}_i|\]
+in the variables \(y_1, \ldots, y_n\). Then there is an interval \(|x - x_i| \leq
+\delta\) in which the system of differential equations
+\[\frac{dy_i}{dx} = f_i (x, y_1, \ldots, y_n) \quad (i = 1, \ldots, n)\]
+has a unique solution
+\[y_1 = \phi_1(x), \ldots, y_n = \phi_n(x)\]
+satisfying the initial conditions
+\[\phi_1(x_0) = y_{01}, \ldots, \phi_n(x_0) = y_{0n}\]
+</p>
+
+</div>
+
+<p>
+The <i>Fredholm equation (of the second kind)</i> and <i>Volterra equation</i> are
+defined in the book.
+</p>
+
+<div id="outline-container-contraction-mappings-problems" class="outline-2">
+<h2 id="contraction-mappings-problems">Problems</h2>
+<div class="outline-text-2" id="text-contraction-mappings-problems">
+<ol class="org-ol">
+<li><p><p>
+Let \(A\) be a mapping of a metric space \(R\) into itself. Prove the condition
+\[\rho(Ax, Ay) < \rho(x, y) \quad (x \neq y)\]
+is insufficient for the existence of a fixed point of f\(A\).
+</p>
+
+<p>
+Let \(R\) be \((0, 1)\) and \(A = \frac{1}{2}\), then fixed point would be \(0\),
+but \(0 \notin R\). Need \(R\) to be complete.
+</p></p></li>
+<li><p><p>
+Let \(F(x)\) be a continuously differentiable function on the interval \([a,
+   b]\) such that \(F(a) < 0\), \(F(b)> 0\) and
+\[0 < K_1 \leq F^\prime(x) \leq K_2 (a \leq x \leq b)\]
+Use Theorem 1 to find the unique root of the equation \(F(x) = 0\)
+</p>
+
+<p>
+<i>Hint.</i> Introduce the auxiliary function \(f(x) = x - \lambda F(x)\), and
+choose \(\lambda\) such that the theorem works for the equivalent equation
+\(f(x) = x\).
+</p>
+
+<p>
+\[f(x) = x - \lambda F(x) \quad f^\prime(x) = 1 - \lambda F^\prime(x)\]
+Select &lambda; so that \(|f^\prime(x)| = |1 - \lambda F^\prime(x)| < 1\),
+whenever \(\lambda F^\prime(x) < 1\) since \(F^\prime(x)\) is strictly positive.
+Can do this by setting $&lambda; = \frac{1}{K_1 + K_2} since
+\[\lambda F^\prime(x) \leq K_2 = \frac{K_2}{K_1 + K_2} < 1\]
+By Theorem 1, \(f\) has a fixed point \(x_0 \in [a, b]\) such that \(f(x_0) =
+   x_0\), which means \(\lambda F(x_0) = 0\), and \(x_0\) is the unique root of
+\(F(x) = 0\).
+</p></p></li>
+<li><p><p>
+Devise a proof of the implicit function theorem based on the use of the
+fixed point theorem.
+</p>
+
+<p>
+Don’t know what the implicit function theorem is. <b>TODO.</b>
+</p></p></li>
+<li><p><p>
+Prove that the method of successive approximations can be used to solve the
+system
+\[x_i = \sum_{j=1}^n a_{ij}x_j + b_i\]
+if \(|a_{ij}| < \frac{1}{n}\) (for all \(i\) and \(j\)), but not if \(|a_{ij}| =
+   \frac{1}{n}\).
+</p>
+
+<p>
+Easy.
+</p></p></li>
+<li><p><p>
+Prove that the condition \(\sum_{j=1}^n|a_{ij}| \leq \alpha < 1\) is
+sufficient for the mapping \(y_i = \sum_{j=1}^n a_{ij}x_j + b_i\) to be a
+contraction mapping in the space \(R_0^n\).
+</p>
+
+<p>
+Easy.
+</p></p></li>
+<li><p><p>
+Prove that any of the \(n\)​-dimensional contraction mapping conditions imply
+\[\begin{vmatrix}
+   a_{11}-1 & a_{12}   & \cdots & a_{1n} \\
+   a_{21}   & a_{22}-1 & \cdots & a_{2n} \\
+   \vdots   & \vdots   & \ddots & \vdots \\
+   a_{n1}   & a_{n2}   & \cdots & a_{nn}-1 \\
+   \end{vmatrix} \not= 0\]
+</p>
+
+<p>
+Easy.
+</p></p></li>
+<li><p><p>
+Consider the nonlinear integral equation
+\[f(x) = \lambda\int_a^b K(x, y; f(y)) dy + \psi(x)\]
+with continuous \(K\) and \(\psi\), where \(K\) satisfies a Lipschitz condition of
+the form
+\[|K(x, y; z_1) - K(x, y; z_2)| \leq M|z_1 - z_2|\]
+in its ‘functional’ argument. Prove that the equation has a unique solution
+for all
+\[|\lambda| < \dfrac{1}{M(b-a)}\]
+Write the successive approximations to this solution.
+</p>
+
+<p>
+Beats me. <b>TODO.</b>
+</p></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
