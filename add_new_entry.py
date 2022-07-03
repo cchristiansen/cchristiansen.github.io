@@ -24,8 +24,11 @@ class Entry:
 
     @property
     def title(self):
-        return re.search(
-            ".*?<h1 class=\"title\">(.*?)</h1>.*?", self.text).group(1)
+        result = re.search(".*?<h1 class=\"title\">(.*?)</h1>.*?", self.text)
+        if result:
+            return result.group(1)
+        else:
+            return re.search("<h1 class=\"title\">(.*?)\n", self.text).group(1)
 
     @property
     def content(self):
@@ -140,7 +143,7 @@ def add_entry(filename, default_indices=list(), rss="rss.xml"):
         entry.add_to_rss(rss)
 
     except Exception as e:
-        print(f"{filename} coud not be added due to error {e}.")
+        print(f"{filename} could not be added due to error {e}.")
 
 def main(args):
     if args[0] in ["-h", "--help"]:

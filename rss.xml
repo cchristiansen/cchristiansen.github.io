@@ -14,6 +14,450 @@
 	<height>32</height>
     </image>
     <item>
+        <title>Noughts and Crosses</title>
+        <link>https://christianchristiansen.net/log/noughts-and-crosses.html</link>
+        <pubDate>Sun, 03 Jul 2022 17:45:03 AEST</pubDate>
+        <guid>
+        https://christianchristiansen.net/log/noughts-and-crosses.html
+        </guid>
+        <description>
+        
+&lt;h1 class=&quot;title&quot;&gt;Noughts and Crosses
+&lt;br /&gt;
+&lt;span class=&quot;subtitle&quot;&gt;Forging an indefatigable undefeatable foe&lt;/span&gt;
+&lt;/h1&gt;
+&lt;div id=&quot;table-of-contents&quot; role=&quot;doc-toc&quot;&gt;
+&lt;h2&gt;Table of Contents&lt;/h2&gt;
+&lt;div id=&quot;text-table-of-contents&quot; role=&quot;doc-toc&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#setting-the-scene&quot;&gt;Setting the scene&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#the-game&quot;&gt;The game&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#the-programming-language&quot;&gt;The programming language&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#the-program&quot;&gt;The program&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#the-code&quot;&gt;The code&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#start-at-the-beginning&quot;&gt;Start at the beginning&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#data-representation&quot;&gt;Data representation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#icky-inputs-and-outlandish-outputs&quot;&gt;Icky inputs and outlandish outputs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#forging-the-foe&quot;&gt;Forging the foe&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#wrap-up&quot;&gt;Wrap up&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#what-next&quot;&gt;What next?&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#play&quot;&gt;Play!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#further-afield&quot;&gt;Further afield&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-setting-the-scene&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;setting-the-scene&quot;&gt;Setting the scene&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-setting-the-scene&quot;&gt;
+&lt;p&gt;
+By pitting ourselves against opponents and frequently failing, we develop an
+understanding of our shortcomings, our prejudices, our inexhaustible capacity
+to flop. Games provide safe padded spaces to fall flat on our faces, while
+still yielding a sense of accomplishment when we stand firm.
+&lt;/p&gt;
+
+&lt;p&gt;
+However, folk are fallible, and friends fickle. To hone our skills at any hour,
+against an opponent who will never tire, we have to create a computer ersatz,
+an algorithmic adversary, to face our ire. Gather around the kiln, watch and
+learn, and see how we forge an indefatigable undefeatable foe from pure
+thought-stuff and (metaphorical) fire.
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-the-game&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;the-game&quot;&gt;The game&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-the-game&quot;&gt;
+&lt;p&gt;
+Noughts and crosses, also inexplicably called tic-tac-toe by Yanks, is a game
+in which two players alternately place noughts and crosses on a three-by-three
+grid; the winner is the first player to place three of their symbol in a
+straight line: horizontally, vertically or diagonally.
+&lt;/p&gt;
+
+&lt;p&gt;
+Consult the relevant Wikipeda article and its citations for more information on
+noughts and crosses than you could ever want.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-the-programming-language&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;the-programming-language&quot;&gt;The programming language&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-the-programming-language&quot;&gt;
+&lt;p&gt;
+Python is the de facto programming language for learning, teaching and
+artificial intelligence (amongst many other fields). For the scope of this
+tutorial, the use of any other programming language would be a gratuitous
+affectation.
+&lt;/p&gt;
+
+&lt;p&gt;
+The best books on Python are &lt;i&gt;Fluent Python&lt;/i&gt; by Luciano Ramalho and &lt;i&gt;Effective
+Python&lt;/i&gt; by Brett Slatkin. For beginners, there are copious stellar resources
+available; any search engine is your friend. The Pythonic idioms to be
+aware of here, are list comprehension and dunders. More generally, within
+this tutorial, the most difficult programming paradigms used are &lt;i&gt;recursion&lt;/i&gt;
+and &lt;i&gt;currying&lt;/i&gt;; &lt;i&gt;The Little Schemer&lt;/i&gt; by Daniel P. Friedman and Matthias
+Felleisen is an excellent primer on both of these concepts.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-the-program&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;the-program&quot;&gt;The program&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-the-program&quot;&gt;
+&lt;p&gt;
+The opponent exhaustively considers every possible move, and determines which
+move has the lowest chance of leading to a loss. Many aspects of the program
+leave much to be desired. However, the primary purpose of this tutorial is to
+demonstrate how to create a simple, non-optimised, artificially intelligent
+opponent, and not to win a beauty pageant.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-the-code&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;the-code&quot;&gt;The code&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-the-code&quot;&gt;
+&lt;/div&gt;
+&lt;div id=&quot;outline-container-start-at-the-beginning&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;start-at-the-beginning&quot;&gt;Start at the beginning&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-start-at-the-beginning&quot;&gt;
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;#!/usr/bin/env python
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-data-representation&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;data-representation&quot;&gt;Data representation&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-data-representation&quot;&gt;
+&lt;blockquote&gt;
+&lt;p&gt;
+Bad programmers worry about the code. Good programmers worry about data
+structures and their relationships.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;
+&lt;div class=&quot;quoter&quot;&gt;&lt;a href=&quot;https://lwn.net/Articles/193245/&quot;&gt;Linus Torvalds&lt;/a&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+We represent an empty starting board as:
+&lt;/p&gt;
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;board = &quot; &quot;*9
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;
+where a space denotes an empty cell, &lt;code&gt;&quot;0&quot;&lt;/code&gt; a nought and &lt;code&gt;&quot;1&quot;&lt;/code&gt; a cross. Players
+are represented as &lt;code&gt;False&lt;/code&gt; for noughts and &lt;code&gt;True&lt;/code&gt; for crosses.
+&lt;/p&gt;
+
+&lt;p&gt;
+We define which indices represent each row, column and diagonal. Remember that
+Python begins indexing at 0, not 1, as Dijkstra ordained.
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;def rowx(x):
+    return [3*x, 3*x+1, 3*x+2]
+
+def coly(y):
+    return [0+y, 3+y, 6+y]
+
+diagdown = [0, 4, 8]
+diagup = [2, 4, 6]
+rows = [rowx(i) for i in range(3)]
+cols = [coly(i) for i in range(3)]
+diags = [diagdown, diagup]
+all_directions = rows + cols + diags
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+To return a list of cells which are still empty:
+&lt;/p&gt;
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;def possible(board):
+    return [i for i, x in enumerate(board) if x == &quot; &quot;]
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+If we insist that noughts always starts first (it is called noughts and crosses
+for a reason), we can determine whose turn it is by counting how many cells are
+still empty. One great consequence of programming our own game, is being
+beholden to our own prejudices and setting our own idiosyncratic rules. &lt;i&gt;Note:&lt;/i&gt;
+noughts is denoted by &lt;code&gt;False&lt;/code&gt;, crosses by &lt;code&gt;True&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;def player(board):
+    return (board.count(&quot; &quot;)-1) % 2
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Knowing the player allows us to figure out what the board looks like after a
+move. &lt;i&gt;Note:&lt;/i&gt; &lt;code&gt;int(True) = 1&lt;/code&gt; and &lt;code&gt;int(False) = 0&lt;/code&gt;.
+&lt;/p&gt;
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;def new_board(board, move):
+    return board[:move] + str(int(player(board))) + board[move+1:]
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+The following allows us to find out if the game has finished, and if so, who
+the winner is:
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;def moves_left(board):
+    return board.count(&quot; &quot;)
+
+def winner(board):
+    if moves_left(board) &amp;lt; 5:
+        for direction in all_directions:
+            try:
+                if sum(int(board[i]) for i in direction) == 3:
+                    return &quot;X&quot;
+                if sum(int(board[i]) for i in direction) == 0:
+                    return &quot;O&quot;
+            except ValueError:
+                continue
+        if moves_left(board) == 0:
+            return &quot;nobody&quot;
+    return False
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-icky-inputs-and-outlandish-outputs&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;icky-inputs-and-outlandish-outputs&quot;&gt;Icky inputs and outlandish outputs&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-icky-inputs-and-outlandish-outputs&quot;&gt;
+&lt;p&gt;
+Humans are visual creatures. Even for geeks with no more than an ASCII console,
+a 9 character long string does not suffice as a representation for a board. We
+must make at least some minimal pretension to aesthetic nous.
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;def display_possible(board):
+    return &quot;, &quot;.join(str(x) for x in possible(board))
+
+def display_player(p):
+    return &quot;X&quot; if p else &quot;O&quot;
+
+def display_cell(x):
+    if x == &quot;1&quot;:
+        return &quot;X&quot;
+    if x == &quot;0&quot;:
+        return &quot;O&quot;
+    return x
+
+def display(board):
+    print()
+    print(
+        &quot;\n_ _ _\n&quot;.join(
+            &quot;|&quot;.join(display_cell(board[3*x+y]) for y in range(3))
+            for x in range(3)
+        )
+    )
+    print()
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+Humans are not only visual creatures, but also butter-fingered. Use exceptions
+to limit the damage a human can do when they mash the keyboard. &lt;code&gt;while True&lt;/code&gt;
+loops forever, providing ample time for the not-so-fleet-footed.
+&lt;/p&gt;
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;def get_human_player():
+    while True:
+        x = input(&quot;Would you like to be noughts O or crosses X?: &quot;)
+        return True if x.lower() == &quot;x&quot; else False
+
+def human_move(board):
+    while True:
+        try:
+            move = input(f&quot;Choose a move from {display_possible(board)}: &quot;)
+            if int(move) in possible(board):
+                return new_board(board, int(move))
+            print(&quot;That number was not valid, please choose another.&quot;)
+        except (ValueError, TypeError):
+            print(&quot;Please input a number, not a string.&quot;)
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-forging-the-foe&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;forging-the-foe&quot;&gt;Forging the foe&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-forging-the-foe&quot;&gt;
+&lt;blockquote&gt;
+&lt;p&gt;
+The enemy of my enemy is my friend.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+The algorithm we implement for the computer is called minimax. Namely, the
+computer chooses the move which maximises its chances that its opponent will
+have minimal chances to win. To calculate the score, minimax recursively calls
+itself exhaustively until all potential scenarios have been considered.
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;def score(result):
+    if result == &quot;O&quot;:
+        return 1
+    if result == &quot;X&quot;:
+        return -1
+    return 0
+
+def maxmin(x, maximise):
+    return max(x) if maximise else min(x)
+
+def minimax(board, maximise=True):
+    if result:=winner(board):
+        return score(result)
+    return maxmin(
+        [
+            minimax(new_board(board, move), not maximise)
+            for move in possible(board)
+        ],
+        maximise
+    )
+
+def computer_best_move(board):
+    best_minimax_score = None
+    best_move = None
+    for move in possible(board):
+        minimax_score = minimax(new_board(board, move), maximise=player(board))
+        if (
+                best_move is None or
+                (player(board) and minimax_score &amp;lt; best_minimax_score) or
+                (not player(board) and minimax_score &amp;gt; best_minimax_score)
+        ):
+            best_minimax_score = minimax_score
+            best_move = move
+    return best_move
+
+def computer_move(board):
+    move = computer_best_move(board)
+    return new_board(board, move)
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-wrap-up&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;wrap-up&quot;&gt;Wrap up&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-wrap-up&quot;&gt;
+&lt;p&gt;
+We then put the pieces together to create a playable game. The &lt;code&gt;EOFError&lt;/code&gt; and
+&lt;code&gt;KeyboardInterrupt&lt;/code&gt; allow the human player to exit at any time. The dunders
+in &lt;code&gt;__name__ == &quot;__main__&quot;&lt;/code&gt; are daft, but alas, all languages have their
+defects.
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+&lt;pre class=&quot;src src-python&quot;&gt;def main(human=False):
+    try:
+        board = &quot; &quot;*9
+        while not winner(board):
+            display(board)
+            if player(board) == human:
+                board = human_move(board)
+            else:
+                board = computer_move(board)
+        display(board)
+        print(f&quot;Finished! Winner is {winner(board)}&quot;)
+    except (EOFError, KeyboardInterrupt):
+        print(&quot;\nAbort\n&quot;)
+        exit()
+
+if __name__ == &quot;__main__&quot;:
+    HUMAN = get_human_player()
+    main(human=HUMAN)
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+The complete code is available &lt;a href=&quot;./noughts-and-crosses.py&quot;&gt;here&lt;/a&gt;.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-what-next&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;what-next&quot;&gt;What next?&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-what-next&quot;&gt;
+&lt;/div&gt;
+&lt;div id=&quot;outline-container-play&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;play&quot;&gt;Play!&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-play&quot;&gt;
+&lt;p&gt;
+Once you have tired of playing against your new-fledged playmate, change it up.
+Rewrite the program with other data representations:
+&lt;/p&gt;
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;&lt;p&gt;keep track of the moves, not the board;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;rewrite the board as an object;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;use a three-by-three matrix instead of a 9 character long string.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+Or improve it! The program could:
+&lt;/p&gt;
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;&lt;p&gt;choose better moves (not just the least worst);&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;take symmetry into account, as a three-by-three grid is highly symmetrical;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;use alpha beta pruning;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;have a plusher user interface.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+Alternatively, you can translate the program to another programming language.
+Or you can create an adversary for another game. Consult your nearest games
+cupboard for inspiration.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-further-afield&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;further-afield&quot;&gt;Further afield&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-further-afield&quot;&gt;
+&lt;p&gt;
+To venture further into the cybernetic meadows, let Richard Brautigan, Andrew
+Ng, &lt;i&gt;Deep Learning&lt;/i&gt; by Ian Goodfellow and Yoshua Bengio and Aaron Courville,
+and &lt;i&gt;Neural Networks and Learning Machines&lt;/i&gt; by Simon Haykin be your guides.
+&lt;i&gt;Bon voyage!&lt;/i&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+        </description>
+    </item>
+    <item>
         <title>Elvis</title>
         <link>https://christianchristiansen.net/log/elvis.html</link>
         <pubDate>Fri, 20 May 2022 15:23:06 AEST</pubDate>
