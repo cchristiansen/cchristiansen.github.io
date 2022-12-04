@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-12-05 Mon 09:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 4. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 4."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 4</h1>
+<p>
+Eliminating side effects from this code could be a fun task.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">with open("4.txt") as f:
+    lines = f.read().splitlines()
+
+def contains(line):
+    l, r = line
+    min_l, max_l = l.split("-")
+    min_r, max_r = r.split("-")
+    print(line, min_l, max_l, min_r, max_r)
+    if int(min_l) &lt;= int(min_r) and int(max_l) &gt;= int(max_r):
+        return 1
+    elif int(min_r) &lt;= int(min_l) and int(max_r) &gt;= int(max_l):
+        return 1
+    return 0
+
+def in_other(line):
+    return contains(line.split(","))
+
+print(sum([in_other(line) for line in lines]))
+
+def overlap(line):
+    l, r = line
+    min_l, max_l = l.split("-")
+    min_r, max_r = r.split("-")
+    print(line, min_l, max_l, min_r, max_r)
+    if int(min_l) &gt;= int(min_r) and int(min_l) &lt;= int(max_r):
+        return 1
+    elif int(min_r) &gt;= int(min_l) and int(min_r) &lt;= int(max_l):
+        return 1
+    return 0
+
+def in_other_2(line):
+    return overlap(line.split(","))
+
+print(sum([in_other_2(line) for line in lines]))
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

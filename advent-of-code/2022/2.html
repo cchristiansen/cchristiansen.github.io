@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-12-05 Mon 09:36 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 2. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 2."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 2</h1>
+<p>
+Only the part 2 code. I deleted part 1 while working out part 2. As can be seen
+from the <code>print</code> statements left in, this code is just left as is afterwards,
+warts and all.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">with open("2.txt") as f:
+    lines = f.read().splitlines()
+
+for line in lines:
+    print(line)
+
+def three(x):
+    if x == 0:
+        return 3
+    return x
+
+def rps(x):
+    if x == "A": #rock
+        return 1
+    elif x == "B": #paper
+        return 2
+    elif x == "C": #scissors
+        return 3
+
+def win_lose_draw(line):
+    if line[-1] == "X":
+        return 0
+    elif line[-1] == "Y":
+        return 3
+    elif line[-1] == "Z":
+        return 6
+
+def rock_paper_scissor(line):
+    if win_lose_draw(line) == 3:
+        return rps(line[0])
+    elif win_lose_draw(line) == 0:
+        return three(rps(line[0])-1)
+    else:
+        return rps(line[0])%3+1
+
+def game(line):
+    return win_lose_draw(line) + rock_paper_scissor(line)
+
+for line in lines:
+    print(line, game(line), win_lose_draw(line), rock_paper_scissor(line))
+
+print(sum([game(line) for line in lines]))
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="../portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
