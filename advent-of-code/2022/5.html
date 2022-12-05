@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-12-05 Mon 16:39 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 5. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 5."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 5</h1>
+<p>
+Is there a more efficient way to do this? Note that <code>from</code> is a reserved word
+in Python, so <code>begin</code> was used instead.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">with open("5.txt") as f:
+    lines = f.read()
+
+head, instructions = lines.split("\n\n")
+
+def get_state(head):
+    state = {
+        x:"" for x in range(1, (len(head.split("\n")[0])+5)//4 + 1)
+    }
+    for line in reversed(head.split("\n")[:-1]):
+        for col, i in enumerate(range(1, len(line), 4), 1):
+            if line[i].isalpha():
+                state[col] += line[i]
+    return state
+
+def carry_out_instruction(state, instruction):
+    _, amount, _, begin, _, to = instruction.split(" ")
+    amount = int(amount)
+    begin = int(begin)
+    to = int(to)
+    print(state)
+    for _ in range(amount):
+        state[to] += state[begin][-1]
+        state[begin] = state[begin][:-1]
+    print(instruction)
+    return state
+
+def carry_out_instructions(state, instructions):
+    for line in instructions.split("\n")[:-1]:
+        state = carry_out_instruction(state, line)
+    return state
+
+def top(state):
+    return "".join([packages[-1] for _, packages in state.items() if packages])
+
+state = get_state(head)
+state = carry_out_instructions(state, instructions)
+print(top(state))
+
+# part 2
+def carry_out_instruction_2(state, instruction):
+    _, amount, _, begin, _, to = instruction.split(" ")
+    amount = int(amount)
+    begin = int(begin)
+    to = int(to)
+    print(state)
+    state[to] += state[begin][-amount:]
+    state[begin] = state[begin][:-amount]
+    print(instruction)
+    return state
+
+def carry_out_instructions_2(state, instructions):
+    for line in instructions.split("\n")[:-1]:
+        state = carry_out_instruction_2(state, line)
+    return state
+
+state2 = get_state(head)
+state2 = carry_out_instructions_2(state2, instructions)
+print(top(state2))
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
