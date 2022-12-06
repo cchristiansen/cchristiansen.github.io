@@ -3,38 +3,40 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-12-06 Tue 16:07 -->
+<!-- 2022-12-06 Tue 16:06 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Advent of Code 2022. Christian Christiansen.</title>
+<title>Advent of Code 2022 day 6. Christian Christiansen.</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Christian Christiansen" />
-<meta name="description" content="My advent of code 2022 solutions. Written in Python."
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 6."
  />
 <link rel="stylesheet" type="text/css" href="../../main.css">
 </head>
 <body>
 <div id="content">
-<h1 class="title">Advent of Code 2022</h1>
+<h1 class="title">Advent of Code 2022 day 6</h1>
 <p>
-Solutions are in Python.
+Code for part 2. For part 1 replace 14 with 4.
 </p>
 
-<p>
-<center>
-<a href="./1.html">1</a>.
-<a href="./2.html">2</a>.
-<a href="./3.html">3</a>.
-<a href="./4.html">4</a>.
-<a href="./5.html">5</a>. <br />
-<a href="./6.html">6</a>.
-</center>
-</p>
+<div class="org-src-container">
+<pre class="src src-python">with open("6.txt") as f:
+    text = f.read()
+
+print(len(text))
+for i in range(len(text)):
+    if len(set(text[i:i+14])) == 14:
+        print(i+14)
+        print(text[i:i+14])
+        exit()
+</pre>
+</div>
 </div>
 <div class="footer">
 <center>
-<a href="../index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
-<a href="../index.html"><h1>Christian Christiansen.</h1></a>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
 <div id="postamble" class="status">
 <a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
 </div>
