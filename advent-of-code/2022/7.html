@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-12-07 Wed 17:23 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 7. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 7."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 7</h1>
+<p>
+Kept using the number 4 million instead of 40 million for part 2. Need to look
+closer next time. Replicating the filesystem was fun. <code>reading</code> was totally
+unnecessary, could have just left out the <code>ls</code>  case.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">with open("7.txt") as f:
+    lines = f.read().splitlines()
+
+filesystem = {}
+cwd = "/"
+
+reading = False
+for line in lines:
+    # command
+    if line.startswith("$"):
+        reading = False
+        # cd
+        if line.startswith("$ cd "):
+            d = line.split("$ cd ")[1]
+            if d == "/":
+                cwd = "/"
+            elif d == "..":
+                cwd = "/".join(cwd.split("/")[:-2])+"/"
+            else:
+                cwd += d+"/"
+        # ls
+        elif line == "$ ls":
+            reading = True
+    else:
+        # init if not in
+        if cwd not in filesystem:
+            filesystem[cwd] = []
+        # dir
+        if line.startswith("dir"):
+            filesystem[cwd].append(line.split(" ")[1])
+        else:
+            filesystem[cwd].append(int(line.split(" ")[0]))
+
+def d_size(d):
+    sum = 0
+    for f in filesystem[d]:
+        if type(f) is int:
+            sum += f
+        else:
+            sum += d_size(d+f+"/")
+    return sum
+
+total = 0
+for d in filesystem:
+    if d_size(d) &lt; 100000:
+        total += d_size(d)
+print(total)
+
+# part 2
+dir_sizes = {d: d_size(d) for d in filesystem}
+cur_size = dir_sizes["/"]
+
+print(min(size for _, size in dir_sizes.items() if cur_size-size &lt; 40000000))
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
