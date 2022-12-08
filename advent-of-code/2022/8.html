@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-12-08 Thu 16:36 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 8. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 8."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 8</h1>
+<p>
+Took too long on part 2 again. Didn’t realise you could still see the tree even
+if it was taller, hence all of the additional <code>{var} += 1</code>. I’m getting
+speedier at part 1 which is good to see.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">with open("8.txt") as f:
+    lines = f.read().splitlines()
+
+board = [[x for x in line] for line in lines]
+
+def is_visible(board, y, x):
+    if all(board[y][i] &lt; board[y][x] for i in range(x)):
+        return True
+    if all(board[j][x] &lt; board[y][x] for j in range(y)):
+        return True
+    if all(board[y][i] &lt; board[y][x] for i in range(x+1, len(board[y]))):
+        return True
+    if all(board[j][x] &lt; board[y][x] for j in range(y+1, len(board))):
+        return True
+    return False
+
+count = 0
+for y in range(len(board)):
+    for x in range(len(board[y])):
+        if is_visible(board, y, x):
+            count += 1
+print(count)
+
+# part 2
+def scenic_score(board, y, x):
+    a = 0
+    for i in range(x-1, -1, -1):
+        if board[y][i] &lt; board[y][x]:
+            a += 1
+        elif board[y][i] == board[y][x]:
+            a += 1
+            break
+        else:
+            a += 1
+            break
+    b = 0
+    for j in range(y-1, -1, -1):
+        if board[j][x] &lt; board[y][x]:
+            b += 1
+        elif board[j][x] == board[y][x]:
+            b += 1
+            break
+        else:
+            b += 1
+            break
+    c = 0
+    for i in range(x+1, len(board[y])):
+        if board[y][i] &lt; board[y][x]:
+            c += 1
+        elif board[y][i] == board[y][x]:
+            c += 1
+            break
+        else:
+            c += 1
+            break
+    d = 0
+    for j in range(y+1, len(board)):
+        if board[j][x] &lt; board[y][x]:
+            d += 1
+        elif board[j][x] == board[y][x]:
+            d += 1
+            break
+        else:
+            d += 1
+            break
+    return a*b*c*d
+
+max_score = 0
+for y in range(len(board)):
+    for x in range(len(board[y])):
+        if (score:=scenic_score(board, y, x)) &gt; max_score:
+            max_score = score
+print(max_score)
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
