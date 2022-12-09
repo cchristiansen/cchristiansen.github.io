@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-12-09 Fri 16:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 9. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 9."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 9</h1>
+<p>
+I thought I could get away with not properly implementing the algorithm and
+also not properly reading the question. Apparently not. It also took me far too
+long to even just parse the input, which I realise now could have just been:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">instructions = [line.split(" ") for line in lines]
+</pre>
+</div>
+
+<p>
+Maybe I do need a break after all.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">with open("9.txt") as f:
+    lines = f.read().splitlines()
+
+instructions = [
+    [line.split(" ")[0], int(line.split(" ")[1])]
+    for line in lines
+]
+
+state = {(0, 0)}
+now = (0, 0)
+H = (0, 0)
+T = (0, 0)
+
+def move(T):
+    if abs(H[0] - T[0]) &lt; 2 and abs(H[1] - T[1]) &lt; 2:
+        return T
+    elif abs(H[0] - T[0]) == 2 and H[1] == T[1]:
+        return (int((H[0] + T[0])/2), T[1])
+    elif abs(H[1] - T[1]) == 2 and H[0] == T[0]:
+        return (T[0], int((H[1] + T[1])/2))
+    elif H[0] &lt; T[0] and H[1] &lt; T[1]:
+        return (T[0]-1, T[1]-1)
+    elif H[0] &gt; T[0] and H[1] &lt; T[1]:
+        return (T[0]+1, T[1]-1)
+    elif H[0] &lt; T[0] and H[1] &gt; T[1]:
+        return (T[0]-1, T[1]+1)
+    elif H[0] &gt; T[0] and H[1] &gt; T[1]:
+        return (T[0]+1, T[1]+1)
+
+for [d, n] in instructions:
+    if d == "R":
+        for x in range(H[0]+1, H[0]+1+n):
+            H = (x, H[1])
+            T = move(T)
+            state.add(T)
+    elif d == "L":
+        for x in range(H[0]-1, H[0]-1-n, -1):
+            H = (x, H[1])
+            T = move(T)
+            state.add(T)
+    elif d == "D":
+        for y in range(H[1]+1, H[1]+1+n):
+            H = (H[0], y)
+            T = move(T)
+            state.add(T)
+    elif d == "U":
+        for y in range(H[1]-1, H[1]-1-n, -1):
+            H = (H[0], y)
+            T = move(T)
+            state.add(T)
+
+print(len(state))
+
+# part 2
+states = {i: (0,0) for i in range(10)}
+
+tails = {(0,0)}
+
+def move(H, T):
+    if abs(H[0] - T[0]) &lt; 2 and abs(H[1] - T[1]) &lt; 2:
+        return T
+    elif abs(H[0] - T[0]) == 2 and H[1] == T[1]:
+        return (int((H[0] + T[0])/2), T[1])
+    elif abs(H[1] - T[1]) == 2 and H[0] == T[0]:
+        return (T[0], int((H[1] + T[1])/2))
+    elif H[0] &lt; T[0] and H[1] &lt; T[1]:
+        return (T[0]-1, T[1]-1)
+    elif H[0] &gt; T[0] and H[1] &lt; T[1]:
+        return (T[0]+1, T[1]-1)
+    elif H[0] &lt; T[0] and H[1] &gt; T[1]:
+        return (T[0]-1, T[1]+1)
+    elif H[0] &gt; T[0] and H[1] &gt; T[1]:
+        return (T[0]+1, T[1]+1)
+
+for [d, n] in instructions:
+    if d == "R":
+        for x in range(states[0][0]+1, states[0][0]+1+n):
+            states[0] = (x, states[0][1])
+            for i in range(1, 10):
+                states[i] = move(states[i-1], states[i])
+            tails.add(states[9])
+    elif d == "L":
+        for x in range(states[0][0]-1, states[0][0]-1-n, -1):
+            states[0] = (x, states[0][1])
+            for i in range(1, 10):
+                states[i] = move(states[i-1], states[i])
+            tails.add(states[9])
+    elif d == "D":
+        for y in range(states[0][1]+1, states[0][1]+1+n):
+            states[0] = (states[0][0], y)
+            for i in range(1, 10):
+                states[i] = move(states[i-1], states[i])
+            tails.add(states[9])
+    elif d == "U":
+        for y in range(states[0][1]-1, states[0][1]-1-n, -1):
+            states[0] = (states[0][0], y)
+            for i in range(1, 10):
+                states[i] = move(states[i-1], states[i])
+            tails.add(states[9])
+
+print(len(tails))
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
