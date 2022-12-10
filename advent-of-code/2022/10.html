@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-12-10 Sat 22:07 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 10. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 10."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 10</h1>
+<p>
+I’m learning to properly read questions and to not take too many shortcuts.
+Part 2 has an unexpected and interesting spin. Coded with morale support from
+Sam.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">with open("10.txt") as f:
+    lines = f.read().splitlines()
+
+cycles = range(20, 221, 40)
+
+values = [1]
+val = 1
+for line in lines:
+    if line == "noop":
+        values.append(val)
+    elif line.startswith("addx"):
+        values.append(val)
+        val += int(line.split(" ")[1])
+        values.append(val)
+
+sum = 0
+for cycle in cycles:
+    print(cycle, values[cycle-1])
+    sum += cycle*values[cycle-1]
+
+print(sum)
+
+# part 2
+def is_in(x, values):
+    if abs(values[x] - x%40) &lt; 2:
+        return "#"
+    return "."
+
+print(
+    "\n".join(
+        "".join(is_in(x, values) for x in range(y, y+40))
+        for y in range(0, 240, 40)
+    )
+)
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
