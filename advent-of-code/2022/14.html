@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-01-09 Mon 20:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 14. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 14."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 14</h1>
+<p>
+Relatively straightforward. Decided to keep track of things with classes.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"># with open("14_test.txt") as f:
+with open("14.txt") as f:
+    data = f.read()
+
+def sign(x):
+    if x &lt; 0:
+        return -1
+    return 1
+
+class Node:
+    def __init__(self, data):
+        self.x, self.y = [int(c) for c in data.split(",")]
+
+    def __str__(self):
+        return f"{self.x}, {self.y}"
+
+class Line:
+    def __init__(self, data):
+        self.line = [Node(n) for n in data.split(" -&gt; ")]
+
+    @property
+    def min_w(self):
+        return min(node.x for node in self.line)
+
+    @property
+    def max_w(self):
+        return max(node.x for node in self.line)
+
+    @property
+    def h(self):
+        return max(node.y for node in self.line)
+
+    def __iter__(self):
+        return iter(self.line)
+
+    def __getitem__(self, i):
+        return self.line[i]
+
+class Grid:
+    def __init__(self, data):
+        self.lines = [Line(l) for l in data.splitlines()]
+        self.min_w = min(line.min_w for line in self.lines)
+        self.max_w = max(line.max_w for line in self.lines)
+        self.h = max(line.h for line in self.lines)
+        self.grid = [
+            ["." for _ in range(self.max_w-self.min_w+1)]
+            for _ in range(self.h+1)
+        ]
+        for line in self.lines:
+            for node, old_node in zip(line[1:], line):
+                self.fill_line(node, old_node)
+        self.comes_to_rest = True
+        self.sand_start = Node("500, 0")
+
+    def __str__(self):
+        return "\n".join([
+            "".join(
+                row
+            )
+            for row in self.grid
+        ])
+
+
+    def block(self, node, char="#"):
+        self.grid[node.y][node.x-self.min_w] = char
+
+    def between(self, start, end):
+        if start.x != end.x:
+            return [
+                Node(f"{i}, {end.y}")
+                for i in range(start.x, end.x, sign(end.x-start.x))
+            ]
+        return [
+            Node(f"{end.x}, {j}")
+            for j in range(start.y, end.y, sign(end.y-start.y))
+        ]
+
+    def fill_line(self, end, start):
+        self.block(start)
+        self.block(end)
+        for node in self.between(start, end):
+            self.block(node)
+
+    def at(self, x, y):
+        if x &gt;= self.min_w and y &gt;= 0 and x &lt; self.max_w+1 and y &lt; self.h+1:
+            return self.grid[y][x-self.min_w]
+        return False
+
+    def speck_movable(self, speck):
+        if (
+                self.at(x=speck.x, y=speck.y+1) == "." or
+                self.at(x=speck.x-1, y=speck.y+1) == "." or
+                self.at(x=speck.x+1, y=speck.y+1) == "."
+        ):
+            return True
+        return False
+
+    def move_speck(self, speck):
+        if self.at(x=speck.x, y=speck.y+1) == ".":
+            return Node(f"{speck.x}, {speck.y+1}")
+        elif self.at(x=speck.x-1, y=speck.y+1) == ".":
+            return Node(f"{speck.x-1}, {speck.y+1}")
+        elif self.at(x=speck.x+1, y=speck.y+1) == ".":
+            return Node(f"{speck.x+1}, {speck.y+1}")
+
+    def sand(self):
+        speck = self.sand_start
+        while self.speck_movable(speck):
+            speck = self.move_speck(speck)
+        if speck.x == self.min_w or speck.x == self.max_w or speck.y == self.h:
+            self.comes_to_rest = False
+        else:
+            self.block(speck, char="o")
+
+    def answer(self):
+        for i in range(100000):
+            self.sand()
+            print(self)
+            if not self.comes_to_rest:
+                return i
+
+grid = Grid(data)
+print(grid.answer())
+
+# part 2
+class Grid2:
+    def __init__(self, data):
+        self.lines = [Line(l) for l in data.splitlines()]
+        self.h = max(line.h for line in self.lines)+2
+        self.max_w = max(line.max_w for line in self.lines)
+        self.N = 2*self.max_w+1
+        self.grid = [
+            ["." for _ in range(self.N)]
+            for _ in range(self.h+1)
+        ]
+        for x in range(self.N):
+            self.grid[-1][x] = "#"
+        for line in self.lines:
+            for node, old_node in zip(line[1:], line):
+                self.fill_line(node, old_node)
+        self.sand_start = Node("500, 0")
+        self.completed = False
+
+    def __str__(self):
+        return "\n".join([
+            "".join(
+                row
+            )
+            for row in self.grid
+        ])
+
+
+    def block(self, node, char="#"):
+        self.grid[node.y][node.x] = char
+
+    def between(self, start, end):
+        if start.x != end.x:
+            return [
+                Node(f"{i}, {end.y}")
+                for i in range(start.x, end.x, sign(end.x-start.x))
+            ]
+        return [
+            Node(f"{end.x}, {j}")
+            for j in range(start.y, end.y, sign(end.y-start.y))
+        ]
+
+    def fill_line(self, end, start):
+        self.block(start)
+        self.block(end)
+        for node in self.between(start, end):
+            self.block(node)
+
+    def at(self, x, y):
+        if x &gt;= 0 and y &gt;= 0 and x &lt; self.N and y &lt; self.h+1:
+            return self.grid[y][x]
+        return False
+
+    def speck_movable(self, speck):
+        if (
+                self.at(x=speck.x, y=speck.y+1) == "." or
+                self.at(x=speck.x-1, y=speck.y+1) == "." or
+                self.at(x=speck.x+1, y=speck.y+1) == "."
+        ):
+            return True
+        return False
+
+    def move_speck(self, speck):
+        if self.at(x=speck.x, y=speck.y+1) == ".":
+            return Node(f"{speck.x}, {speck.y+1}")
+        elif self.at(x=speck.x-1, y=speck.y+1) == ".":
+            return Node(f"{speck.x-1}, {speck.y+1}")
+        elif self.at(x=speck.x+1, y=speck.y+1) == ".":
+            return Node(f"{speck.x+1}, {speck.y+1}")
+
+    def sand(self):
+        speck = self.sand_start
+        while self.speck_movable(speck):
+            speck = self.move_speck(speck)
+        if speck.x == self.sand_start.x and speck.y == self.sand_start.y:
+            self.completed = True
+        else:
+            self.block(speck, char="o")
+
+    def answer(self):
+        for i in range(1, 100000):
+            self.sand()
+            if self.completed:
+                return i
+
+grid = Grid2(data)
+print(grid.answer())
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
