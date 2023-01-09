@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-01-09 Mon 15:49 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 13. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 13."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 13</h1>
+<p>
+There was quite a lot of faffing with part 1 for edge cases. The main edge case
+which caused issues is mitigated by the conditionals with the walrus operator,
+and the following code:
+</p>
+<div class="org-src-container">
+<pre class="src src-python">if type(a) == list and type(b) == list and len(a) == len(b):
+    return None
+</pre>
+</div>
+
+<p>
+Part 2 was fairly straightfoward. Used linear sort since it was effective
+enough.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"># with open("13_test.txt") as f:
+with open("13.txt") as f:
+    pairs = [pair.splitlines() for pair in f.read().split("\n\n")]
+
+def compare(a, b):
+    for i, x in enumerate(a):
+        if i &gt;= len(b):
+            return False
+        elif type(x) == int and type(b[i]) == int and x &gt; b[i]:
+            return False
+        elif type(x) == int and type(b[i]) == int and x &lt; b[i]:
+            return True
+        elif type(x) == list and type(b[i]) == list:
+            if (result := compare(x, b[i])) is not None:
+                return result
+        elif type(x) == int and type(b[i]) == list:
+            if (result := compare([x], b[i])) is not None:
+                return result
+        elif type(x) == list and type(b[i]) == int:
+            if (result := compare(x, [b[i]])) is not None:
+                return result
+    if type(a) == list and type(b) == list and len(a) == len(b):
+        return None
+    else:
+        return True
+
+print(
+    sum(
+        [i for i, (a, b) in enumerate(pairs, 1) if compare(eval(a), eval(b))]
+    )
+)
+
+# part 2
+signals = [x for pair in pairs for x in pair] + ["[[2]]", "[[6]]"]
+
+def linear_sort(l):
+    for i in range(len(l)):
+        for j in range(i):
+            if compare(eval(l[j]), eval(l[i])) is False:
+                temp = l[i]
+                l[i] = l[j]
+                l[j] = temp
+    return l
+
+def product(l):
+    mult = 1
+    for x in l:
+        mult *= x
+    return mult
+
+ordered = linear_sort(signals)
+print(
+    product([i for i, x in enumerate(ordered, 1) if x in ["[[2]]", "[[6]]"]])
+)
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
