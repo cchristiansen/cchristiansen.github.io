@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-01-10 Tue 08:41 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 15. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 15."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 15</h1>
+<p>
+It’s looking messier and messier. The grid is huge, so can’t hold it all in
+memory without causing my computer to crash. Had to abandon to use something
+less memory heavy.
+</p>
+
+<p>
+Part 2 required me to try even harder than part 1. I got partly stuck later on
+in part 2 due to having renamed some variables from <code>y</code> to <code>j</code>. Never do that.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">from numba import njit
+from numba.typed import List
+
+with open("15.txt") as f:
+# with open("15_test.txt") as f:
+    data = f.read()
+
+# # y = 10
+y = 2000000
+
+sensors = List([
+    (
+        int(line.split(":")[0].split("x=")[1].split(",")[0]),
+        int(line.split(":")[0].split("y=")[1])
+    )
+    for line in data.splitlines()
+])
+beacons = List([
+    (
+        int(line.split(":")[1].split("x=")[1].split(",")[0]),
+        int(line.split(":")[1].split("y=")[1])
+    )
+    for line in data.splitlines()
+])
+
+
+@njit
+def solve(sensors, beacons, y):
+    uniq_beacons = set(beacons)
+    cannot_contain = set()
+    for sensor, beacon in zip(sensors, beacons):
+        distance = abs(beacon[0] - sensor[0]) + abs(beacon[1] - sensor[1])
+        if sensor[1] - distance &lt;= y and sensor[1] + distance &gt;= y:
+            for i in range(
+                    -abs(distance-abs(y-sensor[1])),
+                    abs(distance-abs(y-sensor[1])+1)
+            ):
+                if (
+                        (sensor[0]+i, y) not in uniq_beacons and
+                        (sensor[0]+i, y) is not sensor
+                ):
+                    cannot_contain.add(sensor[0]+i)
+            # for i in range(-distance, distance):
+            #     for j in range(-abs(abs(i)-distance), abs(abs(i)-distance)+1):
+            #         if (
+            #                 y == sensor[1]+j and
+            #                 (sensor[0]+i, sensor[1]+j) not in uniq_beacons
+            #         ):
+                        # cannot_contain.add(sensor[0]+i)
+
+    return len(cannot_contain)
+
+print(solve(sensors=sensors, beacons=beacons, y=y))
+
+# Part 2
+# max_coord=20
+max_coord=4000000
+
+# @njit
+def occupied(covers):
+    return set(x for a, b in covers for x in range(a, b))
+
+# @njit
+def overlap(covers, max_coord):
+    covers = sorted(covers, key=lambda x: x[0])
+    start = 0
+    for (a, b) in covers:
+        if a &gt; start:
+            return False
+        start = max(start, b)
+    if b &gt; max_coord:
+        return False
+    return True
+
+# @njit
+def solve_row(j, points, max_coord):
+    covers = []
+    for x, y, distance in points:
+        if y - distance &lt;= j and y + distance &gt;= j:
+            covers.append([
+                    max(x-abs(distance-abs(j-y)), 0),
+                    min(x+abs(distance-abs(j-y)+1), max_coord)
+            ])
+            # occupied = occupied.union(set(
+            #     range(
+            #         max(x-abs(distance-abs(j-y)), 0),
+            #         min(x+abs(distance-abs(j-y)+1), max_coord)
+            #     )
+            # ))
+    if not overlap(covers, max_coord):
+    # if len(occupied:=set(x for a, b in covers for x in range(a, b))) &lt; max_coord:
+    #     if len(occupied) == max_coord:
+    #         break
+    # if len(occupied) &lt; max_coord:
+    #     print(len(occupied))
+        answer = set(range(max_coord)).difference(occupied(covers))
+        return answer.pop()*4000000+j
+    return 0
+
+# @njit
+def solve2(points, max_coord=20):
+    for j in range(max_coord):
+        if ans := solve_row(j, points, max_coord):
+            return ans
+
+# @njit
+def sensor_distances(sensors, beacons):
+    for sensor, beacon in zip(sensors, beacons):
+        distance = abs(beacon[0] - sensor[0]) + abs(beacon[1] - sensor[1])
+        yield (*sensor, distance)
+
+points = [x for x in sensor_distances(sensors, beacons)]
+
+print(solve2(points, max_coord=max_coord))
+
+# def sign(x):
+#     if x &lt; 0:
+#         return -1
+#     return 1
+
+# class Point:
+#     def __init__(self, x, y):
+#         self.point = [x, y]
+
+#     def __str__(self):
+#         return f"{self.x}, {self.y}"
+
+#     @property
+#     def x(self):
+#         return self.point[0]
+
+#     @property
+#     def y(self):
+#         return self.point[1]
+
+# class Beacon(Point):
+#     def __init__(self, data):
+#         beacon_data = data.split(": ")[1]
+#         super().__init__(
+#             x=int(beacon_data.split("x=")[1].split(",")[0]),
+#             y=int(beacon_data.split("y=")[1].split(",")[0])
+#         )
+
+#     def __str__(self):
+#         return "B"
+
+# class Sensor(Point):
+#     def __init__(self, data, beacons=None):
+#         if beacons is None:
+#             beacons = []
+#         self.beacon = None
+#         sensor_data = data.split(": ")[0]
+#         super().__init__(
+#             x=int(sensor_data.split("x=")[1].split(",")[0]),
+#             y=int(sensor_data.split("y=")[1].split(",")[0])
+#         )
+#         beacon_data = data.split(": ")[1]
+#         beacon_x = int(beacon_data.split("x=")[1].split(",")[0])
+#         beacon_y = int(beacon_data.split("y=")[1].split(",")[0])
+#         for beacon in beacons:
+#             if beacon.x == beacon_x and beacon.y == beacon_y:
+#                 self.beacon = beacon
+#                 break
+
+
+#     def __str__(self):
+#         return "S"
+
+# class Grid:
+#     def __init__(self, data):
+#         self.beacons = [Beacon(line) for line in data.splitlines()]
+#         self.sensors = [
+#             Sensor(line, beacons=self.beacons) for line in data.splitlines()
+#         ]
+#         self.max_y = max(
+#             max([beacon.y for beacon in self.beacons]),
+#             max([sensor.y for sensor in self.sensors])
+#         )
+#         self.min_y = min(
+#             min(beacon.y for beacon in self.beacons),
+#             min(sensor.y for sensor in self.sensors)
+#         )
+#         self.max_x = max(
+#             max(beacon.x for beacon in self.beacons),
+#             max(sensor.x for sensor in self.sensors)
+#         )
+#         self.min_x = min(
+#             min(beacon.x for beacon in self.beacons),
+#             min(sensor.x for sensor in self.sensors)
+#         )
+#         self.x = self.max_x - self.min_x + 1
+#         self.y = self.max_y - self.min_y + 1
+#         print(self.x)
+#         print(self.y)
+#         print(self.x*self.y)
+#         self.grid = "."*self.x*self.y
+#         for beacon in self.beacons:
+#             self.set_value(x=beacon.x, y=beacon.y, value="B")
+#         for sensor in self.sensors:
+#             self.set_value(x=sensor.x, y=sensor.y, value="S")
+
+#     def __str__(self):
+#         return "\n".join([self.col(j) for j in range(self.y)])
+
+#     def at(self, x, y):
+#         if (
+#                 y-self.min_y &gt;= 0 and
+#                 x-self.min_x &gt;= 0 and
+#                 y &lt;= self.max_y and
+#                 x &lt;= self.max_x
+#         ):
+#             return self.grid[((y-self.min_y)*self.x)+(x-self.min_x)]
+
+#     def col(self, y):
+#         return self.grid[(y-self.min_y)*self.x:(y-self.min_y+1)*self.x]
+
+#     def set_value(self, x, y, value):
+#         self.grid = (
+#             self.grid[:((y-self.min_y)*self.x)+x-self.min_x] +
+#             value +
+#             self.grid[((y-self.min_y)*self.x)+x-self.min_x+1:]
+#         )
+
+#     def fill(self):
+#         for sensor in self.sensors:
+#             beacon = sensor.beacon
+#             distance = abs(beacon.x - sensor.x) + abs(beacon.y - sensor.y)
+#             for i in range(-distance, distance):
+#                 for j in range(-abs(abs(i)-distance), abs(abs(i)-distance)+1):
+#                     if self.at(x=sensor.x+i, y=sensor.y+j) == ".":
+#                         self.set_value(x=sensor.x+i, y=sensor.y+j, value="#")
+
+#     def line(self, y):
+#         return len(
+#             [x for x in self.col(y) if x == "#"]
+#         )
+
+# grid = Grid(data)
+# # print(grid)
+# # grid.fill()
+# # print(grid)
+# # print(grid.line(10))
+# # print(grid.line(2000000))
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
