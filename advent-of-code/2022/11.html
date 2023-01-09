@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-01-09 Mon 14:09 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 11. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 11."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 11</h1>
+<p>
+From this day onwards I was otherwise engaged. All following solutions were
+done roughly a month later in January once the bulk of the holiday mayhem had
+subsided.
+</p>
+
+<p>
+<code>eval</code> behaved bizarrely in previous iterations on this code. I thought
+brute-forcing part 2 might work, but my patience wore out, and using the lowest
+common multiple did the trick.
+</p>
+
+<p>
+Is there a more sane way to multiple all the elements of an array? There’s
+probably a function called <code>product</code> or something. Anyway, <code>reduce</code> worked.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">from functools import reduce
+
+# with open("11_test.txt") as f:
+with open("11.txt") as f:
+    text = f.read()
+
+monkeys = []
+
+class Monkey:
+    def __init__(self, data):
+        self.number = int(
+            data.split("\n")[0].split("Monkey ")[1].split(":")[0]
+        )
+        self.worry_levels = [
+            int(x) for x in data.split("\n")[1].split("items: ")[1].split(", ")
+        ]
+        self.operations = data.split("\n")[2].split("Operation: new = ")[1]
+        self.test = int(data.split("\n")[3].split("divisible by ")[1])
+        self.true = int(data.split("\n")[4].split("monkey ")[1])
+        self.false = int(data.split("\n")[5].split("monkey ")[1])
+        self.inspected = 0
+
+    def __str__(self):
+        return (
+            str(self.number) +
+            ": " +
+            ", ".join([str(i) for i in self.worry_levels])
+        )
+
+    def turn(self, divisor=None):
+        operation = lambda old: eval(self.operations)
+        for worry in self.worry_levels:
+            if divisor is None:
+                new = int(operation(worry)//3)
+            else:
+                new = operation(worry) % divisor
+            if new % self.test == 0:
+                monkeys[self.true].worry_levels.append(new)
+            else:
+                monkeys[self.false].worry_levels.append(new)
+            self.inspected += 1
+        self.worry_levels = []
+
+for data in text.split("\n\n"):
+    monkeys.append(Monkey(data))
+
+for _ in range(20):
+    for monkey in monkeys:
+        monkey.turn()
+
+print(
+    reduce(
+        lambda x, y: x*y, sorted([monkey.inspected for monkey in monkeys])[-2:]
+    )
+)
+
+# Part 2
+divisor = reduce(lambda x, y: x*y, (monkey.test for monkey in monkeys))
+
+monkeys = []
+
+for data in text.split("\n\n"):
+    monkeys.append(Monkey(data))
+
+for _ in range(10000):
+    for monkey in monkeys:
+        monkey.turn(divisor=divisor)
+
+print(
+    reduce(
+        lambda x, y: x*y,
+        sorted([monkey.inspected for monkey in monkeys])[-2:]
+    )
+)
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

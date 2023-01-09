@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-01-07 Sat 10:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 12. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 12."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 12</h1>
+<p>
+Got stuck multiple times as shown in the code. Multiple attempts were aborted.
+Again reading questions properly would have helped. Part 2 was fairly simple
+after part 1 was worked out. Crucial to the algorithm was keeping a dictionary
+<code>used</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"># import sys
+# import numpy as np
+# np.set_printoptions(threshold=sys.maxsize, linewidth=120)
+import sys
+sys.setrecursionlimit(15000000)
+
+# with open("12_test.txt") as f:
+with open("12.txt") as f:
+    lines = f.read().splitlines()
+
+map = [[x for x in line] for line in lines]
+m = len(map)
+n = len(map[0])
+for row in range(m):
+    for col in range(n):
+        if map[row][col] == "S":
+            start = (row, col)
+        elif map[row][col] == "E":
+            end = (row, col)
+
+# distances = np.matrix([[0]*m*n]*m*n)
+
+def neighbours(element, row, col):
+    if element == "S":
+        val = 97
+    elif element == "E":
+        val = 122
+    else:
+        val = ord(element)
+    for i in reversed(range(row-1, row+2)):
+        for j in reversed(range(col-1, col+2)):
+            if (
+                    i &gt;= 0 and
+                    j &gt;= 0 and
+                    i &lt; m and
+                    j &lt; n and
+                    (i, j) != (row, col) and
+                    (
+                        i-row == 0 or j-col == 0
+                    )
+            ):
+                neighbour = map[i][j]
+                if neighbour == "S":
+                    neighbour_val = 97
+                elif neighbour == "E":
+                    neighbour_val = 122
+                else:
+                    neighbour_val = ord(neighbour)
+                if neighbour_val &lt;= val+1:
+                    yield i, j
+
+# for row in range(m):
+#     for col in range(n):
+#         element = map[row][col]
+#         for neighbour in neighbours(element, row, col):
+#             i, j = neighbour
+#             distances[col*m+row, j*m+i] = 1
+
+used = {start: 1}
+paths = []
+
+def valid_neighbours(node, path):
+    row, col = node
+    for neighbour in neighbours(map[row][col], row, col):
+        if neighbour not in used or used[neighbour] &gt; len(path)+1:
+            yield neighbour
+
+def add_to_path(path):
+    last = path[-1]
+    new_paths = []
+    if len(path) &lt; 500:
+        for node in valid_neighbours(last, path):
+            new_path = path+[node]
+            paths.append(new_path)
+            new_paths.append(new_path)
+            used[node] = len(new_path)
+        for new_path in new_paths:
+            if new_path[-1] != end:
+                add_to_path(new_path)
+            # else:
+            #     with open("12diffa.txt", "w") as f:
+            #         f.write("\n".join([str(node)+" "+map[node[0]][node[1]] for node in new_path]))
+
+add_to_path([start])
+
+# for path in [path for path in paths if path[-1] == end]:
+#     print(path)
+print(min([len(path) for path in paths if path[-1] == end])-1)
+
+# def distance(x, start):
+#     return (x[0] - start[0]) + (x[1] - start[1])
+
+# def valid_choices(route):
+#     last = route[-1]
+#     choices = []
+#     if last[0] &gt; 0:
+#         choices.append((last[0]-1, last[1]))
+#     if last[0] &lt; len(map)-1:
+#         choices.append((last[0]+1, last[1]))
+#     if last[1] &gt; 0:
+#         choices.append((last[0], last[1]-1))
+#     if last[1] &lt; len(map[0])-1:
+#         choices.append((last[0], last[1]+1))
+#     for choice in sorted(choices, key=lambda x: distance(x, start)):
+#         if (
+#                 choice == start or
+#                 choice not in route and
+#                 (
+#                     (
+#                         map[last[0]][last[1]] == "E" and
+#                         map[choice[0]][choice[1]] == "z"
+#                     ) or
+#                     (
+#                         map[last[0]][last[1]] == "a" and
+#                         map[choice[0]][choice[1]] == "S"
+#                     ) or
+#                     abs(
+#                         ord(map[choice[0]][choice[1]]) -
+#                         ord(map[last[0]][last[1]])
+#                     ) &lt; 2 or
+#                     (
+#                         (
+#                             ord(map[choice[0]][choice[1]]) &gt;
+#                             ord(map[last[0]][last[1]])
+#                          )
+#                     )
+#                 )
+#         ):
+#             yield choice
+
+
+# def next_path(route):
+#     for choice in valid_choices(route):
+#         if map[choice[0]][choice[1]] == "S":
+#             yield route + [choice]
+#         yield from next_path(route + [choice])
+
+# min_length = 10*6
+# for route in next_path([end]):
+#     if route[-1] == start and (length:=len(route)) &lt; min_length:
+#         print(length)
+#         min_length = length
+
+# print(min_length)
+
+## PART 2
+used = {end: 1}
+paths = []
+
+def neighbours_2(element, row, col):
+    if element == "S":
+        val = 97
+    elif element == "E":
+        val = 122
+    else:
+        val = ord(element)
+    for i in range(row-1, row+2):
+        for j in range(col-1, col+2):
+            if (
+                    i &gt;= 0 and
+                    j &gt;= 0 and
+                    i &lt; m and
+                    j &lt; n and
+                    (i, j) != (row, col) and
+                    (
+                        i-row == 0 or j-col == 0
+                    )
+            ):
+                neighbour = map[i][j]
+                if neighbour == "S":
+                    neighbour_val = 97
+                elif neighbour == "E":
+                    neighbour_val = 122
+                else:
+                    neighbour_val = ord(neighbour)
+                if neighbour_val &gt;= val-1:
+                    yield i, j
+
+def valid_neighbours_2(node, path):
+    row, col = node
+    for neighbour in neighbours_2(map[row][col], row, col):
+        if neighbour not in used or used[neighbour] &gt; len(path)+1:
+            yield neighbour
+
+def add_to_path_2(path):
+    last = path[-1]
+    new_paths = []
+    for node in valid_neighbours_2(last, path):
+        new_path = path+[node]
+        paths.append(new_path)
+        new_paths.append(new_path)
+        used[node] = len(new_path)
+    for new_path in new_paths:
+        if map[new_path[-1][0]][new_path[-1][1]] != "a":
+            add_to_path_2(new_path)
+
+add_to_path_2([end])
+print(
+    min(
+        [len(path) for path in paths if map[path[-1][0]][path[-1][1]] == "a"]
+    )-1
+)
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
