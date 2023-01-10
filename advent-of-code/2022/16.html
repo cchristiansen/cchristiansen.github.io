@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-01-10 Tue 18:48 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 16. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 16."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 16</h1>
+<p>
+I’ve taken to separating the two parts into different Python files now, since
+the code is growing in complexity. Part 2 improved upon the length of time set
+out by part 1 to work out the distances between the valves. However, despite
+this, it takes an age to run. Used permutations for part 2. I might have been
+able to get away with combinations, but I wanted to be safe.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">with open("16_test.txt") as f:
+# with open("16.txt") as f:
+    data = f.read()
+
+def get_id(line):
+    return line.split("Valve ")[1].split(" ")[0]
+
+class Valve:
+    def __init__(self, data):
+        self.id = get_id(data)
+        self.flow_rate = self.get_flow_rate(data)
+        self.neighbours = self.get_neighbours(data)
+
+    def get_flow_rate(self, line):
+        return int(line.split("rate=")[1].split(";")[0])
+
+    def get_neighbours(self, line):
+        if "valves " in line:
+            return line.split("valves ")[1].split(", ")
+        return [line.split("leads to valve ")[1]]
+
+valves = {get_id(line): Valve(line) for line in data.splitlines()}
+
+def shortest(paths):
+    if len(paths) &gt; 0:
+        return sorted(paths, key=lambda x: len(x))[0]
+    return None
+
+def get_path_to(start, end, path):
+    if end == start:
+        return []
+    elif end in valves[start].neighbours:
+        return path+[end]
+    elif len(path) &gt; 1 and start in path[:-1]:
+        return False
+    paths = []
+    for x in valves[start].neighbours:
+        if possible_path:=get_path_to(x, end, path+[x]):
+            paths.append(possible_path)
+    return shortest(paths)
+
+def get_distances(valves):
+    distances = {}
+    for start in valves:
+        for end in valves:
+            if start == end:
+                distances[(start, end)] = 0
+            elif end in valves[start].neighbours:
+                distances[(start, end)] = 1
+            else:
+                for x in valves[start].neighbours:
+                    if end in valves[x].neighbours:
+                        distances[(start, end)] = 2
+                        break
+                else:
+                    distances[(start, end)] = len(
+                        get_path_to(start, end, [])
+                    )
+    return distances
+
+def answer(rounds, current, unopened, distances):
+    if rounds &lt;= 0:
+        return 0
+    score = 0
+    for candidate in unopened:
+        new_unopened = [x for x in unopened if x is not candidate]
+        new_rounds = rounds-1-distances[(current.id, candidate.id)]
+        if new_rounds &lt;= 0:
+            continue
+        score = max(
+            score,
+            new_rounds*candidate.flow_rate+answer(
+                new_rounds,
+                candidate,
+                new_unopened,
+                distances
+            )
+        )
+    return score
+
+distances = get_distances(valves)
+current = valves["AA"]
+unopened = {valve for valve in valves.values() if valve.flow_rate &gt; 0}
+
+print(answer(30, current, unopened, distances))
+
+# Part 2
+from itertools import permutations
+
+# with open("16_test.txt") as f:
+with open("16.txt") as f:
+    data = f.read()
+
+def get_id(line):
+    return line.split("Valve ")[1].split(" ")[0]
+
+class Valve:
+    def __init__(self, data):
+        self.id = get_id(data)
+        self.flow_rate = self.get_flow_rate(data)
+        self.neighbours = self.get_neighbours(data)
+
+    def __str__(self):
+        return f"{self.id}"
+
+    def __repr__(self):
+        return f"{self.id}"
+
+    def get_flow_rate(self, line):
+        return int(line.split("rate=")[1].split(";")[0])
+
+    def get_neighbours(self, line):
+        if "valves " in line:
+            return line.split("valves ")[1].split(", ")
+        return [line.split("leads to valve ")[1]]
+
+valves = {get_id(line): Valve(line) for line in data.splitlines()}
+
+for valve in valves.values():
+    valve.neighbours = [valves[x] for x in valve.neighbours]
+
+def get_distance(start, end, distances, used=None):
+    if used is None:
+        used = []
+
+    if distances[end][start] is not None:
+        return distances[end][start]
+    elif start == end:
+        return 0
+    elif end in start.neighbours:
+        return 1
+
+    min_distance = 10**6
+    if start in used:
+        return min_distance
+    used.append(start)
+    for x in start.neighbours:
+        min_distance = min(
+            min_distance,
+            get_distance(x, end, distances, used=used)+1
+        )
+    return min_distance
+
+def get_distances(valves):
+    distances = {x: {y: None for y in valves} for x in valves}
+    for x in valves:
+        for y in valves:
+            if distances[y][x] is not None:
+                continue
+            elif x == y:
+                distances[y][x] = 0
+            elif y in x.neighbours:
+                distances[y][x] = 1
+            else:
+                distances[y][x] = get_distance(x, y, distances)
+    return distances
+
+distances = get_distances(valves.values())
+
+def solve(round_a, round_b, current_a, current_b, unopened, distances):
+    if round_a &lt;= 0:
+        return 0
+    if round_b &lt;= 0:
+        return 0
+
+    score = 0
+    if len(unopened) == 0:
+        return score
+    elif len(unopened) == 1:
+        new_score = 0
+        candidate_a = unopened[0]
+        new_round_a = round_a - distances[candidate_a][current_a] - 1
+        if  new_round_a &gt; 0:
+            new_score += candidate_a.flow_rate*new_round_a
+        return max(score, new_score)
+    elif len(unopened) &gt; 1:
+        for candidate_a, candidate_b in permutations(unopened, 2):
+            new_score = 0
+            new_unopened = [
+                x for x in unopened
+                if x is not candidate_a and x is not candidate_b
+            ]
+            new_round_a = round_a - distances[candidate_a][current_a] - 1
+            new_round_b = round_b - distances[candidate_b][current_b] - 1
+            if new_round_a &gt; 0:
+                new_score += candidate_a.flow_rate*new_round_a
+            if new_round_b &gt; 0:
+                new_score += candidate_b.flow_rate*new_round_b
+            score = max(
+                score,
+                new_score + solve(
+                    new_round_a,
+                    new_round_b,
+                    candidate_a,
+                    candidate_b,
+                    new_unopened,
+                    distances
+                )
+            )
+    return score
+
+unopened = [x for x in valves.values() if x.flow_rate &gt; 0]
+print(solve(26, 26, valves["AA"], valves["AA"], unopened, distances))
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
