@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Christian Christiansen"
-__copyright__ = "Copyright 2021, Christian Christiansen"
+__copyright__ = "Copyright 2021-2023, Christian Christiansen"
 __license__ = "AGPLv3"
 __email__ = "christian dot l dot christiansen at gmail dot com"
 
