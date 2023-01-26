@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-01-26 Thu 16:30 -->
+<!-- 2023-01-26 Thu 16:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Metric Spaces: Contraction Mappings. Christian Christiansen.</title>
@@ -47,7 +47,7 @@ whenever \(x_n \rightarrow x\).
 <p>
 <b>Theorem 1</b> (Fixed point theorem)
 </p>
-<div class="theorem" id="orgd567d27">
+<div class="theorem" id="org5842e03">
 <p>
 Every contraction mapping \(A\) defined on a complete metric space \(R\) has a
 unique fixed point.
@@ -58,7 +58,7 @@ unique fixed point.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org4829052">
+<div class="proof" id="org3979530">
 <p>
 Keep contracting, i.e. applying \(A\).
 </p>
@@ -68,7 +68,7 @@ Keep contracting, i.e. applying \(A\).
 <p>
 <b>Theorem 1’</b>
 </p>
-<div class="theorem" id="orgfe4d183">
+<div class="theorem" id="org89b6f34">
 <p>
 Given a continuous mapping of a complete metric space \(R\) onto itself, suppose
 \(A^n\) is a contraction mapping (\(n\) an integer \(>1\)). Then \(A\) has a unique
@@ -80,7 +80,7 @@ fixed point.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org0ab4fec">
+<div class="proof" id="orgcedc612">
 <p>
 Let \(x = \lim_{x \rightarrow \infty} A^{kn} x_0\) and \(Ax = \lim_{k \rightarrow
 \infty} A A^{kn} x_0\).
@@ -102,7 +102,7 @@ solution for initial value problems exist (and is unique).
 <p>
 <b>Theorem 2</b> (Picard, also known as <a href="https://en.wikipedia.org/wiki/Picard%E2%80%93Lindel%C3%B6f_theorem">Picard–Lindelöf</a>)
 </p>
-<div class="theorem" id="org3a354e9">
+<div class="theorem" id="org326a890">
 <p>
 Given a function \(f(x,y)\) defined and continuous on a plane domain \(G\)
 containing the point \((x_0, y_0)\),
@@ -122,7 +122,7 @@ satisfying the initial conditions
 <p>
 <b>Theorem 2’</b>
 </p>
-<div class="theorem" id="org30a7c4c">
+<div class="theorem" id="org1cf884a">
 <p>
 Given \(n\) functions \(f_i (x, y_1, \ldots, y_n)\) defined and continuous on an
 \((n+1)\)​-dimensional domain \(G\) containing the point
@@ -237,12 +237,12 @@ Easy.
 </p></p></li>
 <li><p><p>
 Prove that any of the \(n\)​-dimensional contraction mapping conditions imply
-\[\begin{vmatrix}
+\[\det\left(\begin{matrix}
    a_{11}-1 & a_{12}   & \cdots & a_{1n} \\
    a_{21}   & a_{22}-1 & \cdots & a_{2n} \\
    \vdots   & \vdots   & \ddots & \vdots \\
    a_{n1}   & a_{n2}   & \cdots & a_{nn}-1 \\
-   \end{vmatrix} \not= 0\]
+   \end{matrix}\right) \not= 0\]
 </p>
 
 <p>
