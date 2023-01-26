@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-01-25 Wed 21:18 -->
+<!-- 2023-01-26 Thu 16:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Metric Spaces: Contraction Mappings. Christian Christiansen.</title>
@@ -47,7 +47,7 @@ whenever \(x_n \rightarrow x\).
 <p>
 <b>Theorem 1</b> (Fixed point theorem)
 </p>
-<div class="theorem" id="org5b5c7d6">
+<div class="theorem" id="org4952114">
 <p>
 Every contraction mapping \(A\) defined on a complete metric space \(R\) has a
 unique fixed point.
@@ -58,7 +58,7 @@ unique fixed point.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orgdb5e3eb">
+<div class="proof" id="org9505a81">
 <p>
 Keep contracting, i.e. applying \(A\).
 </p>
@@ -68,7 +68,7 @@ Keep contracting, i.e. applying \(A\).
 <p>
 <b>Theorem 1’</b>
 </p>
-<div class="theorem" id="org96ed2ba">
+<div class="theorem" id="orga17cb77">
 <p>
 Given a continuous mapping of a complete metric space \(R\) onto itself, suppose
 \(A^n\) is a contraction mapping (\(n\) an integer \(>1\)). Then \(A\) has a unique
@@ -77,18 +77,52 @@ fixed point.
 
 </div>
 
-<div class="proof" id="orgc56b969">
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org1290479">
 <p>
 Let \(x = \lim_{x \rightarrow \infty} A^{kn} x_0\) and \(Ax = \lim_{k \rightarrow
 \infty} A A^{kn} x_0\).
+Since \(A^n\) is a contraction mapping, then
+\[\rho(Ax, x) = \lim_{k \rightarrow \infty} \rho(AA^{kn}x_0, A^{kn} x_0) = 0\]
+i.e. \(Ax = x\) so \(x\) is a fixed point of \(A\). Has to be unique, otherwise \(A^n\)
+also has multiple fixed points, which is impossible by Theorem 1 since \(A^n\) is
+a contraction mapping.
 </p>
 
 </div>
 
 <p>
-<b>Theorem 2</b> (Picard, also known as Picard–Lindelöf)
+<b>Note</b> The most interesting applications of Theorems 1 and 1’ arise when the
+space \(R\) is a function space. Below we find out the conditions for when a
+solution for initial value problems exist (and are unique).
 </p>
-<div class="theorem" id="orgedf2421">
+
+<p>
+<b>Theorem 2</b> (Picard, also known as <a href="https://en.wikipedia.org/wiki/Picard%E2%80%93Lindel%C3%B6f_theorem">Picard–Lindelöf</a>)
+</p>
+<div class="theorem" id="org9bc7550">
+<p>
+Given a function \(f(x,y)\) defined and continuous on a plane domain \(G\)
+containing the point \((x_0, y_0)\),
+suppose \(f\) satisfies a Lipschitz condition of the form
+\[|f(x,y) - f(x,\tilde{y})| \leq M |y - \tilde{y}|\]
+in the variable \(y\). Then there is an interval \(|x - x_0| \leq \delta\)
+in which the differential equation
+\[\frac{dy}{dx} = f (x, y)\]
+has a unique solution
+\[y = \phi(x)\]
+satisfying the initial conditions
+\[\phi(x_0) = y_{0}\]
+</p>
+
+</div>
+
+<p>
+<b>Theorem 2’</b>
+</p>
+<div class="theorem" id="org4504712">
 <p>
 Given \(n\) functions \(f_i (x, y_1, \ldots, y_n)\) defined and continuous on an
 \((n+1)\)​-dimensional domain \(G\) containing the point
@@ -108,8 +142,32 @@ satisfying the initial conditions
 </div>
 
 <p>
-The <i>Fredholm equation (of the second kind)</i> and <i>Volterra equation</i> are
-defined in the book.
+<b>For additional information</b>
+Check out <a href="https://math.libretexts.org/Bookshelves/Analysis/Introduction_to_Real_Analysis_(Lebl)/08%3A_Metric_Spaces/8.06%3A_Fixed_point_theorem_and_Picard%E2%80%99s_theorem_again">libretext</a> or <a href="https://ptolemy.berkeley.edu/projects/embedded/eecsx44/lectures/Spring2013/Picard.pdf">these notes</a> by Denise Gutermuth from the University of
+Berkeley.
+</p>
+
+<p>
+<b>Note</b>
+Now show the method of successive approximations can be used to prove the
+existence and uniqueness of solutions of two kinds of integral equations:
+Fredholm and Volterra.
+</p>
+
+<p>
+<b>Example 1</b>
+A <i>Fredholm equation (of the second kind)</i> is an integral equation of the form
+\[f(x) = \lambda \int_b^a K(x, y) f(y) dy + \phi(x)\]
+involving two given functions \(K\) and \(\phi\), an unknown function \(f\) and an
+arbitrary parameter \(\lambda\).
+</p>
+
+<p>
+<b>Example 2</b>
+A <i>Volterra equation</i>
+\[f(x) = \lambda \int_b^x K(x, y) f(y) dy + \phi(x)\]
+differs from the Fredholm equation by having the variable \(x\) rather than the
+fixed number \(b\) as the upper limit of integration.
 </p>
 
 <div id="outline-container-contraction-mappings-problems" class="outline-2">
@@ -203,7 +261,7 @@ Write the successive approximations to this solution.
 </p>
 
 <p>
-Beats me. <b>TODO.</b>
+Tweak the method used for Fredholm’s equation.
 </p></p></li>
 </ol>
 </div>
