@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-01-26 Thu 16:17 -->
+<!-- 2023-01-26 Thu 16:30 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Metric Spaces: Contraction Mappings. Christian Christiansen.</title>
@@ -47,7 +47,7 @@ whenever \(x_n \rightarrow x\).
 <p>
 <b>Theorem 1</b> (Fixed point theorem)
 </p>
-<div class="theorem" id="org8835713">
+<div class="theorem" id="orgd567d27">
 <p>
 Every contraction mapping \(A\) defined on a complete metric space \(R\) has a
 unique fixed point.
@@ -58,7 +58,7 @@ unique fixed point.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org28640f2">
+<div class="proof" id="org4829052">
 <p>
 Keep contracting, i.e. applying \(A\).
 </p>
@@ -68,7 +68,7 @@ Keep contracting, i.e. applying \(A\).
 <p>
 <b>Theorem 1’</b>
 </p>
-<div class="theorem" id="orgfba2c78">
+<div class="theorem" id="orgfe4d183">
 <p>
 Given a continuous mapping of a complete metric space \(R\) onto itself, suppose
 \(A^n\) is a contraction mapping (\(n\) an integer \(>1\)). Then \(A\) has a unique
@@ -80,7 +80,7 @@ fixed point.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orga5e0b04">
+<div class="proof" id="org0ab4fec">
 <p>
 Let \(x = \lim_{x \rightarrow \infty} A^{kn} x_0\) and \(Ax = \lim_{k \rightarrow
 \infty} A A^{kn} x_0\).
@@ -102,7 +102,7 @@ solution for initial value problems exist (and is unique).
 <p>
 <b>Theorem 2</b> (Picard, also known as <a href="https://en.wikipedia.org/wiki/Picard%E2%80%93Lindel%C3%B6f_theorem">Picard–Lindelöf</a>)
 </p>
-<div class="theorem" id="org3fc9f4d">
+<div class="theorem" id="org3a354e9">
 <p>
 Given a function \(f(x,y)\) defined and continuous on a plane domain \(G\)
 containing the point \((x_0, y_0)\),
@@ -122,7 +122,7 @@ satisfying the initial conditions
 <p>
 <b>Theorem 2’</b>
 </p>
-<div class="theorem" id="org259482a">
+<div class="theorem" id="org30a7c4c">
 <p>
 Given \(n\) functions \(f_i (x, y_1, \ldots, y_n)\) defined and continuous on an
 \((n+1)\)​-dimensional domain \(G\) containing the point
@@ -246,7 +246,10 @@ Prove that any of the \(n\)​-dimensional contraction mapping conditions imply
 </p>
 
 <p>
-Easy.
+If one of the conditions is satisfied, then
+\[Ax = x \implies Ax - x = 0 \implies (A - I)x = 0\]
+meaning that \(A - I\) has rank \(n\) and is thus invertible and therefore has a
+nonzero determinant.
 </p></p></li>
 <li><p><p>
 Consider the nonlinear integral equation
