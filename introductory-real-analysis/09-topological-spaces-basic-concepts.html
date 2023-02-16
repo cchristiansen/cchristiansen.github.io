@@ -1,0 +1,947 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-02-16 Thu 17:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Topological Spaces: Basic Concepts. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://christianchristiansen.net/mathjax/tex-chtml.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Topological Spaces: Basic Concepts</h1>
+<p>
+<b>Definition</b>
+Given a set \(X\), a <i>topology</i> in \(X\) is a system \(\tau\) of subsets
+\(G \subseteq X\), called <i>open sets</i> (relative to \(\tau\)), with the following
+two properties:
+</p>
+<ol class="org-ol">
+<li><p>\(X\) and \(\emptyset\) belong to \(\tau\);</p></li>
+<li><p>arbitrary unions \(\cup_\alpha G_\alpha\) and finite intersections
+\(\cap_{k=1}^n G_k\) of open sets belong to \(\tau\).</p></li>
+</ol>
+
+<p>
+<b>Definition</b>
+A <i>topological space</i> is a pair \((X, \tau)\) consisting of a set \(X\) and a
+topology \(\tau\) defined in \(X\).
+</p>
+
+<p>
+<b>More definitions</b>
+Elements of a topological space are called <i>points</i>. <i>Closed sets</i> are the
+complements of open sets. A <i>neighbourhood</i> of a point \(x\) is any open set
+containing the point. A point \(x \in T\) is a <i>contact point</i> of a set
+\(M \subseteq T\) if every neighbourhood of \(x\) contains at least one point of
+\(M\). A point \(x \in T\) is a <i>limit point</i> of a set \(M \subseteq T\) if every
+neighbourhood of \(x\) contains infinitely many points of \(M\). The set of all
+contact points of a set \(M \subseteq T\) is called a <i>closure</i> of \(M\), denoted
+by \([M]\).
+</p>
+
+<p>
+<b>Note</b>
+Example 4, in which \(T = \{a, b\}\) and the open sets are \(\emptyset\), \(\{b\}\)
+and \(T\), with \([T] = \{b\}\), demonstrates that the closure is the set of all
+contact points and not limit points.
+</p>
+
+<p>
+<b>Definition</b>
+Let \(\tau_1\) and \(\tau_2\) be two topologies defined in the same set \(X\). Then
+\(\tau_1\) is <i>stronger</i> than \(\tau_2\) (or equivalently \(\tau_2\) is <i>weaker</i> than
+\(\tau_1\)) if \(\tau_2 \subseteq \tau_1\), i.e. every set of the system \(\tau_2\)
+is a set of the system \(\tau_1\).
+</p>
+
+<p>
+<b>Theorem 1</b>
+</p>
+<div class="theorem" id="org1cf69c2">
+<p>
+The intersection \(\tau = \cap_\alpha \tau_\alpha\) of any sets of topologies in
+\(X\) is itself a topology in \(X\).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgd4b5ecc">
+<p>
+Clearly \(\cap_\alpha \tau_\alpha\) contains \(X\) and \(\emptyset\). Also, every
+\(\tau_\alpha\) is closed (algebraically) under the operations of taking
+arbitrary unions and finite intersections, the same is true of
+\(\cap_\alpha \tau_\alpha\).
+</p>
+
+</div>
+
+<p>
+<b>Corollary</b>
+</p>
+<div class="proof" id="org6a0b8ca">
+<p>
+Let \(\mathscr{B}\) be any system of subsets of a set \(X\). Then there exists a
+minimal topology in \(X\) containing \(\mathscr{B}\), i.e. a topology
+\(\tau(\mathscr{B})\) containing \(\mathscr{B}\) and contained in every topology
+containing \(\mathscr{B}\).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org45a97f4">
+<p>
+A topology containing \(\mathscr{B}\) always exists, e.g. the topology in which
+every subset of \(X\) is open. The intersection fo all topologies containing
+\(\mathscr{B}\) is the desired minimal topology \(\tau(\mathscr{B})\), often called
+the topology <i>generated</i> by the system \(\mathscr{B}\).
+</p>
+
+</div>
+
+<p>
+<b>More definitions</b>
+Let \(\mathscr{B}\) be a system of subsets of \(X\), and \(A\) a fixed subset of \(X\).
+Then the <i>trace</i> of the system \(\mathscr{B}\) on the set \(A\) is the system
+\(\mathscr{B}_A\) consisting of all subsets of \(X\) of the form \(A \cap B\),
+\(B \in \mathscr{B}\). The trace (on A) of a topology \(\tau\) (defined in \(X\)) is
+a topology \(\tau_A\) in \(A\), often called a <i>relative</i> topology. In this sense,
+every subset \(A\) of a given topological space \((X, \tau)\) generates a new
+topological space \((A, \tau_A)\) called a <i>subspace</i> of the original topological
+space \((X, \tau)\).
+</p>
+
+<p>
+<b>Definition</b>
+A family \(\mathscr{G}\) of open subsets of a topological space \(T\) is called a
+<i>base</i> for \(T\) if every open set in \(T\) can be represented as a union of sets
+in \(\mathscr{G}\).
+</p>
+
+<p>
+<b>Theorem 2</b>
+</p>
+<div class="theorem" id="org40cd99b">
+<p>
+Given a set \(T\), let \(\mathscr{G}\) be a system of subsets
+\(G_\alpha \subseteq T\) with the following two properties:
+</p>
+<ol class="org-ol">
+<li><p>every point \(x \in T\) belongs to at least one \(G_\alpha \in \mathscr{G}\);</p></li>
+<li><p>if \(x \in G_\alpha \cap G_\beta\), then there is a \(G_\gamma \in \mathscr{G}\)
+such that \(x \in G_\gamma \in G_\alpha \cap G_\beta\).</p></li>
+</ol>
+<p>
+Suppose the empty set \(\emptyset\) and all sets representable as unions of sets
+\(G_\alpha\) are designated as open. Then \(T\) is a topological space, and
+\(\mathscr{G}\) is a base for \(T\).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org4205c66">
+<p>
+Evident from the conditions of the theorem that the whole set \(T\) and the empty
+set \(\emptyset\) are open sets; and the union of any number of open sets is
+open. Just have to show that the intersection of a finite number of open sets
+is open. It is enough to prove this for just two (arbitary) sets. Let
+\(A = \cup_\alpha G_\alpha\),
+\(B = \cup_\beta G_\beta\).
+Then \(A \cap B = \cup_{\alpha, \beta} (G_\alpha \cap G_\beta)\) (1).
+By hypothesis, for any point \(x \in G_\alpha \cap G_\beta\) there exists a
+\(G_\gamma \in \mathscr{G}\) such that
+\(x \in G_\gamma \subseteq G_\alpha \cap G_\beta\). Hence the set
+\(G_\alpha \cap G_\beta\) is open, being the union of all \(G_\gamma\) contained in
+\(G_\alpha \cap G_\beta\). But then (1) is also open. Thus \(T\) is a topological
+space. The fact that \(\mathscr{G}\) is a base for \(T\) is clear from the way open
+sets in \(T\) are defined.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 3</b>
+</p>
+<div class="theorem" id="org4b61bc3">
+<p>
+A system \(\mathscr{G}\) of open sets \(G_\alpha\) in a topological space \(T\) is a
+base for \(T\) if and only if, given any open set \(G \subseteq T\) and any point
+\(x \in G\), there is a set \(G_\alpha \in \mathscr{G}\) such that
+\(x \in G_\alpha \subseteq G\).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org05ed84c">
+<p>
+If \(\mathscr{G}\) is a base for \(T\), then every open set \(G \subseteq T\) is set
+\(G \subseteq T\) and any point
+\(x \in G\), there is a set \(G_\alpha \in \mathscr{G}\) such that
+\(x \in G_\alpha \subseteq G\). union \(G = \cup_\alpha G_\alpha\) of sets
+\(G_\alpha \in \mathscr{G}\). Therefore every point \(x \in G\) is contained in
+some set \(G_\alpha \subseteq G\). Conversely given anyten set \(G \subseteq T\),
+suppose that for every point \(x \in G\) there is a set \(G_\alpha(x) \in
+\mathscr{G}\) such that \(x \in G_\alpha(x) \subseteq G\). Then
+\(G = \cup_{x \in G} G_\alpha (x)\), i.e. \(G\) is a union of sets in
+\(\mathscr{G}\).
+</p>
+
+</div>
+
+<p>
+<b>More definitions</b>
+Topological spaces <i>with a countable base</i> have at least one base containing no
+more than countably many sets. Such a space is said to satisfy the
+<i>second axiom of countability</i>.
+</p>
+
+<p>
+<b>Theorem 4</b>
+</p>
+<div class="theorem" id="orgc4e963c">
+<p>
+If a topological space \(T\) has a countable base, then \(T\) contains a countable
+everywhere dense subset, i.e. a countable set \(M \subseteq T\) such that
+\([M] \subseteq T\).
+</p>
+
+</div>
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orga201d1f">
+<p>
+Let \(\mathscr{G} = \{G_1, \ldots, G_n, \ldots\}\) be a countable base for \(T\),
+and choose a point \(x_n\) in each \(G_n\). Then the set
+\(M = \{x_1, x_2, \ldots, x_n, \ldots\}\) is countable. Moreover, \(M\) is
+everywhere dense in \(T\), since otherwise the nonempty open set \(G = T - [M]\)
+would contain no points of \(M\). But this is impossible, since \(G\) is a union of
+some of the sets \(G_n\) in \(\mathscr{G}\) and \(G_n\) contains the point
+\(x_n \in M\).
+</p>
+
+</div>
+
+<p>
+<b>Theorem 5</b>
+</p>
+<div class="theorem" id="org06e2800">
+<p>
+If a metric space \(R\) has a countable everywhere dense subset, then \(R\) has a
+countable base.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org7fee71a">
+<p>
+Suppose \(R\) has a countable everywhere dense subset \(\{x_1, \ldots, x_n,
+\ldots\}\). Then, given any open set \(G \subseteq R\) and any \(x \in G\), there is
+an open sphere \(S(x_m, \frac{1}{n})\) such that
+\(x \in S(x_m, \frac{1}{n}) \subseteq G\) for suitable positive integers \(m\) and
+\(n\) (why?). Hence the open sphere \(S(x_m, \frac{1}{n})\), where \(m\) and \(n\)
+range over all positive integers, form a countable base for \(R\).
+</p>
+
+</div>
+
+<p>
+<b>Note</b>
+Combining Theorems 4 and 5, we see that a metric space \(R\) has a countable base
+if and only if it has a countable everywhere dense set.
+</p>
+
+<p>
+<b>More definitions</b>
+A system \(\mathscr{M}\) of sets \(M_\alpha\) is a <i>cover</i> (or <i>covering</i>) of a
+topological space \(T\), and \(\mathscr{M}\) is said to <i>cover</i> \(T\), if
+\(T = \cup_\alpha M_\alpha\). A cover consisting of open (or closed) sets only is
+called an <i>open</i> (or <i>closed</i>) cover. If \(\mathscr{M}\) is a cover of a
+topological space \(T\), then by a <i>subcover</i> of \(\mathscr{M}\) we mean any subset
+of \(\mathscr{M}\) which also covers \(T\).
+</p>
+
+<p>
+<b>Theorem 6</b>
+</p>
+<div class="theorem" id="org0643ef1">
+<p>
+If \(T\) is a topological space with a countable base \(\mathscr{G}\), then every
+open cover \(\mathscr{O}\) has a finite or countable subcover.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgbb8d46d">
+<p>
+Since \(\mathscr{O}\) covers \(T\), each point \(x \in T\) belongs to some open set
+\(O_\alpha \in \mathscr{O}\). Moreover, since \(\mathscr{G}\) is a countable base
+for \(T\), for each \(x \in T\) there is a set \(G_n(x)\) such that
+\(x \in G_n (x) \subseteq O_\alpha\). The collection of all sets \(G_n (x)\)
+selected in this way is finite or countable and covers \(T\). For each \(G_n (x)\)
+we now choose one of the sets \(O_\alpha\) containing \(G_n(x)\), thereby obtaining
+a finite or countable subcover of \(\mathscr{O}\).
+</p>
+
+</div>
+
+<p>
+<b>More definitions</b>
+A topological space \(T\) is <i>connected</i> if it has no subsets other than
+\(\emptyset\) and \(T\) which are both open and closed.
+</p>
+
+<p>
+<b>Theorem 7</b>
+</p>
+<div class="theorem" id="org75b7f7e">
+<p>
+If a topological space \(T\) satisfies the <i>first axiom of countability</i>, i.e. if
+there is a countable neighbourhood base at every point \(x \in T\), then every
+contact point \(x\) of a set \(M \subseteq T\) is the limit of a convergent
+sequence of points in \(M\).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org9c79138">
+<p>
+Let \(\mathscr{O}\) be a countable neighbourhood base at \(x\), consisting of sets
+\(O_n\). it can be assumed that \(O_{n+1} \subseteq O_n (n = 1, 2, \ldots)\),
+since otherwise we need only replace \(O_n\) by \(\cap_{k=1}^n O_k\). Let \(x_n\) be
+any point of \(M\) contained in \(O_n\). Such a point \(x_n\) can always be found,
+since \(x\) is a contact point of \(M\). Then the sequence \(\{x_n\}\) obviously
+converges to \(x\).
+</p>
+
+</div>
+
+<p>
+<b>Defintion</b>
+Suppose that for each pair of distinct points \(x\) and \(y\) in a topological
+space \(T\), there is a neighbourhood \(O_x\) of \(x\) and a neighbourhood \(O_y\) of
+\(y\) such that \(x \notin O_y\), \(y \notin O_x\). Then \(T\) is said to satisfy the
+<i>first axiom of separation</i> and is called a <i>\(T_1\)​-space</i>.
+</p>
+
+<p>
+<b>Theorem 8</b>
+</p>
+<div class="theorem" id="orgcfbf24a">
+<p>
+Every finite subset of a \(T_1\)​-space is closed.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org0df0e05">
+<p>
+Given any single-element set \(\{x\}\), suppose \(y \neq x\). Then \(y\) has a
+neighbourhood \(O_y\) which does not contain \(x\), i.e. \(y \notin [\{x\}]\).
+Therefore \([\{x\}] = \{x\}\), i.e. every ‘singleton’ \(\{x\}\) is closed. But
+every finite union of closed sets is itself closed. Hence every finite subset
+of the given space is closed.
+</p>
+
+</div>
+
+<p>
+<b>Definition</b>
+Suppose that for each pair of distinct points \(x\) and \(y\) in a topological
+space \(T\), there is a neighbourhood \(O_x\) of \(x\) and a neighbourhood \(O_y\) of
+\(y\) such that \(O_x \cap O_y = \emptyset\). Then \(T\) is said to satisfy the
+<i>second</i> (or <i>Hausdorff</i>) <i>axiom of separation</i> and is called a <i>\(T_2\)​-space</i>
+or <i>Hausdorff space</i>.
+</p>
+
+<p>
+<b>Definition</b>
+A \(T_1\)​-space \(T\) is said to be <i>normal</i> if for each pair of disjoint closed
+sets \(F_1\) and \(F_2\) in \(T\), there is an open set \(O_1\) containing \(F_1\)
+and an open set \(O_2\) containing \(F_2\) such that \(O_1 \cap O_2 = \emptyset\).
+</p>
+
+<p>
+<b>Theorem 9</b>
+</p>
+<div class="theorem" id="org87e89c9">
+<p>
+Every metric space is normal.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org4af9a1e">
+<p>
+Let \(X\) and \(Y\) be any two disjoint closed subsets of \(R\). Every point \(x
+\in X\) has a neighbourhood \(O_x\) disjoint from \(Y\), and hence is at a positive
+distance \(\rho_x\) from \(Y\) (recall Problem 9 from page 54). Similarly, every
+point \(y \in Y\) is at a positive distance \(\rho_y\) form \(X\). Consider the open
+sets
+\(U = \cup_{x \in X} S(x, \frac{1}{2} \rho_x)\),
+\(V = \cup_{y \in Y} S(y, \frac{1}{2} \rho_y)\),
+where, as usual, \(S(x, r)\) is the open sphere with center \(x\) and radius \(r\).
+It is clear that \(X \subseteq U\), \(Y \subseteq V\). Moreover, \(U\) and \(V\) are
+disjoint. In fact, suppose to the contrary that there is a point
+\(z \in U \cap V\). Then there are points \(x_0 \in X\), \(y_0 \in Y\) such that
+\(\rho(x_0, z) < \frac{1}{2} \rho_{x_0}\),
+\(\rho(z, y_0) < \frac{1}{2} \rho_{y_0}\).
+Assume, to be explicit, that \(\rho_{x_0} \leq \rho_{y_0}\). Then
+\(\rho(x_0, y_0) \leq \rho(x_0, z) + \rho(z, y_0) < \frac{1}{2} \rho_{x_0} +
+\frac{1}{2} \rho_{y_0} \leq \rho_{y_0}\)
+i.e. \(x_0 \in S(y_0, \rho_y)\). This contradicts the definition of \(\rho_{y_0}\),
+and shows that there is no point \(z \in U \cap V\).
+</p>
+
+</div>
+
+<p>
+<b>More definitions</b>
+A property of a topologica space \(T\) shared by every subspace of \(T\) is said to
+be <i>hereditary</i>.
+</p>
+
+<p>
+<b>Note</b>
+Normality is not a hereditary property.
+</p>
+
+<p>
+<b>More definitions</b>
+Let \(f\) be a mapping of one topological space \(X\) into another topological
+space \(Y\), so that \(f\) associates an element \(y = f(x) \in Y\) with each element
+\(x \in X\). Then \(f\) is said to be <i>continuous at a point</i> \(x_0 \in X\) if, given
+any neighbourhood \(V_{y_0}\) of the point \(y_0 = f(x_0)\), there is a
+neighbourhood \(U_{x_0}\) of the point \(x_0\) such that
+\(f(U_{x_0}) \subseteq V_{y_0}\). \(f\) is <i>continuous on</i> \(X\) if it is continuous
+at every point of \(X\). A continuous mapping of a topological space \(X\) into the
+real line is called a continuous real function on \(X\).
+</p>
+
+<p>
+<b>Theorem 10</b>
+</p>
+<div class="theorem" id="org69f34bb">
+<p>
+A mapping \(f\) of a topological space \(X\) into a topological space \(Y\) is
+continuous if and only if the preimage \(\Gamma = f^{-1}(G)\) of every open set
+\(G \subseteq Y\) is open (in \(X\)).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org32617bc">
+<p>
+Suppose \(f\) is continuous and \(G\) is an open subset of \(Y\). Choose
+\(x \in \Gamma = f^{-1}(G)\) and let \(y = f(x)\). Then \(G\) is a neighbourhood of
+\(y\). By continuity of \(f\), tyhere is a neighbourhood \(U_x\) of \(x\) such that
+\(f(U_x) \subseteq G\), i.e. \(U_x \subseteq \Gamma\). In other words, every point
+\(x \in \Gamma\) has a neighbourhood contained in \(\Gamma\), so \(\Gamma\) is open.
+</p>
+
+<p>
+Conversely, suppose \(\Gamma = f^{-1}(G)\) is open whenever \(G \subseteq Y\) is
+open. Let \(x \in X\) and \(V_y\) be a neighbourhood of \(y = f(x)\). Then clearly
+\(x \in f^{-1}(V_y)\), and \(f^{-1}(V_y)\) is open, by hypothesis. Therefore
+\(U_x = f^{-1}(V_y)\) is a neighbourhood of \(x\) such that \(f(U_x) \subseteq V_y\).
+In other words, \(f\) is continuous at \(x\) and hence on \(X\), since \(x\) is an
+arbitrary point of \(X\).
+</p>
+
+</div>
+
+<p>
+<b>Theorem 10’</b>
+</p>
+<div class="theorem" id="org9d464c1">
+<p>
+A mapping \(f\) of a topological space \(X\) into a topological space \(Y\) is
+continuous if and only if the preimage \(\Gamma = f^{-1}(F)\) of every closed set
+\(F \subseteq Y\) is closed (in \(X\)).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org1bc5498">
+<p>
+Use the fact that thereforereimage ofclosed complement is the complement of the
+preimage.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 11</b>
+</p>
+<div class="theorem" id="org5f7389e">
+<p>
+Given topological spaces \(X\), \(Y\) and \(Z\), suppose \(f\) is a continuous mapping
+of \(X\) into \(Y\) and \(\phi\) is a continuous mapping of \(Y\) into \(Z\). Then the
+mapping \(\phi f\), i.e. the mapping carrying \(x\) into \(\phi(f(x))\), is
+continuous.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgd2fcfe4">
+<p>
+Immediate consequence of Theorem 10.
+</p>
+
+</div>
+
+<p>
+<b>More definitions</b>
+Given two topological spaces \(X\) and \(Y\), let \(f\) be a one-to-one mapping of
+\(X\) onto \(Y\), and suppose \(f\) and \(f^{-1}\) are both continuous.Then \(f\) is
+called a <i>homeomorphic mapping</i> or a <i>homeomorphism</i> (between \(X\) and \(Y\)). Two
+spaces \(X\) and \(Y\) are said to be <i>homeomorphic</i> if there exists a
+homeomorphism between them.
+</p>
+
+<p>
+<b>More definitions</b>
+A topological space \(T\) is said to be <i>metrizable</i> if its topology can be
+specified by means of some metric (more exactly, if it is homemorphic to some
+metric space).
+</p>
+
+<p>
+<b>Urysohn’s Metrization Theorem</b>
+A necessary and sufficient condition for a topological space with a countable
+base to be metrizable is that it be normal.
+</p>
+
+<div id="outline-container-topological-spaces-basic-concepts-problems" class="outline-2">
+<h2 id="topological-spaces-basic-concepts-problems">Problems</h2>
+<div class="outline-text-2" id="text-topological-spaces-basic-concepts-problems">
+<ol class="org-ol">
+<li><p><p>
+Prove that \(G \subseteq T\) is open iff every \(x \in G\) has a neighbourhood
+contained in \(G\).
+</p>
+
+<p>
+If all \(x \in G\) has a neighbourhood contained in \(G\), then for each \(x\) let
+\(O_x \subseteq G\) be the open neighbourhood contained in \(G\). Then
+\(\cup_{x \in G} O_x \subseteq G\) is open, as topologies are closed under
+arbitrary unions. However \(\cup_{x \in G} O_x \supseteq G\) since
+\(\cup_{x \in G} O_x\) contains every point of \(G\). Hence
+\(G = \cup_{x \in G} O_x\) is open.
+</p></p></li>
+<li><p>Prove
+<ol class="org-ol">
+<li><p><p>
+\([M] = M\) iff \(M\) closed, i.e. \(T-G\) of an open set \(G \subseteq T\).
+</p>
+
+<p>
+If \([M] = M\), then \(M\) contains all of its contact points. So for all
+\(x \in T-M\), there exists a neighbourhood of \(x\) which doesn’t contain
+any points of \(M\), i.e. \(x\) has a neighbourhood contained in \(T-M\). By
+the result of Problem 1, \(T-M\) is open, hence \(M\) is closed.
+</p>
+
+<p>
+Conversely, if \(M\) is closed, then \(T-M\) is open. Let \(x \in T-M\) and
+assume for contradiction that \(x\) is a contact point of \(M\). Then every
+neighbourhood of \(x\) contains at least one point of \(M\). However, \(T-M\)
+is open, and hence a neighbourhood of \(x\), and it doesn’t include
+any points of \(M\). This is a contradiction. Therefore the only contact
+points of \(M\) are in \(M\), i.e. \(M = [M]\).
+</p></p></li>
+<li><p><p>
+\([M]\) is the smallest closed set containing \(M\).
+</p>
+
+<p>
+If \([M]\) is not the smallest closed set, then there exists \(x \in [M]\), a
+contact point of \(M\), such that \(x \notin M\) and \(x \notin M’\).
+As we assume for contradiction that \(M’ = [M] - {x}\) is closed, then \(T -
+      M’ = T - ([M] - {x})\) is open, but \(x\) is a contact point of \(M\) so every
+neighbourhood contains an element of \(M\). This leads to a contradiction.
+</p></p></li>
+<li><p>The closure operator satsifies Theorem 1 on page 46 (Metric Spaces:
+convergence. Open and closed sets), i.e.
+<ol class="org-ol">
+<li><p><p>
+If \(M \subseteq N\), then \([M] \subseteq [N]\);
+</p>
+
+<p>
+Let \(M \subseteq N\). Assume for contradiction that there exists
+\(x \in [M]\) such that \(x \notin [N]\). But then \(x\) is a contact point
+of \(M\), and not of \(M\), which is impossible as \(M\) is contained in
+\(N\). Contradiction.
+</p></p></li>
+<li><p><p>
+\([[M]]\) = [M];
+</p>
+
+<p>
+\([M]\) is closed, so by the result of 2.1, \([[M]] = [M]\).
+</p></p></li>
+<li><p><p>
+\([M \cup N] = [M] \cup [N]\);
+</p>
+
+<p>
+\(M \cup N \subseteq [M] \cup [N]\). Taking closure of both sides, we
+have \([M \cup N] \subseteq [[M] \cup [N]] = [M] \cup [N]\), as the
+union of two closed sets is itself closed.
+</p>
+
+<p>
+Both \([M] \subseteq [M \cup N]\) and \([N] \subseteq [M \cup N]\). Hence
+\([M] \cup [N] \subseteq [M \cup N]\), since both \([M]\) and \([N]\) are
+subsets.
+</p>
+
+<p>
+Combining the two inequalities, we get the desired result.
+</p></p></li>
+<li><p><p>
+\([\emptyset] = \emptyset\).
+</p>
+
+<p>
+\(\emptyset\) is closed, therefore \([\emptyset] = \emptyset\).
+</p></p></li>
+</ol></p></li>
+</ol></p></li>
+<li><p><p>
+Consider the set \(\mathscr{T}\) of all possible topologies defined in a set
+\(X\), where \(\tau_2 \leq \tau_1\) means \(\tau_2\) is weaker than \(\tau_1\).
+Verify \(\leq\) is a partial ordering of \(\mathscr{T}\). Does \(\mathscr{T}\)
+have maximal and minimal elements? If so, what are they?
+</p>
+
+<p>
+We need to show that the relation is reflexive, transitive and
+antisymmetric.
+</p>
+
+<p>
+Reflexive as any topology \(\tau\) contains all of its own sets, i.e.
+\(\tau \leq \tau\).
+</p>
+
+<p>
+Transitive since if \(\tau_1 \leq \tau_2\), i.e. all of the sets in \(\tau_1\)
+are in \(\tau_2\), and \(\tau_2 \leq \tau_3\), i.e. all of the sets in \(\tau_2\)
+are in \(\tau_3\), then \(\tau_1 \leq \tau_3\).
+</p>
+
+<p>
+Antisymmetry follows too, since if \(\tau_2\) contains all of the sets of
+\(\tau_1\), then \(\tau_2 \leq \tau_1\) only if \(\tau_1\) contains all of the
+sets of \(\tau_2\), i.e. only if they are equal. Hence $&tau;<sub>1</sub> &le; \(\tau_2\)
+and \(\tau_2 \leq \tau_1\) only occurs when \(\tau_1 = \tau_2\)
+</p>
+
+<p>
+Not a full ordering. Take two topologies on \(X = \{1, 2\}\), with
+\(\tau_1 = \{\emptyset, \{1\}, X\}\) and
+\(\tau_2 = \{\emptyset, \{2\}, X\}\).
+Evidently \(\tau_1\) and \(\tau_2\) cannot be compared as \(\tau_1\) does not
+include \(\{2\}\) and \(\tau_2\) does not include \(\{1\}\).
+</p>
+
+<p>
+Minimal topology is \(\{\emptyset, X\}\). Maximal topology is the topology
+where every subset of \(X\) is open.
+</p></p></li>
+<li><p><p>
+Can two distinct topologies \(\tau_1\) and \(\tau_2\) in \(X\) generate the same
+relative topology in a subset \(A \subseteq X\)?
+</p>
+
+<p>
+Yes, if they have the same subsets of \(A\) in the topology but different
+subsets of \(X - A\).
+</p></p></li>
+<li><p><p>
+Let \(X = \{a, b, c\}\), \(A = \{a, b\}\), \(B = \{b, c\}\) and
+\(\mathscr{G} = \{\emptyset, X, A, B\}\). Is \(\mathscr{G}\) a base for a
+topology in \(X\)?
+</p>
+
+<p>
+No, since \(A \cap B = \{b\}\) is open but cannot be described as a union of
+elements of the base.
+</p></p></li>
+<li><p><p>
+Prove if \(M\) is an uncountable subset of a topological space with a
+countable base, then some point of \(M\) is a limit point of \(M\).
+</p>
+
+<p>
+Assume for contradiction that \(M\) doesn't have a limit point. Then for any
+\(x\in M\) there exists some \(G_x\in\mathscr{G}\) such that \(G_x\cap M =
+   \{x\}\). For another point \(y\in M\) we can also find
+\(G_y \cap M = \{y\}\). Hence \(x \not= y \Rightarrow G_x \not= G_y\), which
+defines an injection from \(M\) to \(\mathscr{G}\), so \(|M|\leq|\mathscr{G}|\).
+Hence \(M\) is countable, but this is a contradiction. Therefore there must be
+a limit point in \(M\).
+</p></p></li>
+<li><p><p>
+Prove \(T\) in Example 4, from page 79, (where \(T = \{a, b\}\) and the open
+sets are \(\emptyset\), \(T\), and \(\{b\}\)) is connected.
+</p>
+
+<p>
+<i>Comment.</i> \(T\) might be called a ‘connected doubleton’.
+</p>
+
+<p>
+\(\{b\}\) is not closed as \(T - \{b\} = \{a\}\) is not open. Hence \(\emptyset\)
+and \(T\) are the only sets which are both open and closed, therefore \(T\) is
+connected.
+</p></p></li>
+<li><p><p>
+Prove a topological space satisfying the second axiom of countability
+automatically satisfies the first axiom of countability.
+</p>
+
+<p>
+If \(T\) satisfies the second axiom of countability, i.e. \(T\) has a countable
+base \(\mathscr{G}\), then by Theorem 3, for any \(O_x \subseteq T\) containing
+\(x\), there is a set \(G_\alpha \in \mathscr{G}\) such that
+\(x \in G_\alpha \subseteq O_x\), i.e. the topology satisfies the
+first axiom of countability.
+</p></p></li>
+<li><p><p>
+Given an example of a topological space satisfying the first axiom but not
+the second.
+</p>
+
+<p>
+A discrete, uncountable topology satisfies the first axiom of countability,
+but not the second axiom. In the discrete topology, every distinct point is
+an open set, so it cannot be covered by a countable base.
+</p></p></li>
+<li><p><p>
+Let \(\tau\) be the system of sets containing the empty set and every subset
+of the closed unit interval \([0, 1]\) obtained by deleting a finite or
+countable number of points from \(X\). Verify that \(T = (X, \tau)\) is a
+topological space. Prove that \(T\) satisfies neither the second nor the
+first axiom of countability. Prove \(T\) is a \(T_1\)​-space, but not a
+Hausdorff space.
+</p>
+
+<p>
+\(\emptyset\) in \(\tau\) and \(X\) in \(\tau\) for the cases where no points are
+deleted. Need to show open sets are closed under arbitrary unions and
+finite intersections.
+</p>
+
+<p>
+Let \(G_\alpha\) be the open sets in &tau; and \(F_\alpha\) be the corresponding
+closed sets. Then for any arbitrary index set \(I\),
+\[
+    \cup_\alpha G_\alpha =
+    \cup_\alpha (X - F_\alpha) =
+    X - \cap_\alpha F_\alpha.
+    \]
+Since closed sets are closed under arbitrary intersections, and
+\(\cap_\alpha F_\alpha \subseteq F_\beta\) for some closed set which is at
+most countable, the arbitrary union is \(X\) with a countable number of
+points removed. So closed under arbitrary unions.
+</p>
+
+<p>
+For finite \(k\), \(\cap_k G_k = \cap_k (X - F_k) = X - \cup F_k\). A finite
+union of closed sets is closed, and a finite union of countable sets is
+countable, hence the topology is closed under finite intersections.
+</p>
+
+<p>
+By Problem 8, for the countability axioms, we simply need to show that the
+space does not satisfy the first axiom of countability. Let \(G\) be an open
+set of \(x\) where all of the rationals (except \(x\) if it is rational) have
+been removed. Then there is only one open set
+\(O\) such that \(x \in O \subseteq G\), namely, \(G\). So the first axiom is not
+satisifed, and hence neither is the second.
+</p>
+
+<p>
+Let \(x\) and \(y\) be two distinct points and
+\(O_x = [0, y) \cup (y, 1]\) and \(O_y = [0, x) \cup (x, 1]\). Then
+\(x \notin O_y\) and \(y \notin O_x\), hence \(T_1\)​-space.
+</p>
+
+<p>
+Any open set including \(x\) will only have a countable set of \(X\) removed,
+as will any open set including \(y\). Hence \(O_x \cap O_y \not= \emptyset\),
+so not Hausdorff.
+</p></p></li>
+<li><p><p>
+Let \(T\) be the same as in Problem 10. Prove that the only convegent
+sequences in \(T\) are the ‘stationary sequences’, i.e. the sequences all of
+whose terms are the same starting from some index \(n\). Prove that the set
+\(M = (0, 1]\) has the point \(0\) as a contact point, but contains no sequence
+of points converging to \(0\).
+</p>
+
+<p>
+For contradiction, assume that there is a non-stationary sequence, i.e.
+(without loss of generalisation) for all \(x_n\) in the sequence,
+\(O_{x_{n+1}} \subseteq O_{x_{n}}\) and \(x_{n_1} \not= x_n\). However, this
+defines a countable neighbourhood base of the limit point \(x\),
+but the space does not satsify the first axiom of countability, so there is
+a contradiction.
+</p>
+
+<p>
+\(0\) is a contact point of \(M\), as for any open set \(O_0\) of \(0\)
+\(O_0 \cap M \not= \emptyset\), remember (\(\{0\}\) is not an open set).
+</p>
+
+<p>
+Since the only convergent sequences in \(T\) are ‘stationary sequences’,
+no sequence of points in \(M = (0, 1]\) can converge to a point outside of
+\(M\), so no sequence can converge to \(0\).
+</p></p></li>
+<li><p><p>
+Prove the converse of Theorem 8, i.e. prove if every finite subset of \(T\)
+is closed, \(T\) is a \(T_1\)​-space.
+</p>
+
+<p>
+<i>Comment.</i> Hence a topological space \(T\) is a \(T_1\)​-space iff every finite
+subset of \(T\) is closed.
+</p>
+
+<p>
+If every finite subset of \(T\) is closed, then for all \(x \in T\), \(\{x\}\) is
+closed, i.e. \(T - \{x\}\) is open. Then for any two distinct points \(x\) and
+\(y\), we can construct two neighbourhoods
+\(x\) &isin; O<sub>x</sub> = T - \{y\}$ and \(y \in O_y = T - \{x\}\)
+such that \(x \notin O_y\) and \(y \notin O_x\). Hence \(T\) is a \(T_1\)​-space.
+</p></p></li>
+<li><p><p>
+Prove the following theorem, known as Urysohn’s lemma: given a normal space
+\(T\) and two disjoint closed sets \(F_1, F_2 \in T\), there exists a
+continuous real function \(f\) such that \(0 \leq f(x) \leq 1\) and
+\[f(x) = \begin{cases}
+    0 \textrm{ if } x \in F_1 \\
+    1 \textrm{ if } x \in F_2.
+    \end{cases}\]
+</p>
+
+<p>
+\(f\) is a mapping from \(T\) to \([0, 1]\), which is a metric space and hence a
+normal topological space (and also therefore a \(T_1\)​-space). The preimage
+of \(\{0\}\), which is closed in \([0, 1]\) (by Theorem 8), is \(F_1\), which is
+closed in \(T\), and the preimage of \(\{1\}\), which too is closed in \([0,
+    1]\), is \(F_2\), which is closed in \(T\).
+</p>
+
+<p>
+[TODO: Unclear what steps then need to be taken here&#x2026;]
+</p>
+
+<p>
+(Potentially&#x2026;) As \(T\) is normal, we can define \(f\) such that for any
+closed \(F \in (0, 1)\), the preimage \(\Gamma = f^{-1}(F)\) is closed in \(T\).
+Therefore \(f\) is continuous, by Theorem 10’.
+</p>
+
+<p>
+Alternatively, we have a remark saying that a mapping \(f\) of \(X\) into \(Y\)
+is continuous if and only if the topology \(\tau_X\) is <i>stronger</i> than the
+topology \(f^{-1}(\tau_Y)\) on page 86. Maybe this statement could be helpful.
+</p></p></li>
+<li><p><p>
+A \(T_1\)​-space \(T\) is said to be <i>completely regular</i> if, given any closed
+set \(F \subseteq T\) and any point \(x_0 \in T - F\), there exists a
+continuous real function \(f\) such that \(0 \leq f(x) \leq 1\) and
+\[f(x) = \begin{cases}
+    0 \textrm{ if } x = x_0 \\
+    1 \textrm{ if } x \in F.
+    \end{cases}\]
+(Completely regular spaces are also called Tychonoff spaces.) Prove that
+every normal space is completely regular, but not conversely. Prove that
+every subspace of a completely regular space (in particular, of a normal
+space) is completely regular.
+</p>
+
+<p>
+TODO.
+</p></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
