@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-02-21 Tue 15:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Topological Spaces: Compactness. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://christianchristiansen.net/mathjax/tex-chtml.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Topological Spaces: Compactness</h1>
+<p>
+<b>Heine-Borel Theorem</b>
+</p>
+<div class="theorem" id="orga60cc72">
+<p>
+Any cover of a closed \([a, b]\) by a sytem of open intervals (or, more
+generally, open sets) has a finite subcover.
+</p>
+
+</div>
+
+<p>
+<b>Definition</b>
+A topological space \(T\) is said to be <i>compact</i> if every open cover of \(T\) has
+a finite subcover. A compact Hausdorff space is called a <i>compactum</i>.
+</p>
+
+<p>
+<b>Definition</b>
+A system of subsets \(\{A_\alpha\}\) of a set \(T\) is said to be <i>centered</i> if
+every finite intersection \(\cap_{k=1}^n A_k\) is nonempty (also called the
+finite intersection property).
+</p>
+
+<p>
+<b>Theorem 1</b>
+</p>
+<div class="theorem" id="org913e06f">
+<p>
+A topological space \(T\) is compact if and only if every centered system of
+closed subsets of \(T\) has a nonempty intersection.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+[Credit to <a href="https://dantopology.wordpress.com/2009/11/30/the-finite-intersection-property-in-compact-spaces-and-countably-compact-spaces/">Dan Ma</a> for this proof; I was unable to fully understand the proof
+given in the book.]
+</p>
+<div class="proof" id="org399aedf">
+<p>
+Let \(T\) be compact and \(\{F_\alpha\}\) any centered system of closed subsets of
+\(T\). For contradiction, assume \(\cap_\alpha F_\alpha = \emptyset\), then
+\(\{G_\alpha\} = \{T - F_\alpha\}\) is an open cover of \(T\). By the compactness
+of \(T\), \(G_\alpha\) has a finite subcover
+\(\{T - F_{\alpha_1}, \ldots, T - F_{\alpha_n}\}\)
+implying that \(\cap_{k = 1}^n F_{\alpha_k} = \emptyset\). Contradiction.
+Therefore \(\cap_\alpha F_\alpha \not= \emptyset\).
+</p>
+
+<p>
+Conversely, let \(\{G_\alpha\}\) be an open cover of \(T\) with no finite subcover,
+then \(\{F_\alpha\} = \{T - G_\alpha\}\) is a centered system of
+closed subsets of \(T\) with \(\cap_\alpha F_\alpha = \emptyset\).
+</p>
+
+</div>
+
+<p>
+<b>Theorem 2</b>
+</p>
+<div class="theorem" id="orge084224">
+<p>
+Every closed subset \(F\) of a compact topological space \(T\) is itself compact.
+</p>
+
+</div>
+
+<div class="proof" id="orgb44c5d9">
+<p>
+Let \(\{F_\alpha\}\) be any centered system of closed subset of the subspace
+\(F \subseteq T\). Then every \(F_\alpha\) is closed in \(T\) as well, therefore
+\(\cap_\alpha F_\alpha \not= \emptyset\). Then by Theorem 1, \(F\) is compact.
+</p>
+
+</div>
+
+<p>
+<b>Corollary</b>
+</p>
+<div class="theorem" id="org4e88884">
+<p>
+Every closed subset of a compactum is itself a compactum.
+</p>
+
+</div>
+
+<div class="proof" id="orgd98e4cd">
+<p>
+By Theorem 2 and the fact that every subset of a Hausdorff space is itself a
+Hausdorff space.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 3</b>
+</p>
+<div class="theorem" id="org7b8aca9">
+<p>
+Let \(K\) be a compactum and \(T\) any Hausdorff space containing \(K\). Then \(K\) is
+closed in \(T\).
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org4d2502a">
+<p>
+Suppose \(y \notin K\), so that \(y \in T- K\). Then, for anytenoint \(x \in K\),
+there is a neighbourhood \(U_x\) of \(x\) and \(V_x\) of \(y\) such that
+\(U_x \cap V_x = \emptyset\). The neighbourhood \(U_x\) for \(x \in K\) form an open
+cover of \(K\). Hence, by the compactness of \(K\), \(\{U_x\}\) has a finite subcover
+consisting of sets \(U_{x_1}, \ldots U_{x_n}\). Let
+\(V = V_{x_1} \cap \ldots \cap V_{x_n}\). Then \(V\) is a neighbourhood of the
+point \(y\) which does not intersect the set
+\(U_{x_1} \cup \ldots \cup U_{x_n} \supseteq K\), and hence \(y \notin [K]\). It
+follows that \(K\) is closed (in \(T\)).
+</p>
+
+</div>
+
+<p>
+<b>Remark</b>
+It is a consequence of Theorem 2 and Theorem 3 that compactness is an
+‘intrinsic property’, in the sense that a compactum remains a compactum after
+being ‘embedded’ in any larger Hausdorff space.
+</p>
+
+<p>
+<b>Theorem 4</b>
+</p>
+<div class="theorem" id="orgf2d3027">
+<p>
+Every compactum \(K\) is a normal space.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org539eae0">
+<p>
+Let \(X\) and \(Y\) be any two disjoint closed subsets of \(K\). Reporting the
+argument given in the proof of Theorem 3, we easily see that, given any point
+\(y \in Y\), there exists a neighbourhood \(U_y\) containing \(y\) and an open set
+\(O_y \supseteq X\) such that \(U_y \cap O_y = \emptyset\). Since \(Y\) is compact,
+by Theorem 2, the cover \(\{U_y\} (y \in Y)\) of the set \(Y\) has a finite
+subcover \(U_{y_1}, \ldots, U_{y_n}\). The open sets
+\(O^{(1)} = O_{y_1} \cap \ldots \cap O_{y_n}\),
+\(O^{(2)} = U_{y_1} \cap \ldots \cap U_{y_n}\)
+then satisfy the normality conditions
+\(O^{(1)} \supseteq X\),
+\(O^{(2)} \supseteq Y\),
+\(O^{(1)} \cap O^{(2)} = \emptyset\).
+</p>
+
+</div>
+
+<p>
+<b>Theorem 5</b>
+</p>
+<div class="theorem" id="org856dddb">
+<p>
+Let \(X\) be a compact space and \(f\) a continuous mapping of \(X\) onto a
+topological space \(Y\). Then \(Y = f(X)\) is itself compact.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org87ab812">
+<p>
+Let \(\{V_\alpha\}\) be any open cover of \(Y\), and let
+\(U_\alpha = f^{-1}(V_\alpha)\). Then the sets \(U_\alpha\) are open (being
+preimages of open sets under a continuous mapping) and cover the space \(X\).
+Since \(X\) is compact, \(\{U_\alpha\}\) has a finite subcover
+\(U_{x_1}, \ldots, U_{x_n}\). Then the sets \(V_{x_1}, \ldots V_{x_n}\), where
+\(V_k = f(U_k)\), cover \(Y\). It follows that \(Y\) is compact.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 6</b>
+</p>
+<div class="theorem" id="orgb988046">
+<p>
+A one-to-one continuous mapping  of a compactum \(X\) onto a compactum \(Y\) is
+necessarily a homeomorphism.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgcf43f96">
+<p>
+We must show that \(f^{-1}\) is continuous too. Let \(F\) be a closed set in \(X\)
+and \(P = f(F)\) be its image in \(Y\). Then \(P\) is a compactum, by Theorem 5.
+Hence, by Theorem 3, \(P\) is closed in \(Y\). Therefore the preimage under
+\(f^{-1}\) of any closed set \(F \subseteq X\) is closed. It follows from Theorem
+10’ (from <a href="./09-topological-spaces-basic-concepts.html">Topological Spaces: Basic Concepts</a>) that \(f^{-1}\) is continuous.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 7</b>
+</p>
+<div class="theorem" id="org49a9f32">
+<p>
+If \(T\) is a compact space, then any infinite subset of \(T\) has at least one
+limit point.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgfc15845">
+<p>
+Suppose \(T\) contains an infinite set \(X\) with no limit point. Then \(T\) contains
+a countable set \(X = \{x_1, \ldots, x_n\}\) with no limit point. But then the
+sets \(F_n = \{x_n, x_{n+1}, \ldots\} (n = 1, 2, \ldots)\) form a centered system
+of closed sets in \(T\) with an empty intersection ,i.e., \(T\) is not compact.
+</p>
+
+</div>
+
+<p>
+<b>Definition</b>
+A topological space \(T\) is said to be <i>countably compact</i> if every infinite
+subset of \(T\) has at least one limit point (in \(T\)).
+</p>
+
+<p>
+<b>Remark</b>
+Theorem 7 says that every compact set is countably compact. The converse,
+however, is not true (see Problem 1).
+</p>
+
+<p>
+<b>Theorem 8</b>
+</p>
+<div class="theorem" id="org241bde1">
+<p>
+Each of the following two conditions is necessary and sufficient for a
+topological space \(T\) to be countably compact:
+</p>
+<ol class="org-ol">
+<li><p>every countable open cover of \(T\) has a finite subcover;</p></li>
+<li><p>every countable centered system of closed subsets of \(T\) has a non-empty
+intersection.</p></li>
+</ol>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org500b9ac">
+<p>
+The equivalence of conditions 1 and 2 is an immediate consequence of the
+duality principle. Moreover, if \(T\) is not countably compact, then, repeating
+the argument given in proving Theorem 7, we find that there is a countable
+centered system of closed subsets of \(T\) with an empty intersection. This
+proves the sufficiency of condition 2. Thus we need only prove the necessity of
+condition 2.
+</p>
+
+<p>
+Let \(T\) be countably compact, and let \(\{F_n\}\) be a countable centered system
+of closed sets in \(T\). Then, as we now show, \(\cap_n F_n \not= \emptyset\). Let
+\(\Phi_n = \cap_{k=1}^n F_k\). Then none of the \(\Phi_n\) is empty, since
+\(\{F_k\}\) is centered. Moreover,
+\(\Phi_1 \supseteq \ldots \supseteq \Phi_n \supseteq \ldots\) and
+\(\cap_n \Phi_n = \cap_n F_n\). There are now two possibilities:
+</p>
+<ol class="org-ol">
+<li><p>\(\Phi_{n_0} = \Phi_{n_0 + 1} = \ldots\) starting from some index \(n_0\), in
+which case it is obvious that \(\cap_n \Phi_n = \Phi_{n_0} \not= \emptyset\) .</p></li>
+<li><p>There are infinitely many distinct sets \(\Phi_n\). In this case, there is
+clearly no loss in generality in assuming that all the \(\Phi_n\) are
+distinct. Let \(x_n \in \Phi_n - \Phi_{n+1}\). Thn the sequence \(\{x_n\}\)
+consists of infinitely many distinct points of \(T\), and hence, by the
+countable compactness of \(T\), must have at least one limit point, say \(x_0\).
+But then \(x_0\) must be a limit point of \(\Phi_n\), since \(\Phi_n\) contains
+all the points \(x_n, x_{n+1}, \ldots\). Moreover \(x_0 \in \Phi_n\), since
+\(\Phi_n\) is closed. It follows that \(x_0 \in \cap_n \Phi_n\) i.e.
+\(\cap_n \Phi_n \not= \emptyset\).</p></li>
+</ol>
+
+</div>
+
+<p>
+<b>Remark</b>
+Thus compact topological spaces are those in which an <i>arbitrary</i> open cover
+has a finite subcover, while countably compoact spaces are those in which every
+<i>countable</i> open cover has a finite subcover.
+</p>
+
+<p>
+<b>Theorem 9</b>
+</p>
+<div class="theorem" id="org345e23a">
+<p>
+The concepts of compactness and countable compactness coincide for a
+topological space \(T\) with a countable base.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org7526089">
+<p>
+By Theorem 6 (from <a href="./09-topological-spaces-basic-concepts.html">Topological Spaces: Basic Concepts</a>), every open cover
+\(\mathscr{O}\) of \(T\) has a countable subcover. Hence, if \(T\) is countably
+compact, \(\mathscr{O}\) has a finite subcover, by Theorem 8.
+</p>
+
+</div>
+
+<div id="outline-container-compactness-problems" class="outline-2">
+<h2 id="compactness-problems">Problems</h2>
+<div class="outline-text-2" id="text-compactness-problems">
+<ol class="org-ol">
+<li><p><p>
+Let \(X\) be the set of all ordinal numbers less than the first uncountable
+ordinal. Let \((\alpha, \beta) \subseteq X\) denote the set of all ordinal
+numbers \(\gamma\) such that \(\alpha < \gamma < \beta\), and let the open sets
+in \(X\) be all the unions of the interval \((\alpha, \beta)\). Prove that the
+resulting topological space \(T\) is countably compact but not compact.
+</p>
+
+<p>
+By Theorem 8, if every countable centered system of closed subsets of \(T\)
+has a non-empty intersection, then it is countably compact.
+</p></p></li>
+<li><p><p>
+A topological space \(T\) is said to be <i>locally compact</i> if every point
+\(x \in T\) has at least one relatively compact neighbourhood. Show that a
+compact space is automatically locally compact, but not conversely. Prove
+that every closed subspace of a locally compact subspace is locally compact.
+</p>
+
+<p>
+TODO.
+</p></p></li>
+<li><p><p>
+A point \(x\) is said to be a complete limit point of a subset \(A\) of a
+topological space if, given any neighbourhood \(U\) of \(x\) the sets \(A\) and
+\(A \cap U\) have the same power (i.e. cardinal number). Prove that every
+infinite subset ofU$ have the same power (i.e. cardinal number). Prove that
+every infinite subset of a compact topological space has at least one
+complete limit point.
+</p>
+
+<p>
+<i>Comment.</i> Conversely, it can be shown that if every infinite subset of a
+topological space \(T\) has at least one complete limit point, then \(T\) is
+compact.
+</p>
+
+<p>
+TODO.
+</p></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
