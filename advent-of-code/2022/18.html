@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-02-23 Thu 19:08 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 18. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 18."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 18</h1>
+<p>
+Part 1 was simple. Part 2 was not. It’s interesting how working in more than
+two dimensions becomes non-trivial very quickly. I am possibly overly chuffed
+with the function name <code>try_to_get_out</code>.
+</p>
+
+<p>
+Part 2 takes a long time to run. There may have been a smarter way, but I’m
+reasonably happy with it.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">from itertools import combinations, product
+
+# with open("18_test.txt") as f:
+with open("18.txt") as f:
+    lines = f.read().splitlines()
+
+def get_cube(line: str) -&gt; dict:
+    x, y, z = line.split(",")
+    return {"x": int(x), "y": int(y), "z": int(z)}
+
+def next_to(a: dict, b: dict):
+    if (
+            sum([
+                a["x"] == b["x"],
+                a["y"] == b["y"],
+                a["z"] == b["z"]
+            ]) == 2 and
+            max([
+                abs(a["x"] - b["x"]),
+                abs(a["y"] - b["y"]),
+                abs(a["z"] - b["z"])
+            ]) == 1
+    ):
+        return True
+    return False
+
+cubes = [get_cube(line) for line in lines]
+
+total_faces = len(cubes)*6
+for (a, b) in combinations(cubes, 2):
+    if next_to(a, b):
+        total_faces -= 2
+print(total_faces)
+
+# part 2
+import sys
+sys.setrecursionlimit(2000)
+
+min_x = min(a["x"] for a in cubes)
+max_x = max(a["x"] for a in cubes)
+min_y = min(a["y"] for a in cubes)
+max_y = max(a["y"] for a in cubes)
+min_z = min(a["z"] for a in cubes)
+max_z = max(a["z"] for a in cubes)
+
+def get_all_possible_cubes(cubes: list[dict]) -&gt; list[dict]:
+    for x in range(min_x, max_x+1):
+        for y in range(min_y, max_y+1):
+            for z in range(min_z, max_z+1):
+                yield {"x": x, "y": y, "z": z}
+
+possibly_inside = [x for x in get_all_possible_cubes(cubes)]
+
+inside_cubes = cubes.copy()
+original_cubes = cubes.copy()
+
+def try_to_get_out(cube, history):
+    def next_cubes(cube):
+        for i, j, k in (
+                (-1, 0, 0),
+                (0, -1, 0),
+                (0, 0, -1),
+                (1, 0, 0),
+                (0, 1, 0),
+                (0, 0, 1),
+        ):
+            yield {"x": cube["x"]+i, "y": cube["y"]+j, "z": cube["z"]+k}
+
+    if cube in history:
+        return True
+    if (
+            cube["x"] &lt; min_x or
+            cube["x"] &gt; max_x or
+            cube["y"] &lt; min_y or
+            cube["y"] &gt; max_y or
+            cube["z"] &lt; min_z or
+            cube["z"] &gt; max_z
+    ):
+        return False
+    history.append(cube)
+    for next_cube in next_cubes(cube):
+        if try_to_get_out(next_cube, history) is False:
+            return False
+    return True
+
+def inside(cube, cubes):
+    if cube in cubes:
+        return False
+    history = cubes.copy()
+    return try_to_get_out(cube, history=history)
+
+for i, cube in enumerate(possibly_inside):
+    # print(i, "out of", len(possibly_inside))
+    if (
+            sum([next_to(cube, x) for x in original_cubes]) &gt; 0 and
+            inside(cube, cubes)
+    ):
+        total_faces -= sum([next_to(cube, x) for x in original_cubes])
+        cubes.append(cube)
+
+print(total_faces)
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
