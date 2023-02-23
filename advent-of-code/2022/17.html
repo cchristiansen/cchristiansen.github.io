@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-02-23 Thu 17:03 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 16. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 16."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 16</h1>
+<p>
+Part 1 is now redundant because Part 2 also covers it’s case. Part 1 also takes
+an incredibly long time. Part 2 uses two tricks to speed up the calculation:
+</p>
+<ol class="org-ol">
+<li><p>it only looks at the top part of the grid which is still relevant;</p></li>
+<li><p>once a loop has been found, it works out how often the loop would occur and
+‘skips’ doing them.</p></li>
+</ol>
+
+<div id="outline-container-org0071990" class="outline-2">
+<h2 id="org0071990">Part 1</h2>
+<div class="outline-text-2" id="text-org0071990">
+<div class="org-src-container">
+<pre class="src src-python">def create_shape(data: str) -&gt; dict:
+    return {
+        "height": data.count("\n")+1,
+        "width": len(data.split("\n")[0]),
+        "shape": data.replace("#", "@")
+    }
+
+def grid_top(grid: str) -&gt; int:
+    return ((len(grid.rstrip("."))-1) // grid_width) + 1
+
+def display_grid(grid: str) -&gt; None:
+    print(
+        "\n".join(
+            "|"+grid[i*grid_width:(i+1)*grid_width]+"|"
+            for i in reversed(range(grid_top(grid)+1))
+        ) +
+        "\n" +
+        "+" + "-"*grid_width + "+"
+    )
+
+def initialise_shape(shape: dict, grid: str) -&gt; str:
+    end_height = init_x + grid_top(grid)
+    start_height = shape["height"] +  end_height
+    return (
+        grid[:end_height*grid_width] +
+        "".join(
+            "."*init_y +
+            shape["shape"].split("\n")[i] +
+            "."*(grid_width - init_y - shape["width"])
+            for i in reversed(range(shape["height"]))
+        ) +
+        grid[start_height*grid_width:]
+    )
+
+def can_move_left(grid: str) -&gt; bool:
+    return all(
+        i % grid_width != 0 and grid[i-1] != "#"
+        for i, x in enumerate(grid) if x == "@"
+    )
+
+def can_move_right(grid: str) -&gt; bool:
+    return all(
+        i % grid_width != grid_width-1 and grid[i+1] != "#"
+        for i, x in enumerate(grid) if x == "@"
+    )
+
+def can_move_down(grid: str) -&gt; bool:
+    return all(
+        i - grid_width &gt; 0 and grid[i-grid_width] != "#"
+        for i, x in enumerate(grid) if x == "@"
+    )
+
+def move_left(grid: str) -&gt; str:
+    new_grid = grid.replace("@", ".")
+    for i, x in enumerate(grid):
+        if x == "@":
+            new_grid = (
+                new_grid[:i-1] + "@" + new_grid[i:]
+            )
+    return new_grid
+
+def move_right(grid: str) -&gt; str:
+    new_grid = grid.replace("@", ".")
+    for i, x in enumerate(grid):
+        if x == "@":
+            new_grid = (
+                new_grid[:i+1] + "@" + new_grid[i+2:]
+            )
+    return new_grid
+
+def move_down(grid: str) -&gt; str:
+    new_grid = grid.replace("@", ".")
+    for i, x in enumerate(grid):
+        if x == "@":
+            new_grid = (
+                new_grid[:i-grid_width] + "@" + new_grid[i-grid_width+1:]
+            )
+    return new_grid
+
+def move_left_right(grid: str) -&gt; str:
+    next_move = move()
+    if next_move == "&lt;" and can_move_left(grid):
+        grid = move_left(grid)
+    elif next_move == "&gt;" and can_move_right(grid):
+        grid = move_right(grid)
+    return grid
+
+def turn_stationary(grid: str) -&gt; str:
+    return grid.replace("@", "#")
+
+shapes_raw = """####
+
+.#.
+###
+.#.
+
+..#
+..#
+###
+
+#
+#
+#
+#
+
+##
+##"""
+
+shapes = [create_shape(x) for x in shapes_raw.split("\n\n")]
+
+number_of_rocks = 2022
+# number_of_rocks = 20
+grid_height = number_of_rocks*4
+grid_width = 7
+
+init_x = 3
+init_y = 2
+
+grid = "."*grid_width*grid_height
+
+with open("17.txt") as f:
+    jet_stream = f.read().strip()
+    print(jet_stream)
+
+move_i = -1
+
+def move() -&gt; str:
+    global move_i
+    move_i += 1
+    return jet_stream[move_i % len(jet_stream)]
+
+for i in range(number_of_rocks):
+    print(i)
+    shape = shapes[i % len(shapes)]
+    grid = initialise_shape(shape, grid)
+    # display_grid(grid)
+    grid = move_left_right(grid)
+    while can_move_down(grid):
+        grid = move_down(grid)
+        grid = move_left_right(grid)
+    grid = turn_stationary(grid)
+
+print(grid_top(grid))
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org473601b" class="outline-2">
+<h2 id="org473601b">Part 2</h2>
+<div class="outline-text-2" id="text-org473601b">
+<div class="org-src-container">
+<pre class="src src-python">def create_shape(data: str) -&gt; dict:
+    return {
+        "height": data.count("\n")+1,
+        "width": len(data.split("\n")[0]),
+        "shape": data.replace("#", "@")
+    }
+
+def grid_top(grid: str) -&gt; int:
+    return ((len(grid.rstrip("."))-1) // grid_width) + 1
+
+def display_grid(grid: str) -&gt; None:
+    print(
+        "\n".join(
+            "|"+grid[i*grid_width:(i+1)*grid_width]+"|"
+            for i in reversed(range(grid_top(grid)+1))
+        ) +
+        "\n" +
+        "+" + "-"*grid_width + "+"
+    )
+
+def cut_grid(grid: str, grid_height: int) -&gt; (str, int):
+    at = len(grid)
+    for i in range(grid_width):
+        row = 0
+        for j in range(grid_top(grid)):
+            if grid[j*grid_width+i] == "#":
+                row = j
+        if row &lt; at:
+            at = row
+    if at == len(grid):
+        return grid+grid_addon, grid_height
+    return (grid[at*grid_width:]+grid_addon, grid_height+at)
+
+def trim_grid(grid: str) -&gt; str:
+    return grid[:(grid_top(grid)+1)*grid_width]
+
+def initialise_shape(shape: dict, grid: str) -&gt; str:
+    end_height = init_x + grid_top(grid)
+    start_height = shape["height"] + end_height
+    return (
+        grid[:end_height*grid_width] +
+        "".join(
+            "."*init_y +
+            shape["shape"].split("\n")[i] +
+            "."*(grid_width - init_y - shape["width"])
+            for i in reversed(range(shape["height"]))
+        ) +
+        grid[start_height*grid_width:]
+    )
+
+def can_move_left(grid: str) -&gt; bool:
+    return all(
+        i % grid_width != 0 and grid[i-1] != "#"
+        for i, x in enumerate(grid) if x == "@"
+    )
+
+def can_move_right(grid: str) -&gt; bool:
+    return all(
+        i % grid_width != grid_width-1 and grid[i+1] != "#"
+        for i, x in enumerate(grid) if x == "@"
+    )
+
+def can_move_down(grid: str) -&gt; bool:
+    return all(
+        i - grid_width &gt; 0 and grid[i-grid_width] != "#"
+        for i, x in enumerate(grid) if x == "@"
+    )
+
+def move_left(grid: str) -&gt; str:
+    new_grid = grid.replace("@", ".")
+    for i, x in enumerate(grid):
+        if x == "@":
+            new_grid = (
+                new_grid[:i-1] + "@" + new_grid[i:]
+            )
+    return new_grid
+
+def move_right(grid: str) -&gt; str:
+    new_grid = grid.replace("@", ".")
+    for i, x in enumerate(grid):
+        if x == "@":
+            new_grid = (
+                new_grid[:i+1] + "@" + new_grid[i+2:]
+            )
+    return new_grid
+
+def move_down(grid: str) -&gt; str:
+    new_grid = grid.replace("@", ".")
+    for i, x in enumerate(grid):
+        if x == "@":
+            new_grid = (
+                new_grid[:i-grid_width] + "@" + new_grid[i-grid_width+1:]
+            )
+    return new_grid
+
+def move_left_right(grid: str) -&gt; str:
+    def move() -&gt; str:
+        global move_i
+        move_i += 1
+        return jet_stream[move_i % len(jet_stream)]
+
+    next_move = move()
+    if next_move == "&lt;" and can_move_left(grid):
+        grid = move_left(grid)
+    elif next_move == "&gt;" and can_move_right(grid):
+        grid = move_right(grid)
+    return grid
+
+def turn_stationary(grid: str) -&gt; str:
+    return grid.replace("@", "#")
+
+shapes_raw = """####
+
+.#.
+###
+.#.
+
+..#
+..#
+###
+
+#
+#
+#
+#
+
+##
+##"""
+
+shapes = [create_shape(x) for x in shapes_raw.split("\n\n")]
+
+number_of_rocks = 1000000000000
+# number_of_rocks = 2022
+# number_of_rocks = 100
+
+grid_height = 0
+grid_width = 7
+
+init_x = 3
+init_y = 2
+
+with open("17.txt") as f:
+# with open("17_test.txt") as f:
+    jet_stream = f.read().strip()
+    print(jet_stream)
+
+move_i = -1
+grid_addon = "."*grid_width*(init_x+1+max(shape["height"] for shape in shapes))
+grid = grid_addon
+
+grids_so_far = set()
+
+def find_previous_turn(grids_so_far: set, grid: str, move_i: int):
+    for g, m, old_turn, old_grid_height in grids_so_far:
+        if g == grid and m == move_i:
+            return g, m, old_turn, old_grid_height
+    return None, None, None, None
+
+# # Manually
+# for i in range(number_of_rocks):
+#     shape = shapes[i % len(shapes)]
+#     grid, grid_height = cut_grid(grid, grid_height)
+#     grid = initialise_shape(shape, grid)
+#     grid = trim_grid(grid)
+#     # display_grid(grid)
+#     grid = move_left_right(grid)
+#     while can_move_down(grid):
+#         grid = move_down(grid)
+#         grid = move_left_right(grid)
+#     grid = turn_stationary(grid)
+
+# print("Real answer", grid_height+grid_top(grid))
+# display_grid(grid)
+
+
+# ###################################
+# # Copied over
+# with open("17.txt") as f:
+# # with open("17_test.txt") as f:
+#     jet_stream = f.read().strip()
+#     print(jet_stream)
+
+# move_i = -1
+# grid_addon = "."*grid_width*(init_x+1+max(shape["height"] for shape in shapes))
+# grid = grid_addon
+# grid_height = 0
+
+# grids_so_far = set()
+# ###################################
+
+old_turn = 0
+old_grid_height = 0
+for i in range(number_of_rocks):
+    shape = shapes[i % len(shapes)]
+    grid, grid_height = cut_grid(grid, grid_height)
+    grid = initialise_shape(shape, grid)
+    grid = trim_grid(grid)
+    grid = move_left_right(grid)
+    while can_move_down(grid):
+        grid = move_down(grid)
+        grid = move_left_right(grid)
+    grid = turn_stationary(grid)
+    turns = i
+    if any(
+            grid == g and move_i % len(jet_stream) == m
+            for g, m, old_i, old_grid_height in grids_so_far
+    ):
+        old_grid, _, old_turn, old_grid_height = find_previous_turn(
+            grids_so_far,
+            grid,
+            move_i % len(jet_stream)
+        )
+        break
+    else:
+        grids_so_far.add((grid, move_i % len(jet_stream), i, grid_height))
+
+
+repeat = (number_of_rocks // (turns - old_turn)) - 1
+grid_height = old_grid_height + ((grid_height - old_grid_height) * repeat)
+
+for i in range(old_turn + (turns-old_turn)*repeat + 1, number_of_rocks):
+    shape = shapes[i % len(shapes)]
+    grid, grid_height = cut_grid(grid, grid_height)
+    grid = initialise_shape(shape, grid)
+    grid = trim_grid(grid)
+    grid = move_left_right(grid)
+    while can_move_down(grid):
+        grid = move_down(grid)
+        grid = move_left_right(grid)
+    grid = turn_stationary(grid)
+
+print("answer", grid_height+grid_top(grid))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
