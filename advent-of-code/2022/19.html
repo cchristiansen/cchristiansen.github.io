@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-02-25 Sat 11:05 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 19. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 19."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 19</h1>
+<p>
+Branching is incredibly expensive. Theoretically, this problem wasn’t
+particularly challenging. In practice though, it was infuriating. Many
+different attempts to speed up the program have proved to be unfruitful. The
+answers were obtained from half-mangled programs which have been lost to the
+ether. Below are the remnants.
+</p>
+
+<div id="outline-container-orgf27d2c2" class="outline-2">
+<h2 id="orgf27d2c2">Part 1</h2>
+<div class="outline-text-2" id="text-orgf27d2c2">
+<div class="org-src-container">
+<pre class="src src-python">from itertools import product
+from functools import cached_property
+
+class Blueprint:
+    def __init__(
+            self,
+            number,
+            ore_robot_ore,
+            clay_robot_ore,
+            obsidian_robot_ore,
+            obsidian_robot_clay,
+            geode_robot_ore,
+            geode_robot_obsidian,
+    ):
+        self.number = number
+        self.ore_robot_ore = ore_robot_ore
+        self.clay_robot_ore = clay_robot_ore
+        self.obsidian_robot_ore = obsidian_robot_ore
+        self.obsidian_robot_clay = obsidian_robot_clay
+        self.geode_robot_ore = geode_robot_ore
+        self.geode_robot_obsidian = geode_robot_obsidian
+
+    def __hash__(self):
+        return self.number
+
+def get_blueprints(line):
+    (
+        number,
+        ore_robot,
+        clay_robot,
+        obsidian_ore,
+        obsidian_clay,
+        geode_ore,
+        geode_obsidian
+    ) = [int(x) for x in line.replace(":", "").split(" ") if x.isnumeric()]
+    return Blueprint(
+        number,
+        ore_robot,
+        clay_robot,
+        obsidian_ore,
+        obsidian_clay,
+        geode_ore,
+        geode_obsidian,
+    )
+
+with open("19.txt") as f:
+# with open("19testtest.txt") as f:
+    lines = f.read().splitlines()
+
+max_geode = 0
+history = {}
+
+def tree(
+        blueprint,
+        time = 24,
+        ore = 0,
+        clay = 0,
+        obsidian = 0,
+        geode = 0,
+        ore_robot = 1,
+        clay_robot = 0,
+        obsidian_robot = 0,
+        geode_robot = 0,
+        add_clay_robot = True,
+        add_ore_robot = True,
+):
+    global max_geode
+    global history
+    key = (
+        time,
+        ore,
+        clay,
+        obsidian,
+        geode,
+        ore_robot,
+        clay_robot,
+        geode_robot,
+        add_clay_robot and blueprint.clay_robot_ore &lt;= ore,
+        add_ore_robot and blueprint.ore_robot_ore &lt;= ore,
+    )
+    if key in history:
+        return history[key]
+    # print(
+    #     "blueprint:",
+    #     blueprint.number,
+    #     "time:",
+    #     time,
+    #     "max_geode:",
+    #     max_geode,
+    #     "geode:",
+    #     geode,
+    #     "robots:",
+    #     geode_robot,
+    #     obsidian_robot,
+    #     clay_robot,
+    #     ore_robot,
+    #     "ores:",
+    #     ore,
+    #     clay,
+    #     obsidian,
+    #     geode,
+    # )
+    if geode &gt; max_geode:
+        max_geode = geode
+
+    if time == 0:
+        history[key] = geode
+        return geode
+
+    if (geode + (1.5*time*(geode_robot+1)) &lt; max_geode):
+        history[key] = 0
+        return 0
+
+    new_geode_robot = geode_robot
+    new_obsidian_robot = obsidian_robot
+    new_clay_robot = clay_robot
+    new_ore_robot = ore_robot
+
+    if (
+            blueprint.geode_robot_ore &lt;= ore and
+            blueprint.geode_robot_obsidian &lt;= obsidian
+    ):
+        ore -= blueprint.geode_robot_ore
+        obsidian -= blueprint.geode_robot_obsidian
+        new_geode_robot += 1
+    elif (
+            blueprint.obsidian_robot_ore &lt;= ore and
+            blueprint.obsidian_robot_clay &lt;= clay
+    ):
+        ore -= blueprint.obsidian_robot_ore
+        clay -= blueprint.obsidian_robot_clay
+        new_obsidian_robot += 1
+    elif (
+            add_clay_robot and
+            blueprint.clay_robot_ore &lt;= ore
+    ):
+        ore -= blueprint.clay_robot_ore
+        new_clay_robot += 1
+    elif (
+            add_ore_robot and
+            blueprint.ore_robot_ore &lt;= ore
+    ):
+        ore -= blueprint.ore_robot_ore
+        new_ore_robot += 1
+
+    ans = max(
+        tree(
+            blueprint,
+            time = time-1,
+            ore = ore + ore_robot,
+            clay = clay + clay_robot,
+            obsidian = obsidian + obsidian_robot,
+            geode = geode + geode_robot,
+            ore_robot = new_ore_robot,
+            clay_robot = new_clay_robot,
+            obsidian_robot = new_obsidian_robot,
+            geode_robot = new_geode_robot,
+            add_clay_robot = new_add_clay_robot,
+            add_ore_robot = new_add_ore_robot,
+        )
+        for (
+            new_add_clay_robot,
+            new_add_ore_robot
+        ) in product((True, False), repeat=2)
+    )
+    history[key] = ans
+    return ans
+
+def get_geodes(blueprint):
+    global max_geode
+    global history
+    max_geode = 0
+    history = {}
+    ans = tree(blueprint)
+    print(blueprint.number, ans, max_geode)
+    return tree(blueprint)
+
+blueprints = [get_blueprints(line) for line in lines]
+
+print(
+    "answer",
+    sum([
+        get_geodes(blueprint) * blueprint.number
+        for blueprint in blueprints
+    ])
+)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1b682ef" class="outline-2">
+<h2 id="org1b682ef">Part 2 (incredibly slow)</h2>
+<div class="outline-text-2" id="text-org1b682ef">
+<div class="org-src-container">
+<pre class="src src-python">from itertools import product
+from random import randint
+from functools import cached_property
+
+class Blueprint:
+    def __init__(
+            self,
+            number,
+            ore_robot_ore,
+            clay_robot_ore,
+            obsidian_robot_ore,
+            obsidian_robot_clay,
+            geode_robot_ore,
+            geode_robot_obsidian,
+    ):
+        self.number = number
+        self.ore_robot_ore = ore_robot_ore
+        self.clay_robot_ore = clay_robot_ore
+        self.obsidian_robot_ore = obsidian_robot_ore
+        self.obsidian_robot_clay = obsidian_robot_clay
+        self.geode_robot_ore = geode_robot_ore
+        self.geode_robot_obsidian = geode_robot_obsidian
+
+    def __hash__(self):
+        return self.number
+
+    def __str__(self):
+        return (
+            f"{self.number} "
+            f"ore ore: {self.ore_robot_ore} "
+            f"clay ore:{self.clay_robot_ore} "
+            f"obsidian ore: {self.obsidian_robot_ore} "
+            f"obsidian clay: {self.obsidian_robot_clay} "
+            f"geode ore: {self.geode_robot_ore} "
+            f"geode obsidian: {self.geode_robot_obsidian} "
+        )
+
+def get_blueprints(line):
+    (
+        number,
+        ore_robot,
+        clay_robot,
+        obsidian_ore,
+        obsidian_clay,
+        geode_ore,
+        geode_obsidian
+    ) = [int(x) for x in line.replace(":", "").split(" ") if x.isnumeric()]
+    return Blueprint(
+        number,
+        ore_robot,
+        clay_robot,
+        obsidian_ore,
+        obsidian_clay,
+        geode_ore,
+        geode_obsidian,
+    )
+
+with open("19.txt") as f:
+    lines = f.read().splitlines()
+
+def tree(
+        blueprint,
+        time = 24,
+        ore = 0,
+        clay = 0,
+        obsidian = 0,
+        geode = 0,
+        ore_robot = 1,
+        clay_robot = 0,
+        obsidian_robot = 0,
+        geode_robot = 0,
+):
+    def can_build(t=None):
+        if t is None:
+            return [
+                x
+                for x in ["", "geode", "obsidian", "clay", "ore"]
+                if can_build(x)
+            ]
+        elif t == "":
+            return True
+        elif t == "geode":
+            return (
+                blueprint.geode_robot_ore &lt;= ore and
+                blueprint.geode_robot_obsidian &lt;= obsidian
+            )
+        elif t == "obsidian":
+            return (
+                blueprint.obsidian_robot_ore &lt;= ore and
+                blueprint.obsidian_robot_clay &lt;= clay
+            )
+        elif t == "clay":
+            return blueprint.clay_robot_ore &lt;= ore
+        elif t == "ore":
+            return blueprint.ore_robot_ore &lt;= ore
+
+    def new_ore(build):
+        if build == "":
+            return ore + ore_robot
+        elif build == "ore":
+            return ore + ore_robot - blueprint.ore_robot_ore
+        elif build == "clay":
+            return ore + ore_robot - blueprint.clay_robot_ore
+        elif build == "obsidian":
+            return ore + ore_robot - blueprint.obsidian_robot_ore
+        elif build == "geode":
+            return ore + ore_robot - blueprint.geode_robot_ore
+
+    def new_clay(build):
+        if build == "obsidian":
+            return clay + clay_robot - blueprint.obsidian_robot_clay
+        return clay + clay_robot
+
+    def new_obsidian(build):
+        if build == "geode":
+            return obsidian + obsidian_robot - blueprint.geode_robot_obsidian
+        return obsidian + obsidian_robot
+
+    def new_geode(build):
+        return geode + geode_robot
+
+    def new_ore_robot(build):
+        if build == "ore":
+            return ore_robot + 1
+        return ore_robot
+
+    def new_clay_robot(build):
+        if build == "clay":
+            return clay_robot + 1
+        return clay_robot
+
+    def new_obsidian_robot(build):
+        if build == "obsidian":
+            return obsidian_robot + 1
+        return obsidian_robot
+
+    def new_geode_robot(build):
+        if build == "geode":
+            return geode_robot + 1
+        return geode_robot
+
+    def get_most_needed(t=None, weights=None):
+        values = {}
+        if t is None:
+            t = ["geode", "obsidian", "clay", "ore", ""]
+        if weights is None:
+            weights = [10**6, 20, 10, 6, 3, 2, 1, 30, 1]
+        for x in t:
+            if x == "geode":
+                values[x] = weights[0]
+            elif x == "obsidian":
+                values[x] = (
+                    (
+                        blueprint.geode_robot_obsidian -
+                        obsidian_robot
+                    )*weights[1]
+                )
+            elif x == "clay":
+                values[x] = (
+                    (blueprint.geode_robot_obsidian - obsidian_robot)*weights[2] +
+                    (blueprint.obsidian_robot_clay - clay_robot)*weights[3]
+                )
+            elif x == "ore":
+                values[x] = (
+                    (blueprint.geode_robot_ore - ore_robot)*weights[4] +
+                    (blueprint.obsidian_robot_ore - ore_robot)*weights[5] +
+                    (blueprint.clay_robot_ore - clay_robot)*weights[6] +
+                    (blueprint.ore_robot_ore - ore_robot)*weights[7]
+                )
+            elif x == "":
+                values[x] = weights[8]
+        return sorted(values, key=lambda x: values[x], reverse=True)
+
+    def should_build():
+        return get_most_needed(can_build())
+
+    key = (
+        time,
+        "ores",
+        ore,
+        clay,
+        obsidian,
+        geode,
+        "robots",
+        ore_robot,
+        clay_robot,
+        obsidian_robot,
+        geode_robot,
+    )
+    global max_geodes
+    if geode &gt; max_geodes:
+        max_geodes = geode
+        print(max_geodes)
+    if time == 0:
+        print(key)
+        return geode
+    if geode + time*(geode_robot + time/2) &lt; max_geodes:
+        return 0
+
+    return max(
+        tree(
+            blueprint,
+            time = time-1,
+            ore = new_ore(build),
+            clay = new_clay(build),
+            obsidian = new_obsidian(build),
+            geode = new_geode(build),
+            ore_robot = new_ore_robot(build),
+            clay_robot = new_clay_robot(build),
+            obsidian_robot = new_obsidian_robot(build),
+            geode_robot = new_geode_robot(build),
+        ) for build in should_build()
+    )
+    # for build in can_build():
+    #     if build == "geode":
+    #         ore -= blueprint.geode_robot_ore
+    #         obsidian -= blueprint.geode_robot_obsidian
+    #         new_geode_robot += 1
+    #     elif build == "obsidian":
+    #         ore -= blueprint.obsidian_robot_ore
+    #         clay -= blueprint.obsidian_robot_clay
+    #         new_obsidian_robot += 1
+    #     elif build == "clay":
+    #         ore -= blueprint.clay_robot_ore
+    #         new_clay_robot += 1
+    #     elif build == "ore":
+    #         ore -= blueprint.ore_robot_ore
+    #         new_ore_robot += 1
+
+    # return tree(
+    #     blueprint,
+    #     time = time-1,
+    #     ore = ore + ore_robot,
+    #     clay = clay + clay_robot,
+    #     obsidian = obsidian + obsidian_robot,
+    #     geode = geode + geode_robot,
+    #     ore_robot = new_ore_robot,
+    #     clay_robot = new_clay_robot,
+    #     obsidian_robot = new_obsidian_robot,
+    #     geode_robot = new_geode_robot,
+    # )
+
+max_geodes = 0
+
+def get_geodes(blueprint, time=24):
+    global max_geodes
+    max_geodes = 0
+    print(blueprint)
+    ans = tree(blueprint, time=time)
+
+    print(blueprint.number, ans)
+    return ans
+
+blueprints = [get_blueprints(line) for line in lines]
+
+answer = 1
+for blueprint in blueprints[:3]:
+    geodes = get_geodes(blueprint, time=32)
+    answer *= geodes
+
+print(answer)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge93063a" class="outline-2">
+<h2 id="orge93063a">Part 2 (quick, but not necessarily accurate)</h2>
+<div class="outline-text-2" id="text-orge93063a">
+<div class="org-src-container">
+<pre class="src src-python">from itertools import product
+from random import randint
+from functools import cached_property
+
+class Blueprint:
+    def __init__(
+            self,
+            number,
+            ore_robot_ore,
+            clay_robot_ore,
+            obsidian_robot_ore,
+            obsidian_robot_clay,
+            geode_robot_ore,
+            geode_robot_obsidian,
+    ):
+        self.number = number
+        self.ore_robot_ore = ore_robot_ore
+        self.clay_robot_ore = clay_robot_ore
+        self.obsidian_robot_ore = obsidian_robot_ore
+        self.obsidian_robot_clay = obsidian_robot_clay
+        self.geode_robot_ore = geode_robot_ore
+        self.geode_robot_obsidian = geode_robot_obsidian
+
+    def __hash__(self):
+        return self.number
+
+    def __str__(self):
+        return (
+            f"{self.number} "
+            f"ore ore: {self.ore_robot_ore} "
+            f"clay ore:{self.clay_robot_ore} "
+            f"obsidian ore: {self.obsidian_robot_ore} "
+            f"obsidian clay: {self.obsidian_robot_clay} "
+            f"geode ore: {self.geode_robot_ore} "
+            f"geode obsidian: {self.geode_robot_obsidian} "
+        )
+
+def get_blueprints(line):
+    (
+        number,
+        ore_robot,
+        clay_robot,
+        obsidian_ore,
+        obsidian_clay,
+        geode_ore,
+        geode_obsidian
+    ) = [int(x) for x in line.replace(":", "").split(" ") if x.isnumeric()]
+    return Blueprint(
+        number,
+        ore_robot,
+        clay_robot,
+        obsidian_ore,
+        obsidian_clay,
+        geode_ore,
+        geode_obsidian,
+    )
+
+with open("19.txt") as f:
+    lines = f.read().splitlines()
+
+def generate_weights(n=10000):
+    for _ in range(n):
+        yield [
+            10**6,
+            randint(1, 25),
+            randint(1, 25),
+            randint(1, 25),
+            randint(1, 25),
+            randint(1, 25),
+            randint(1, 25),
+            randint(1, 25),
+            randint(1, 25),
+        ]
+    # for a, b, c, d, e, f, g in product(
+    #         (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20),
+    #         repeat=7
+    # ):
+    #     yield [10**9, a, b, c, d, e, f, g]
+
+def tree(
+        blueprint,
+        time = 24,
+        ore = 0,
+        clay = 0,
+        obsidian = 0,
+        geode = 0,
+        ore_robot = 1,
+        clay_robot = 0,
+        obsidian_robot = 0,
+        geode_robot = 0,
+        weights = None,
+):
+    def can_build(t=None):
+        if t is None:
+            return [
+                x for x in ["geode", "obsidian", "clay", "ore"] if can_build(x)
+            ]
+        elif t == "geode":
+            return (
+                blueprint.geode_robot_ore &lt;= ore and
+                blueprint.geode_robot_obsidian &lt;= obsidian
+            )
+        elif t == "obsidian":
+            return (
+                blueprint.obsidian_robot_ore &lt;= ore and
+                blueprint.obsidian_robot_clay &lt;= clay
+            )
+        elif t == "clay":
+            return blueprint.clay_robot_ore &lt;= ore
+        elif t == "ore":
+            return blueprint.ore_robot_ore &lt;= ore
+
+    # def time_to_build(t):
+    #     if t == "obsidian":
+    #         return max(
+    #             0,
+    #             (blueprint.obsidian_robot_ore - ore)/ore_robot,
+    #             (blueprint.obsidian_robot_clay - clay)/clay_robot
+    #         )
+    #     elif t == "clay":
+    #         return max(
+    #             0,
+    #             int((blueprint.clay_robot_ore - ore)/ore_robot)
+    #         )
+    #     elif t == "ore":
+    #         return max(
+    #             0,
+    #             int((blueprint.ore_robot_ore - ore)/ore_robot)
+    #         )
+
+    def get_most_needed(t=None, weights=None):
+        values = {}
+        if t is None:
+            t = ["geode", "obsidian", "clay", "ore"]
+        if weights is None:
+            weights = [10**6, 10, 5, 2, 5, 2, 1, 30]
+        for x in t:
+            if x == "geode":
+                values[x] = weights[0]
+            elif x == "obsidian":
+                values[x] = (
+                    (
+                        blueprint.geode_robot_obsidian -
+                        obsidian_robot
+                    )*weights[1]
+                )
+            elif x == "clay":
+                values[x] = (
+                    (blueprint.geode_robot_obsidian - obsidian_robot)*weights[2] +
+                    (blueprint.obsidian_robot_clay - clay_robot)*weights[3]
+                )
+            elif x == "ore":
+                values[x] = (
+                    (blueprint.geode_robot_ore - ore_robot)*weights[4] +
+                    (blueprint.obsidian_robot_ore - ore_robot)*weights[5] +
+                    (blueprint.clay_robot_ore - clay_robot)*weights[6] +
+                    (blueprint.ore_robot_ore - ore_robot)*weights[7]
+                )
+        if len(values):
+            return sorted(values, key=lambda x: values[x])[-1]
+        return ""
+
+    def should_build(weights):
+        return get_most_needed(can_build(), weights=weights)
+
+    # def robot_worth_it(t):
+    #     if t == "geode":
+    #         return can_build(t)
+    #     elif t == "obsidian":
+    #         return (
+    #             can_build(t) and
+    #             not (
+    #                 (
+    #                     obsidian + obsidian_robot &gt;=
+    #                     blueprint.geode_robot_obsidian
+    #                 ) and
+    #                 blueprint.obsidian_robot_ore &lt; blueprint.geode_robot_ore
+    #             )
+    #         )
+    #     elif t == "clay":
+    #         return (
+    #             can_build(t) and
+    #             not (
+    #                 (
+    #                     obsidian + obsidian_robot &gt;=
+    #                     blueprint.geode_robot_obsidian
+    #                 ) and
+    #                 blueprint.clay_robot_ore &lt; blueprint.geode_robot_ore
+    #             ) and
+    #             not (
+    #                 ore &lt;= blueprint.obsidian_robot_ore and
+    #                 blueprint.clay_robot_ore &lt; blueprint.obsidian_robot_ore
+    #             )
+    #         )
+    #     elif t == "ore":
+    #         return (
+    #             can_build(t) and
+    #             blueprint.ore_robot_ore &lt;= ore and
+    #             not (
+    #                 ore &lt; blueprint.clay_robot_ore and
+    #                 blueprint.ore_robot_ore &lt; blueprint.clay_robot_ore
+    #             )
+    #         )
+
+    key = (
+        time,
+        "ores",
+        ore,
+        clay,
+        obsidian,
+        geode,
+        "robots",
+        ore_robot,
+        clay_robot,
+        obsidian_robot,
+        geode_robot,
+    )
+    if time == 0:
+        # print(key)
+        return geode
+
+    new_geode_robot = geode_robot
+    new_obsidian_robot = obsidian_robot
+    new_clay_robot = clay_robot
+    new_ore_robot = ore_robot
+
+    build = should_build(weights=weights)
+    if build == "geode":
+        ore -= blueprint.geode_robot_ore
+        obsidian -= blueprint.geode_robot_obsidian
+        new_geode_robot += 1
+    elif build == "obsidian":
+        ore -= blueprint.obsidian_robot_ore
+        clay -= blueprint.obsidian_robot_clay
+        new_obsidian_robot += 1
+    elif build == "clay":
+        ore -= blueprint.clay_robot_ore
+        new_clay_robot += 1
+    elif build == "ore":
+        ore -= blueprint.ore_robot_ore
+        new_ore_robot += 1
+
+    return tree(
+        blueprint,
+        time = time-1,
+        ore = ore + ore_robot,
+        clay = clay + clay_robot,
+        obsidian = obsidian + obsidian_robot,
+        geode = geode + geode_robot,
+        ore_robot = new_ore_robot,
+        clay_robot = new_clay_robot,
+        obsidian_robot = new_obsidian_robot,
+        geode_robot = new_geode_robot,
+        weights = weights
+    )
+
+def get_geodes(blueprint, time=24):
+    print(blueprint)
+    ans = max(
+        tree(blueprint, time=time, weights=weights)
+        for weights in generate_weights()
+    )
+    print(blueprint.number, ans)
+    return ans
+
+blueprints = [get_blueprints(line) for line in lines]
+
+answer = 1
+for blueprint in blueprints[:3]:
+    geodes = get_geodes(blueprint, time=32)
+    answer *= geodes
+
+print(answer)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
