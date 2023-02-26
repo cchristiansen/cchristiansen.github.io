@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-02-25 Sat 15:11 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 20. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 20."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 20</h1>
+<p>
+Relatively straightforward, aside from using <code>% (len(data) - 1)</code>. Part 2 wasn’t
+a great deal more complicated.
+</p>
+
+<div id="outline-container-org645649f" class="outline-2">
+<h2 id="org645649f">Part 1</h2>
+<div class="outline-text-2" id="text-org645649f">
+<div class="org-src-container">
+<pre class="src src-python">with open("20.txt") as f:
+    data = [
+        {"number": int(x), "pos": i}
+        for i, x in enumerate(f.read().splitlines())
+    ]
+
+def print_data(l):
+    print([(x["number"], x["pos"]) for x in l])
+
+new_data = data.copy()
+
+for i in range(len(data)):
+    x = data[i]
+    number = x["number"]
+    pos = x["pos"]
+
+    to = (pos+number) % (len(data) - 1)
+    if to == 0:
+        to = len(data) - 1
+
+    x["pos"] = to
+
+    if to &lt; pos:
+        new_data = new_data[:to] + [x] + new_data[to:pos] + new_data[pos+1:]
+        for a in new_data[to+1:pos+1]:
+            a["pos"] += 1
+    elif to &gt; pos:
+        new_data = (
+            new_data[:pos] + new_data[pos+1:to+1] + [x] + new_data[to+1:]
+        )
+        for a in new_data[pos:to]:
+            a["pos"] -= 1
+    else:
+        new_data = new_data
+
+zero_at = min(i for i, x in enumerate(new_data) if x["number"] == 0)
+print(
+    sum([
+        new_data[(1000+zero_at) % len(new_data)]["number"],
+        new_data[(2000+zero_at) % len(new_data)]["number"],
+        new_data[(3000+zero_at) % len(new_data)]["number"],
+    ])
+)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfaa2c74" class="outline-2">
+<h2 id="orgfaa2c74">Part 2</h2>
+<div class="outline-text-2" id="text-orgfaa2c74">
+<div class="org-src-container">
+<pre class="src src-python">with open("20.txt") as f:
+    data = [
+        {"number": int(x)*811589153, "pos": i}
+        for i, x in enumerate(f.read().splitlines())
+    ]
+
+def print_data(l):
+    print([(x["number"], x["pos"]) for x in l])
+
+new_data = data.copy()
+
+for _ in range(10):
+    for i in range(len(data)):
+        x = data[i]
+        number = x["number"]
+        pos = x["pos"]
+
+        to = (pos+number) % (len(data) - 1)
+        if to == 0:
+            to = len(data) - 1
+
+        x["pos"] = to
+
+        if to &lt; pos:
+            new_data = new_data[:to] + [x] + new_data[to:pos] + new_data[pos+1:]
+            for a in new_data[to+1:pos+1]:
+                a["pos"] += 1
+        elif to &gt; pos:
+            new_data = (
+                new_data[:pos] + new_data[pos+1:to+1] + [x] + new_data[to+1:]
+            )
+            for a in new_data[pos:to]:
+                a["pos"] -= 1
+        else:
+            new_data = new_data
+
+zero_at = min(i for i, x in enumerate(new_data) if x["number"] == 0)
+print(
+    sum([
+        new_data[(1000+zero_at) % len(new_data)]["number"],
+        new_data[(2000+zero_at) % len(new_data)]["number"],
+        new_data[(3000+zero_at) % len(new_data)]["number"],
+    ])
+)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

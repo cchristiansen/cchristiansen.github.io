@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-02-27 Mon 10:11 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 21. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 21."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 21</h1>
+<p>
+Again, relatively straightforward. Part 2 wasn’t a great deal more complicated.
+I couldn’t figure out quickly a way to use <code>eval</code> so hand-coded each case for
+the four different operands, but hey ho.
+</p>
+
+<div id="outline-container-org3baebd1" class="outline-2">
+<h2 id="org3baebd1">Part 1</h2>
+<div class="outline-text-2" id="text-org3baebd1">
+<div class="org-src-container">
+<pre class="src src-python">def parse(data, value):
+    if value.isnumeric():
+        return int(value)
+    elif value.count(" ") == 2:
+        x, operand, y = value.split(" ")
+        if operand == "+":
+            return parse(data, data[x]) + parse(data, data[y])
+        elif operand == "-":
+            return parse(data, data[x]) - parse(data, data[y])
+        elif operand == "*":
+            return parse(data, data[x]) * parse(data, data[y])
+        elif operand == "/":
+            return int(parse(data, data[x]) / parse(data, data[y]))
+
+def calculate(data):
+    return parse(data, data["root"])
+
+with open("21.txt") as f:
+    lines = f.read().splitlines()
+
+data = {
+    line.split(": ")[0]: line.split(": ")[1]
+    for line in lines
+}
+
+print(calculate(data))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6279672" class="outline-2">
+<h2 id="org6279672">Part 2</h2>
+<div class="outline-text-2" id="text-org6279672">
+<div class="org-src-container">
+<pre class="src src-python">def in_tree(data, key, looking_for):
+    if key == looking_for:
+        return True
+    elif data[key].count(" ") == 2:
+        x, _, y = data[key].split(" ")
+        return in_tree(data, x, looking_for) or in_tree(data, y, looking_for)
+
+def parse(data, key):
+    if key == "root":
+        x, _, y = data[key].split()
+        if in_tree(data, x, looking_for="humn"):
+            return reverse_calc(data, parse(data, y), x)
+        elif in_tree(data, y, looking_for="humn"):
+            return reverse_calc(data, parse(data, x), y)
+    elif data[key].isnumeric():
+        return int(data[key])
+    elif data[key].count(" ") == 2:
+        x, operand, y = data[key].split(" ")
+        if operand == "+":
+            return parse(data, x) + parse(data, y)
+        elif operand == "-":
+            return parse(data, x) - parse(data, y)
+        elif operand == "*":
+            return parse(data, x) * parse(data, y)
+        elif operand == "/":
+            return int(parse(data, x) / parse(data, y))
+
+def reverse_calc(data, value, key):
+    if key == "humn":
+        return value
+    elif data[key].isnumeric():
+        return int(data[key])
+    elif data[key].count(" ") == 2:
+        x, operand, y = data[key].split(" ")
+        in_x = in_tree(data, x, "humn")
+        if operand == "+":
+            if in_x:
+                return reverse_calc(data, value-parse(data, y), x)
+            else:
+                return reverse_calc(data, value-parse(data, x), y)
+        elif operand == "-":
+            if in_x:
+                return reverse_calc(data, value+parse(data, y), x)
+            else:
+                return reverse_calc(data, parse(data, x)-value, y)
+        elif operand == "*":
+            if in_x:
+                return reverse_calc(data, int(value/parse(data, y)), x)
+            else:
+                return reverse_calc(data, int(value/parse(data, x)), y)
+        elif operand == "/":
+            if in_x:
+                return reverse_calc(data, value*parse(data, y), x)
+            else:
+                return reverse_calc(data, int(parse(data, x)/value), y)
+
+def calculate(data):
+    return parse(data, "root")
+
+with open("21.txt") as f:
+    lines = f.read().splitlines()
+
+data = {
+    line.split(": ")[0]: line.split(": ")[1]
+    for line in lines
+}
+
+print(calculate(data))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
