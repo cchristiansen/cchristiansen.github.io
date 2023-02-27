@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-02-27 Mon 19:52 -->
+<!-- 2023-02-27 Mon 19:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Advent of Code 2022 day 22. Christian Christiansen.</title>
@@ -17,12 +17,13 @@
 <div id="content">
 <h1 class="title">Advent of Code 2022 day 22</h1>
 <p>
-Part 2 was incredibly painful.
+Part 2 was incredibly painful. Maybe hand-coding <code>if</code> statements isn’t the most
+sensible idea.
 </p>
 
-<div id="outline-container-org68e4f92" class="outline-2">
-<h2 id="org68e4f92">Part 1</h2>
-<div class="outline-text-2" id="text-org68e4f92">
+<div id="outline-container-orge782da6" class="outline-2">
+<h2 id="orge782da6">Part 1</h2>
+<div class="outline-text-2" id="text-orge782da6">
 <div class="org-src-container">
 <pre class="src src-python">def get_card(data):
     return data.splitlines()[:-2]
@@ -60,7 +61,6 @@ def change_direction(instruction, direction):
     else:
         return (int(instruction), direction)
 
-
 def get_answer(card, instructions):
     def valid(to, direction):
         row, col = to
@@ -78,7 +78,6 @@ def get_answer(card, instructions):
             return to
         elif card[row][col] == " ":
             return next_move(to, direction)
-
 
     def next_move(start, direction):
         row, col = start
@@ -100,7 +99,6 @@ def get_answer(card, instructions):
         elif to is False:
             return start
 
-
     position = next_move((0, 0), 0)
     direction = 0
     for instruction in get_instructions(instructions):
@@ -115,9 +113,9 @@ print(get_answer(card, instructions))
 </div>
 </div>
 
-<div id="outline-container-org9ffcfcc" class="outline-2">
-<h2 id="org9ffcfcc">Part 2</h2>
-<div class="outline-text-2" id="text-org9ffcfcc">
+<div id="outline-container-orgcb1bbd7" class="outline-2">
+<h2 id="orgcb1bbd7">Part 2</h2>
+<div class="outline-text-2" id="text-orgcb1bbd7">
 <div class="org-src-container">
 <pre class="src src-python"># Not going to bother generalising
 def get_face(row, col):
@@ -186,7 +184,6 @@ def change_direction(instruction, direction):
         return (int(instruction[1:]), (direction-1)%4)
     else:
         return (int(instruction), direction)
-
 
 def get_answer(card, instructions):
     def next_move(start, direction):
