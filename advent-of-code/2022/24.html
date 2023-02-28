@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-02-28 Tue 13:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 24. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 24."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 24</h1>
+<p>
+Use breadth-first search. Wasn’t as painful as I had anticipated. Luckily I had
+abstracted enough in part 1 so that part 2 didn’t require any change to the
+underlying logic.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">with open("24.txt") as f:
+    data = f.read()
+
+def get_board(data):
+    return [
+        list(line) for line in data.splitlines()
+    ]
+
+def get_blizzards(board):
+    blizzards = dict()
+    for row in range(len(board)):
+        for col in range(len(board[0])):
+            if board[row][col] in ("&gt;", "v", "&lt;", "^"):
+                blizzards[(row, col)] = {board[row][col]}
+    return blizzards
+
+def get_walls(board):
+    return [
+        (row, col)
+        for row in range(len(board))
+        for col in range(len(board[0]))
+        if board[row][col] == "#"
+    ]
+
+blizzard_movement = {
+    "&gt;": (0, 1),
+    "v": (1, 0),
+    "&lt;": (0, -1),
+    "^": (-1, 0),
+    " ": (0, 0),
+}
+
+def add_movement(x, y):
+    a, b = x
+    c, d = y
+    return (a+c, b+d)
+
+def get_answer(board, blizzards, walls):
+    def is_within_board(pos):
+        row, col = pos
+        if row &lt; 0 or row &gt;= len(board):
+            return False
+        elif col &lt; 0 or col &gt;= len(board[0]):
+            return False
+        return True
+
+    def within_board(pos):
+        row, col = pos
+        if row &lt; 0 or row &gt;= len(board):
+            return (row % len(board), col)
+        elif col &lt; 0 or col &gt;= len(board[0]):
+            return (row, col % len(board[0]))
+        return pos
+
+    def move_blizzard(pos, blizzard):
+        new_pos = within_board(add_movement(pos, blizzard_movement[blizzard]))
+        if new_pos in walls:
+            return move_blizzard(new_pos, blizzard)
+        return new_pos
+
+    def move_blizzards(blizzard_positions):
+        new_blizzards = dict()
+        for pos, blizzards in blizzard_positions.items():
+            for blizzard in blizzards:
+                new_pos = move_blizzard(pos, blizzard)
+                if new_pos in new_blizzards:
+                    new_blizzards[new_pos].add(blizzard)
+                else:
+                    new_blizzards[new_pos] = {blizzard}
+        return new_blizzards
+
+    def valid_moves(pos):
+        for move in "&gt;v&lt;^ ":
+            to = add_movement(pos, blizzard_movement[move])
+            if (
+                    is_within_board(to) and
+                    pos not in walls and
+                    pos not in blizzards
+            ):
+                yield to
+
+    def get_paths(paths):
+        new_paths = set()
+        for pos in paths:
+            for new_pos in valid_moves(pos):
+                new_paths.add(new_pos)
+        return new_paths
+
+    start = (0, 1)
+    end = (len(board)-1, len(board[0])-2)
+    time = 1
+
+    paths = {(start)}
+    going = True
+    while going:
+        time += 1
+        blizzards = move_blizzards(blizzards)
+        paths = get_paths(paths)
+        going = not any(path == end for path in paths)
+    # # Uncomment this for part 2
+    # paths = {(end)}
+    # returning = True
+    # while returning:
+    #     time += 1
+    #     blizzards = move_blizzards(blizzards)
+    #     paths = get_paths(paths)
+    #     returning = not any(path == start for path in paths)
+    # paths = {(start)}
+    # going_back = True
+    # while going_back:
+    #     time += 1
+    #     blizzards = move_blizzards(blizzards)
+    #     paths = get_paths(paths)
+    #     going_back = not any(path == end for path in paths)
+    return time
+
+board = get_board(data)
+blizzards = get_blizzards(board)
+walls = get_walls(board)
+
+print(get_answer(board, blizzards, walls))
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
