@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-02-27 Mon 19:57 -->
+<!-- 2023-02-28 Tue 15:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Advent of Code 2022 day 22. Christian Christiansen.</title>
@@ -21,9 +21,17 @@ Part 2 was incredibly painful. Maybe hand-coding <code>if</code> statements isn�
 sensible idea.
 </p>
 
-<div id="outline-container-orge782da6" class="outline-2">
-<h2 id="orge782da6">Part 1</h2>
-<div class="outline-text-2" id="text-orge782da6">
+<p>
+It appears it wasn’t just me who found it painful:
+</p>
+<ul class="org-ul">
+<li><p><a href="https://youtu.be/sXVTvOuALHs?t=608">Johnathon Paulson’s reaction</a>;</p></li>
+<li><p><a href="https://youtu.be/oe6DvImL3k8?t=1274">Neil Thistlewaite’s reaction</a>.</p></li>
+</ul>
+
+<div id="outline-container-orgff1d26b" class="outline-2">
+<h2 id="orgff1d26b">Part 1</h2>
+<div class="outline-text-2" id="text-orgff1d26b">
 <div class="org-src-container">
 <pre class="src src-python">def get_card(data):
     return data.splitlines()[:-2]
@@ -113,9 +121,9 @@ print(get_answer(card, instructions))
 </div>
 </div>
 
-<div id="outline-container-orgcb1bbd7" class="outline-2">
-<h2 id="orgcb1bbd7">Part 2</h2>
-<div class="outline-text-2" id="text-orgcb1bbd7">
+<div id="outline-container-org1c7b005" class="outline-2">
+<h2 id="org1c7b005">Part 2</h2>
+<div class="outline-text-2" id="text-org1c7b005">
 <div class="org-src-container">
 <pre class="src src-python"># Not going to bother generalising
 def get_face(row, col):
