@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-02-28 Tue 14:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advent of Code 2022 day 25. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My advent of code 2022 solutions. Written in Python. Day 25."
+ />
+<link rel="stylesheet" type="text/css" href="../../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Advent of Code 2022 day 25</h1>
+<p>
+A nice and easy end to the puzzles. I look forward to next year!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">from math import ceil
+
+with open("25.txt") as f:
+    lines = f.read().splitlines()
+
+snafu_to_dec_char = {
+    "2": 2,
+    "1": 1,
+    "0": 0,
+    "-": -1,
+    "=": -2,
+}
+
+dec_to_snafu_char = {
+    2: "2",
+    1: "1",
+    0: "0",
+    -1: "-",
+    -2: "=",
+}
+
+def snafu_to_dec(line):
+    dec = 0
+    power = 0
+    for coeff in reversed(line):
+        dec += snafu_to_dec_char[coeff]*(5**power)
+        power += 1
+    return dec
+
+def dec_to_snafu(x):
+    def get_coeffs(x):
+        coeffs = []
+        max_power = ceil(x**(1/5))
+        for power in reversed(range(max_power)):
+            coeff = x // 5**power
+            coeffs.append(coeff)
+            x -= (coeff*(5**power))
+        return coeffs
+
+    def carry_overs(coeffs):
+        new_coeffs = [0] + coeffs
+        for i in range(len(new_coeffs)):
+            while new_coeffs[-i] &gt; 2:
+                new_coeffs[-i-1] += 1
+                new_coeffs[-i] -= 5
+        return new_coeffs
+
+    coeffs = get_coeffs(x)
+    latest_coeffs = carry_overs(coeffs)
+    return "".join(dec_to_snafu_char[x] for x in latest_coeffs).lstrip("0")
+
+print(dec_to_snafu(sum(snafu_to_dec(line) for line in lines)))
+</pre>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
