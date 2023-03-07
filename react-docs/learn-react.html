@@ -1,0 +1,896 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-03-07 Tue 17:14 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>React Docs: Learn React. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My notes for Learn React, from the React Docs."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">React Docs: Learn React</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd20019a">Describing the UI</a>
+<ul>
+<li><a href="#orgd4fa057">Your First Component</a></li>
+<li><a href="#orgd0aeecd">Writing Markup with JSX</a></li>
+<li><a href="#org6c72383">Rendering Lists</a></li>
+</ul>
+</li>
+<li><a href="#org0930437">Adding Interactivity</a>
+<ul>
+<li><a href="#org1084004">Responding to Events</a></li>
+<li><a href="#orgb63912e">Render and Commit</a></li>
+<li><a href="#org13960cb">Updating Objects in State</a></li>
+<li><a href="#org366166f">Updating Arrays in State</a></li>
+</ul>
+</li>
+<li><a href="#orgacca6d2">Managing State</a>
+<ul>
+<li><a href="#org541318e">Choosing the State Structure</a></li>
+<li><a href="#org817a140">Preserving and Resetting State</a></li>
+<li><a href="#org76bf7bd">Extracting State Logic into a Reducer</a></li>
+<li><a href="#org139c411">Passing Data Deeply with Context</a></li>
+<li><a href="#org289ef3b">Scaling Up with Reducer and Context</a></li>
+</ul>
+</li>
+<li><a href="#orgdef8469">Escape Hatches</a>
+<ul>
+<li><a href="#org06f8928">Manipulating the DOM with Refs</a></li>
+<li><a href="#org80e540d">Synchronizing with Effects</a></li>
+<li><a href="#org2edce06">You Might Not Need An Effect</a></li>
+<li><a href="#orga4d09e7">Lifecycle of Reactive Effects</a></li>
+<li><a href="#org12ebcc7">Removing Effect Dependencies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd20019a" class="outline-2">
+<h2 id="orgd20019a"><a href="https://beta.reactjs.org/learn/describing-the-ui">Describing the UI</a></h2>
+<div class="outline-text-2" id="text-orgd20019a">
+</div>
+<div id="outline-container-orgd4fa057" class="outline-3">
+<h3 id="orgd4fa057"><a href="https://beta.reactjs.org/learn/your-first-component">Your First Component</a></h3>
+<div class="outline-text-3" id="text-orgd4fa057">
+<p>
+It is possible to use React for only ‘sprinkles of interactivity’.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd0aeecd" class="outline-3">
+<h3 id="orgd0aeecd"><a href="https://beta.reactjs.org/learn/writing-markup-with-jsx">Writing Markup with JSX</a></h3>
+<div class="outline-text-3" id="text-orgd0aeecd">
+<p>
+For historical reasons, <code>aria-*</code> and <code>data-*</code> attributes are written as in HTML
+with dashes, and not in camelCase.
+</p>
+</div>
+</div>
+<div id="outline-container-org6c72383" class="outline-3">
+<h3 id="org6c72383"><a href="https://beta.reactjs.org/learn/rendering-lists">Rendering Lists</a></h3>
+<div class="outline-text-3" id="text-org6c72383">
+<p>
+Arrow functions implicitly return the expression right after <code>=&gt;</code>, so you don’t
+need a <code>return</code> statement. However, you must write <code>return</code> explicitly if your
+<code>=&gt;</code> is followed by a <code>{</code> curly brace. Arrow functions containing <code>=&gt; {</code> are
+said to have a ‘block body’.
+</p>
+
+<p>
+For creating keys: If your data is generated and persisted locally (e.g. notes
+in a note-taking app), use an incrementing counter, <code>crypto.randomUUID()</code> or a
+package like <code>uuid</code> when creating items.
+</p>
+
+<p>
+<b>Rules of keys</b>
+</p>
+<ul class="org-ul">
+<li><p>Keys must be unique among siblings. However, it’s okay to use the same keys
+for JSX nodes in different arrays.</p></li>
+<li><p>Keys must not change or that defeats their purpose! Don’t generate them while
+rendering.</p></li>
+</ul>
+
+<p>
+React will use the item’s index if you don’t specify a key at all. But the
+order in which you render items will change over time if an item is inserted,
+deleted, or if the array gets reordered.
+</p>
+
+<p>
+Do not generate keys on the fly, e.g. with <code>key={Math.random()}</code>.
+This will cause keys to never match up between renders, leading to all your
+components and DOM being recreated every time. Not only is this slow, but it
+will also lose any user input inside the list items.
+</p>
+
+<p>
+Note that your components won’t receive <code>key</code> as a prop. It’s only used as a
+hint by React itself.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0930437" class="outline-2">
+<h2 id="org0930437"><a href="https://beta.reactjs.org/learn/adding-interactivity">Adding Interactivity</a></h2>
+<div class="outline-text-2" id="text-org0930437">
+</div>
+<div id="outline-container-org1084004" class="outline-3">
+<h3 id="org1084004"><a href="https://beta.reactjs.org/learn/responding-to-events">Responding to Events</a></h3>
+<div class="outline-text-3" id="text-org1084004">
+<p>
+Can stop event propogation with <code>e.stopPropagation();</code>. Can also stop default
+browser behaviour (i.e. stopping refresh after submitting forms) with
+<code>e.preventDefault()</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb63912e" class="outline-3">
+<h3 id="orgb63912e"><a href="https://beta.reactjs.org/learn/render-and-commit">Render and Commit</a></h3>
+<div class="outline-text-3" id="text-orgb63912e">
+<p>
+The default behavior of rendering all components nested within the updated
+component is not optimal for performance if the updated component is very high
+in the tree. See the Performance section for more details.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org13960cb" class="outline-3">
+<h3 id="org13960cb"><a href="https://beta.reactjs.org/learn/updating-objects-in-state">Updating Objects in State</a></h3>
+<div class="outline-text-3" id="text-org13960cb">
+<p>
+Note that the &#x2026; spread syntax is ‘shallow’ – it only copies things one level
+deep. This makes it fast, but it also means that if you want to update a nested
+property, you’ll have to use it more than once.
+</p>
+
+<p>
+Square brackets inside your object definition specify a property with dynamic
+name. This can be used to create a single event handler for multiple fields:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">import { useState } from 'react';
+
+export default function Form() {
+  const [person, setPerson] = useState({
+    firstName: 'Barbara',
+    lastName: 'Hepworth',
+    email: 'bhepworth@sculpture.com'
+  });
+
+  function handleChange(e) {
+    setPerson({
+      ...person,
+      [e.target.name]: e.target.value
+    });
+  }
+
+  return (
+    &lt;&gt;
+      &lt;label&gt;
+        First name:
+        &lt;input
+          name="firstName"
+          value={person.firstName}
+          onChange={handleChange}
+        /&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        Last name:
+        &lt;input
+          name="lastName"
+          value={person.lastName}
+          onChange={handleChange}
+        /&gt;
+      &lt;/label&gt;
+      &lt;label&gt;
+        Email:
+        &lt;input
+          name="email"
+          value={person.email}
+          onChange={handleChange}
+        /&gt;
+      &lt;/label&gt;
+      &lt;p&gt;
+        {person.firstName}{' '}
+        {person.lastName}{' '}
+        ({person.email})
+      &lt;/p&gt;
+    &lt;/&gt;
+  );
+}
+</pre>
+</div>
+
+<p>
+For nested objects:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">setPerson({
+  ...person, // Copy other fields
+  artwork: { // but replace the artwork
+    ...person.artwork, // with the same one
+    city: 'New Delhi' // but in New Delhi!
+  }
+});
+</pre>
+</div>
+
+<p>
+Although objects are not technically nested, they are separate objects which
+point at each other.
+</p>
+
+<p>
+<a href="https://github.com/immerjs/use-immer">Immer</a> allows you to write convenient but mutating syntax which takes care of
+producing copies for you. With Immer, this is valid functioning code:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">updatePerson(draft =&gt; {
+  draft.artwork.city = 'Lagos';
+});
+</pre>
+</div>
+
+<p>
+To try Immer:
+</p>
+<ol class="org-ol">
+<li><p>Run <code>npm install use-immer</code> to add Immer as a dependency</p></li>
+<li><p>Then replace <code>import { useState } from 'react'</code> with
+<code>import { useImmer } from 'use-immer'</code></p></li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-org366166f" class="outline-3">
+<h3 id="org366166f"><a href="https://beta.reactjs.org/learn/updating-arrays-in-state">Updating Arrays in State</a></h3>
+<div class="outline-text-3" id="text-org366166f">
+<p>
+In Javascript, <code>slice</code> is how to select a part of an array.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">import { useState } from 'react';
+
+let nextId = 3;
+const initialArtists = [
+  { id: 0, name: 'Marta Colvin Andrade' },
+  { id: 1, name: 'Lamidi Olonade Fakeye'},
+  { id: 2, name: 'Louise Nevelson'},
+];
+
+export default function List() {
+  const [name, setName] = useState('');
+  const [artists, setArtists] = useState(
+    initialArtists
+  );
+
+  function handleClick() {
+    const insertAt = 1; // Could be any index
+    const nextArtists = [
+      // Items before the insertion point:
+      ...artists.slice(0, insertAt),
+      // New item:
+      { id: nextId++, name: name },
+      // Items after the insertion point:
+      ...artists.slice(insertAt)
+    ];
+    setArtists(nextArtists);
+    setName('');
+  }
+
+  return (
+    &lt;&gt;
+      &lt;h1&gt;Inspiring sculptors:&lt;/h1&gt;
+      &lt;input
+        value={name}
+        onChange={e =&gt; setName(e.target.value)}
+      /&gt;
+      &lt;button onClick={handleClick}&gt;
+        Insert
+      &lt;/button&gt;
+      &lt;ul&gt;
+        {artists.map(artist =&gt; (
+          &lt;li key={artist.id}&gt;{artist.name}&lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/&gt;
+  );
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgacca6d2" class="outline-2">
+<h2 id="orgacca6d2"><a href="https://beta.reactjs.org/learn/managing-state">Managing State</a></h2>
+<div class="outline-text-2" id="text-orgacca6d2">
+</div>
+<div id="outline-container-org541318e" class="outline-3">
+<h3 id="org541318e"><a href="https://beta.reactjs.org/learn/choosing-the-state-structure">Choosing the State Structure</a></h3>
+<div class="outline-text-3" id="text-org541318e">
+<ol class="org-ol">
+<li><p>Group related state.</p></li>
+<li><p>Avoid contradictions in state.</p></li>
+<li><p>Avoid redundant state.</p></li>
+<li><p>Avoid duplication in state.</p></li>
+<li><p>Avoid deeply nested state.</p></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org817a140" class="outline-3">
+<h3 id="org817a140"><a href="https://beta.reactjs.org/learn/preserving-and-resetting-state">Preserving and Resetting State</a></h3>
+<div class="outline-text-3" id="text-org817a140">
+<p>
+If you want to preserve the state between re-renders, the structure of your
+tree needs to ‘match up’ from one render to another. Hence you should never
+nest component function definitions, because otherwise each time the parent is
+re-rendered, so are any nested components. Always declare component functions
+at the top level, and don’t nest their definitions.
+</p>
+
+<p>
+Keys are not globally unique. They only specify the position
+<i>within the parent</i>.
+</p>
+
+<p>
+Can use keys to reset state.
+</p>
+
+<p>
+To preserve state for removed apps, could:
+</p>
+<ol class="org-ol">
+<li><p>render everything but hide everything aside from the current one with CSS.
+This is slow and stupid.</p></li>
+<li><p>lift the state up.</p></li>
+<li><p>save to (and load from) <code>localStorage</code>. This could be clever.</p></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org76bf7bd" class="outline-3">
+<h3 id="org76bf7bd"><a href="https://beta.reactjs.org/learn/extracting-state-logic-into-a-reducer">Extracting State Logic into a Reducer</a></h3>
+<div class="outline-text-3" id="text-org76bf7bd">
+<p>
+A reducer takes two arguments, the current state and the action object, and it
+returns the next state.
+</p>
+
+<p>
+Example:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">const tasksReducer = (tasks, action) =&gt; {
+  if (action.type === "added") {
+    return [
+      ...tasks,
+      {
+        id: action.id,
+        text: action.text,
+        done: false,
+      },
+    ];
+  } else if (action.type === "changed"){
+    return tasks.map((t) =&gt; {
+      if (t.id === action.task.id) {
+        return action.task;
+      } else {
+        return t;
+      }
+    });
+  } else if (action.type === "deleted") {
+    return tasks.filter((t) =&gt; t.id !== action.id);
+  } else {
+    throw Error("Unknown action: " + action.type);
+  }
+}
+</pre>
+</div>
+
+<p>
+By convention, switch statements are used in reducers:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">const tasksReducer = (tasks, action) =&gt; {
+  switch (action.type) {
+    case "added": {
+      return [
+        ...tasks,
+        {
+          id: action.id,
+          text: action.text,
+          done: false,
+        },
+      ];
+    }
+    case "changed": {
+      return tasks.map((t) =&gt; {
+        if (t.id === action.task.id) {
+          return action.task;
+        } else {
+          return t;
+        }
+      });
+    }
+    case "deleted": {
+      return tasks.filter((t) =&gt; t.id !== action.id);
+    }
+    default: {
+      throw Error("Unknown action: " + action.type);
+    }
+  }
+}
+</pre>
+</div>
+
+<p>
+Reducers are named after <code>reduce</code> which takes the <i>result so far</i> and the
+<i>current item</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js">const arr = [1, 2, 3, 4, 5];
+const sum = arr.reduce(
+  (result, number) =&gt; result + number
+);
+return sum
+</pre>
+</div>
+
+<p>
+To use a reducer:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">import {useReducer} from "react";
+const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+</pre>
+</div>
+
+<p>
+When reducers are used, event handlers only specify <i>what happened</i> by
+dispatching actions, and the reducer function determines
+<i>how the state updates</i> in reponse to them.
+</p>
+
+<p>
+The Immer reducer is called <code>useImmerReducer</code>. Immer provides a special <code>draft</code>
+object which is safe to mutate.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">const tasksReducer = (draft, action) =&gt; {
+  switch (action.type) {
+    case "added": {
+      draft.push({
+        id: action.id,
+        text: action.text,
+        done: false,
+      }),
+      break;
+    }
+    case "changed": {
+      const index = draft.findIndex((t) =&gt; t.id === action.task.id);
+      draft[index] = action.task;
+      break;
+    }
+    case "deleted": {
+      return tasks.filter((t) =&gt; t.id !== action.id);
+    }
+    default: {
+      throw Error("Unknown action: " + action.type);
+    }
+  }
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org139c411" class="outline-3">
+<h3 id="org139c411"><a href="https://beta.reactjs.org/learn/passing-data-deeply-with-context">Passing Data Deeply with Context</a></h3>
+<div class="outline-text-3" id="text-org139c411">
+<p>
+Context allows a parent to make information available to any components in the
+tree below it, no matter how deep, without passing it explicitly through props.
+</p>
+
+<p>
+For context, on top of <code>useContext</code>, a context provider is also required.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">import { createContext } from "react";
+
+const LevelContext = createContext(1);
+
+const Heading = ({ children }) =&gt;  {
+  const level = useContext(LevelContext);
+  // ....
+}
+
+const Section = ({ children }) {
+  return  (
+    &lt;section className="section"&gt;
+      &lt;LevelContext.Provider value={level + 1}&gt;
+        {children}
+      &lt;/LevelContext.Provider&gt;
+    &lt;/section&gt;
+  );
+}
+</pre>
+</div>
+
+<p>
+Contexts are especially useful for:
+</p>
+<ol class="org-ol">
+<li><p>theming,</p></li>
+<li><p>making the current account available,</p></li>
+<li><p>routing,</p></li>
+<li><p>managing state. It is common to use a reducer together with context.</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org289ef3b" class="outline-3">
+<h3 id="org289ef3b"><a href="https://beta.reactjs.org/learn/scaling-up-with-reducer-and-context">Scaling Up with Reducer and Context</a></h3>
+<div class="outline-text-3" id="text-org289ef3b">
+<p>
+Need to separate contexts for state and the dispatch:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">import { createContext } from "react";
+
+export const TasksContext = createContext(null);
+export const TasksDispatchContext = createContext(null);
+</pre>
+</div>
+
+<p>
+Then to provide them for the entire tree below:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">import { TasksContext, TasksDispatchContext } from "./TasksContext.jsx";
+
+export default TaskApp = () =&gt; {
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+  //...
+  return (
+    &lt;TasksContext.Provider value={tasks}&gt;
+      &lt;TasksDispatchContext.Provider value={dispatch}&gt;
+        ...
+      &lt;/TasksDispatchContext.Provider&gt;
+    &lt;/TasksContext.Provider&gt;
+  );
+}
+</pre>
+</div>
+
+<p>
+Can move all of the wiring into one file:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">export TasksProvider = ({ children }) =&gt; {
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+
+  return (
+    &lt;TasksContext.Provider value={tasks}&gt;
+      &lt;TasksDispatchContext.Provider value={dispatch}&gt;
+        {children}
+      &lt;/TasksDispatchContext.Provider&gt;
+    &lt;/TasksContext.Provider&gt;
+  );
+}
+</pre>
+</div>
+
+<p>
+Then <code>TaskApp</code> looks like:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">import { TasksProvider } from "./TasksContext.jsx";
+
+export default TaskApp = () =&gt; {
+  return (
+    &lt;TasksProvider&gt;
+      ...
+    &lt;/TasksProvider&gt;
+  );
+}
+</pre>
+</div>
+
+<p>
+Can create custom hooks:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">export useTasks = () =&gt; {
+  return useContext(TasksContext);
+}
+
+export useTasksDispatch = () =&gt; {
+  return useContext(TasksContextDispatch);
+}
+</pre>
+</div>
+
+<p>
+Then when a component needs to read context, it can do it through these
+functions:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">const tasks = useTasks();
+const dispatch = useTasksDispatch();
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdef8469" class="outline-2">
+<h2 id="orgdef8469"><a href="https://beta.reactjs.org/learn/escape-hatches">Escape Hatches</a></h2>
+<div class="outline-text-2" id="text-orgdef8469">
+<p>
+When you want a component to ‘remember’ some information, but you don’t want
+that information to trigger new renders, you can use a <i>ref</i>:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">const ref = useRef(0);
+</pre>
+</div>
+
+<p>
+There are two common cases where you do not need effects:
+</p>
+<ol class="org-ol">
+<li><p>transforming data for rendering,</p></li>
+<li><p>handling user events.</p></li>
+</ol>
+</div>
+
+<div id="outline-container-org06f8928" class="outline-3">
+<h3 id="org06f8928"><a href="https://beta.reactjs.org/learn/manipulating-the-dom-with-refs">Manipulating the DOM with Refs</a></h3>
+<div class="outline-text-3" id="text-org06f8928">
+<p>
+React does not let a component access the DOM nodes of other components, not
+even for its own children; components that want to expose their DOM nodes have
+to opt in to that behaviour.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js">const MyInput = forwardRef((props, ref) =&gt; {
+  return &lt;input {...props} ref={ref} /&gt;;
+});
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org80e540d" class="outline-3">
+<h3 id="org80e540d"><a href="https://beta.reactjs.org/learn/synchronizing-with-effects">Synchronizing with Effects</a></h3>
+<div class="outline-text-3" id="text-org80e540d">
+<p>
+<code>useEffect</code> without a dependency array with run after every re-render.
+<code>useEffect</code> with an empty dependency array only runs on mount.
+</p>
+
+<p>
+To clean up, use <code>return</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">useEffect(() =&gt; {
+  const connection = createConnection();
+  connection.connect();
+  return () =&gt; {
+    connection.disconnect();
+  };
+}, []);
+</pre>
+</div>
+
+<p>
+When React runs in development mode, it seeks out bugs, so in the above case
+will connect, then disconnect, the re-connect again. This does not occur in
+production.
+</p>
+
+<p>
+If your Effect fetches something, the cleanup function should either abort the
+fetch or ignore its result:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">useEffect(() =&gt; {
+  let ignore = false;
+
+  async function startFetching() {
+    const json = await fetchTodos(userId);
+    if (!ignore) {
+      setTodos(json);
+    }
+  }
+
+  startFetching();
+
+  return () =&gt; {
+    ignore = true;
+  };
+}, [userId]);
+</pre>
+</div>
+
+<p>
+The React documentation states that data fetching through React isn’t the
+quickest, and even suggests using a more fully featured framework such as
+Next.js to deal with data fetching. Should I look into Next.js?
+</p>
+
+<p>
+Some logic should only run once when the application starts. You can put it
+outside your components:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">if (typeof window !== 'undefined') { // Check if we're running in the browser.
+  checkAuthToken();
+  loadDataFromLocalStorage();
+}
+
+const App = () =&gt; {
+  // ...
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2edce06" class="outline-3">
+<h3 id="org2edce06"><a href="https://beta.reactjs.org/learn/you-might-not-need-an-effect">You Might Not Need An Effect</a></h3>
+<div class="outline-text-3" id="text-org2edce06">
+<p>
+Cache expensive calculations with <code>useMemo</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">const TodoList = ({ todos, filter }) =&gt; {
+  const [newTodo, setNewTodo] = useState('');
+  const visibleTodos = useMemo(() =&gt; {
+    // Does not re-run unless todos or filter change
+    return getFilteredTodos(todos, filter);
+  }, [todos, filter]);
+  // ...
+}
+</pre>
+</div>
+
+<p>
+To find out how expensive a calculations is, use <code>console.time</code> and
+<code>console.timeEnd</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">console.time('filter array');
+const visibleTodos = getFilteredTodos(todos, filter);
+console.timeEnd('filter array');
+</pre>
+</div>
+
+<p>
+Do not chain <code>useEffect</code> as it is incredibly inefficient, and a sign of bad
+code.
+</p>
+
+<p>
+To subscribe to an external store, use <code>useSyncExternalStore</code>.
+</p>
+
+<p>
+To fix race conditions, use ignore.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">function SearchResults({ query }) {
+  const [results, setResults] = useState([]);
+  const [page, setPage] = useState(1);
+  useEffect(() =&gt; {
+    let ignore = false;
+    fetchResults(query, page).then(json =&gt; {
+      if (!ignore) {
+        setResults(json);
+      }
+    });
+    return () =&gt; {
+      ignore = true;
+    };
+  }, [query, page]);
+
+  function handleNextPageClick() {
+    setPage(page + 1);
+  }
+  // ...
+}
+</pre>
+</div>
+
+<p>
+Consider building own Effect to make data fetching better:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">function SearchResults({ query }) {
+  const [page, setPage] = useState(1);
+  const params = new URLSearchParams({ query, page });
+  const results = useData(`/api/search?${params}`);
+
+  function handleNextPageClick() {
+    setPage(page + 1);
+  }
+  // ...
+}
+
+function useData(url) {
+  const [data, setData] = useState(null);
+  useEffect(() =&gt; {
+    let ignore = false;
+    fetch(url)
+      .then(response =&gt; response.json())
+      .then(json =&gt; {
+        if (!ignore) {
+          setData(json);
+        }
+      });
+    return () =&gt; {
+      ignore = true;
+    };
+  }, [url]);
+  return data;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga4d09e7" class="outline-3">
+<h3 id="orga4d09e7"><a href="https://beta.reactjs.org/learn/lifecycle-of-reactive-effects">Lifecycle of Reactive Effects</a></h3>
+<div class="outline-text-3" id="text-orga4d09e7">
+<p>
+All values inside the component (including props, state, and variables in your
+component’s body) are reactive. Any reactive value can change on a re-render,
+so you need to include reactive values as Effect’s dependencies.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org12ebcc7" class="outline-3">
+<h3 id="org12ebcc7"><a href="https://beta.reactjs.org/learn/removing-effect-dependencies">Removing Effect Dependencies</a></h3>
+<div class="outline-text-3" id="text-org12ebcc7">
+<p>
+Object and function dependencies create a risk that your Effect will
+re-synchronize more often than you need. Whenever possible, avoid objects and
+functions as your Effect’s dependencies. Instead, try moving them outside the
+component, inside the Effect, or extracting primitive values out of them.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-03-07 Tue 17:14 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>React Docs: Get Started. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="My notes for Get started, from the React Docs."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">React Docs: Get Started</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org4e8b578">Quick Start</a>
+<ul>
+<li><a href="#org8495af1">Tutorial: Tic-Tac-Toe</a></li>
+<li><a href="#org4accfbc">Thinking in React</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org4e8b578" class="outline-2">
+<h2 id="org4e8b578"><a href="https://beta.reactjs.org/learn">Quick Start</a></h2>
+<div class="outline-text-2" id="text-org4e8b578">
+<p>
+React component names must start with a capital letter.
+</p>
+
+<p>
+JSX has to be wrapped in a shared parent, e.g. <code>&lt;&gt;...&lt;/&gt;</code>.
+</p>
+
+<p>
+<code>className</code> specifies CSS class.
+</p>
+
+<p>
+Curly braces allow an escape back into JavaScript.
+</p>
+
+<p>
+Conditionals may be written in long form,
+</p>
+<div class="org-src-container">
+<pre class="src src-js">let content;
+if (isLoggedIn) {
+  content = &lt;AdminPanel /&gt;;
+} else {
+  content = &lt;LoginForm /&gt;;
+}
+return (
+  &lt;div&gt;
+    {content}
+  &lt;/div&gt;
+);
+</pre>
+</div>
+<p>
+using the conditional <code>?</code> operator,
+</p>
+<div class="org-src-container">
+<pre class="src src-js">&lt;div&gt;
+  {isLoggedIn ? (
+    &lt;AdminPanel /&gt;
+  ) : (
+    &lt;LoginForm /&gt;
+  )}
+&lt;/div&gt;
+</pre>
+</div>
+<p>
+or using the logical <code>&amp;&amp;</code> syntax.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">&lt;div&gt;
+  {isLoggedIn &amp;&amp; &lt;AdminPanel /&gt;}
+&lt;/div&gt;
+</pre>
+</div>
+
+<p>
+React relies on keys for keeping track of elements in a list.
+</p>
+
+<p>
+An example of an <i>event handler</i>:
+</p>
+<div class="org-src-container">
+<pre class="src src-js">function MyButton() {
+  function handleClick() {
+    alert('You clicked me!');
+  }
+
+  return (
+    &lt;button onClick={handleClick}&gt;
+      Click me
+    &lt;/button&gt;
+  );
+}
+</pre>
+</div>
+
+<p>
+Functions starting with <code>use</code> are called <i>Hooks</i>.
+</p>
+</div>
+
+<div id="outline-container-org8495af1" class="outline-3">
+<h3 id="org8495af1"><a href="https://beta.reactjs.org/learn/tutorial-tic-tac-toe">Tutorial: Tic-Tac-Toe</a></h3>
+<div class="outline-text-3" id="text-org8495af1">
+<p>
+<code>export</code> makes a function accessible outside of its file. <code>default</code> informs
+other files that it’s the main function.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js">import { useState } from "react";
+
+const Square = ({ value, onSquareClick }) =&gt; {
+  return (
+    &lt;button className="square" onClick={onSquareClick}&gt;
+      {value}
+    &lt;/button&gt;
+  );
+}
+
+export default const Board = ({ xIsNext, squares, onPlay }) =&gt; {
+  const handleClick = (i) =&gt; {
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+
+    const nextSquares = squares.slice();
+    if (xIsNext) {
+      nextSquares[i] = "X";
+    } else {
+      nextSquares[i] = "O";
+    }
+    onPlay(nextSquares);
+  }
+
+  const winner = calculateWinner(squares)
+  let status;
+  if (winner) {
+    status = "Winner: " + winner;
+  } else {
+    status = "Next player: " + (xIsNext ? "X" : "O");
+  }
+
+  return (
+    &lt;&gt;
+      &lt;div className="board-row"&gt;
+        &lt;Square value={squares[0]} onSquareClick={() =&gt; handleClick(0)} /&gt;
+        &lt;Square value={squares[1]} onSquareClick={() =&gt; handleClick(1)} /&gt;
+        &lt;Square value={squares[2]} onSquareClick={() =&gt; handleClick(2)} /&gt;
+      &lt;/div&gt;
+      &lt;div className="board-row"&gt;
+        &lt;Square value={squares[3]} onSquareClick={() =&gt; handleClick(3)} /&gt;
+        &lt;Square value={squares[4]} onSquareClick={() =&gt; handleClick(4)} /&gt;
+        &lt;Square value={squares[5]} onSquareClick={() =&gt; handleClick(5)} /&gt;
+      &lt;/div&gt;
+      &lt;div className="board-row"&gt;
+        &lt;Square value={squares[6]} onSquareClick={() =&gt; handleClick(6)} /&gt;
+        &lt;Square value={squares[7]} onSquareClick={() =&gt; handleClick(7)} /&gt;
+        &lt;Square value={squares[8]} onSquareClick={() =&gt; handleClick(8)} /&gt;
+      &lt;/div&gt;
+    &lt;/&gt;
+  );
+}
+
+export default const Game = () =&gt; {
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = useState(0);
+  const xisNext = currentMove % 2 === 1;
+  const currentSquares = history[currentMove];
+
+  const handlePlay = (nextSquares) =&gt; {
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+  }
+
+  const jumpTo(nextMove) {
+    setCurrentMove(nextMove);
+  }
+
+  const moves = history.map((squares, move) =&gt; {
+    let description;
+    if (move &gt; 0) {
+      description = "Go to move #" + move;
+    } else {
+      description = "Go to game start";
+    }
+    return (
+      &lt;li key={move}&gt;
+        &lt;button onClick={() =&gt; jumpTo(move)}&gt;{description}&lt;/button&gt;
+      &lt;/li&gt;
+    );
+  });
+
+  return (
+    &lt;div className="game"&gt;
+      &lt;div className="game-board"&gt;
+        &lt;Board
+          xIsNext={xIsNext}
+          squares={currentSquares}
+          onPlay={handlePlay}
+        /&gt;
+      &lt;/div&gt;
+      &lt;div className="game-info"&gt;
+        &lt;&lt;ol&gt;{moves}&lt;/ol&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}
+
+const calculateWinner = (squares) =&gt; {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i &lt; lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (
+      squares[a] &amp;&amp; squares[a] === squares[b] &amp;&amp; squares[a] === squares[c]
+    ) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+</pre>
+</div>
+
+<p>
+Extra challenges:
+</p>
+<ol class="org-ol">
+<li><p>For the current move only, show ‘You are at move #&#x2026;’ instead of a button.</p></li>
+<li><p>Rewrite <code>Board</code> to use two loops to make the squares instead of hardcoding
+them.</p></li>
+<li><p>Add a toggle button that lets you sort the moves in either ascending or
+descending order.</p></li>
+<li><p>When someone wins, highlight the three squares that caused the wine (and
+when no one wins, display a message about the result being a draw).</p></li>
+<li><p>Display the location of each move in the format (col, row) in the move
+history list.</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org4accfbc" class="outline-3">
+<h3 id="org4accfbc"><a href="https://beta.reactjs.org/learn/thinking-in-react">Thinking in React</a></h3>
+<div class="outline-text-3" id="text-org4accfbc">
+<p>
+Props are like arguments you pass to a function. State is like a component’s
+memory.
+</p>
+
+<p>
+To think in React:
+</p>
+<ol class="org-ol">
+<li><p>Break the UI into a component hierarchy,</p></li>
+<li><p>Build a static version in React,</p></li>
+<li><p>Find the minimal but complete representation of UI state,</p></li>
+<li><p>Identify where your state should live,</p></li>
+<li><p>Add inverse data flow.</p></li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>

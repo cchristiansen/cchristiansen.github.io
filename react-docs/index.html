@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-03-07 Tue 17:16 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>React Docs. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<meta name="description" content="React is an open source JavaScript library for building user interfaces, developed by Meta (formerly Facebook) since 2011. Here, I seek to become better acquainted with my poison of choice. Having already covered the previous documentation, the notes below will cover the latest (as of March 2023) beta version of the documentation."
+ />
+<link rel="stylesheet" type="text/css" href="../main.css">
+</head>
+<body>
+<div id="content">
+<h1 class="title">React Docs</h1>
+<p>
+<a href="https://reactjs.org/">React</a> is an open source JavaScript library for building user interfaces,
+developed by Meta (formerly Facebook) since 2011. Here, I seek to become better
+acquainted with my poison of choice. Having already covered the previous
+documentation, the notes below cover the latest (as of March 2023) <a href="https://beta.reactjs.org/">beta</a>
+version of the documentation.
+</p>
+
+<p>
+Notes are separated into:
+</p>
+<ol class="org-ol">
+<li><p><a href="./get-started.html">Get started</a></p></li>
+<li><p><a href="./learn-react.html">Learn React</a></p></li>
+</ol>
+
+<div id="outline-container-orgf8a0e9c" class="outline-2">
+<h2 id="orgf8a0e9c">Insights</h2>
+<div class="outline-text-2" id="text-orgf8a0e9c">
+<p>
+Components must start with capital letters. Rename all component files to begin
+with capitals.
+</p>
+
+<p>
+Always use keys.
+</p>
+
+<p>
+Reminder to use square brackets for specifying properties with dynamic names.
+</p>
+
+<p>
+Immer is a revelation.
+</p>
+
+<p>
+Use reducers. Then, event handlers only specify what happened by dispatching
+actions, and the reducer function determines how the state updates in reponse
+to them.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">const tasksReducer = (tasks, action) =&gt; {
+  switch (action.type) {
+    case "added": {
+      return [
+        ...tasks,
+        {
+          id: action.id,
+          text: action.text,
+          done: false,
+        },
+      ];
+    }
+    case "changed": {
+      return tasks.map((t) =&gt; {
+        if (t.id === action.task.id) {
+          return action.task;
+        } else {
+          return t;
+        }
+      });
+    }
+    case "deleted": {
+      return tasks.filter((t) =&gt; t.id !== action.id);
+    }
+    default: {
+      throw Error("Unknown action: " + action.type);
+    }
+  }
+}
+</pre>
+</div>
+
+<p>
+Use contexts.
+</p>
+
+<p>
+Use contexts with reducers. The logic can be put into one file.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">export TasksProvider = ({ children }) =&gt; {
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+
+  return (
+    &lt;TasksContext.Provider value={tasks}&gt;
+      &lt;TasksDispatchContext.Provider value={dispatch}&gt;
+        {children}
+      &lt;/TasksDispatchContext.Provider&gt;
+    &lt;/TasksContext.Provider&gt;
+  );
+}
+</pre>
+</div>
+
+<p>
+Cache expensive calculations with <code>useMemo</code>.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="../details.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="../details.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
