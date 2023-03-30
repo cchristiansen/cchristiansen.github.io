@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-03-30 Thu 21:23 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Topological Spaces: Compactness in Metric Spaces. Christian Christiansen.</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christian Christiansen" />
+<link rel="stylesheet" type="text/css" href="../main.css">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://christianchristiansen.net/mathjax/tex-chtml.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Topological Spaces: Compactness in Metric Spaces</h1>
+<p>
+<b>Definition</b>
+Let \(R\) be a metric space and \(\epsilon\) any positive number. Then a set
+\(A \subseteq R\) is said to be an \(\epsilon\)​<i>-net</i> for a set \(M \subseteq R\) if,
+for every \(x \in M\) there is at least one point \(a \in A\) such that
+\(\rho(x, a) \leq \epsilon\).
+</p>
+
+<p>
+<b>Definition</b>
+Given a metric space \(R\) and a subset \(M \subseteq R\), suppose \(M\) has a
+<i>finite</i> \(\epsilon\)​-net for every \(\epsilon > 0\). Then \(M\) is said to be
+<i>totally bounded</i>.
+</p>
+
+<p>
+<b>Note</b>
+Example 5 shows that the Hilbert cube (or fundamental parallelepiped) is an
+infinite-dimensional totally bounded set.
+</p>
+
+<p>
+<b>Theorem 1</b>
+</p>
+<div class="theorem" id="org838dd6f">
+<p>
+Every countably compact metric space \(R\) is totally bounded.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org1ee1796">
+<p>
+Suppose \(R\) is not totally bounded, then there is an \(\epsilon_0 > 0\) such that
+\(R\) has no finite \(\epsilon_0\)​-net. Choose any point \(a_1 \in R\). Then \(R\)
+contains at least one point, say \(a_2\), such that \(\rho(a_1, a_2) >
+\epsilon_0\), since otherwise \(a_1\) would be an \(\epsilon_0\)​-net for \(R\).
+Moreover, \(R\) contains a point \(a_3\) such that \(\rho(a_1, a_3) > \epsilon_0\),
+\(\rho(a_2, a_3) > \epsilon_0\), since otherwise the pair \(a_1, a_2\)
+would be an \(\epsilon_0\)​-net for \(R\). More generally, once having found the
+points \(a_1, a_2, \ldots a_n\), we choose \(a_{n+1} \in R\) such that
+\(\rho(a_k, a_{n+1}) > \epsilon_0 \quad (k = 1, 2, \ldots, n)\). This
+construction gives an infinite sequence of distinct points
+\(a_1, a_2, \ldots, a_n, \ldots\) with no limit points, since
+\(\rho(a_j, a_k) > \epsilon_0\) if
+\(j \neq k\). But then \(R\) cannot be countably compact.
+</p>
+
+</div>
+
+<p>
+<b>Corollary 1</b>
+</p>
+<div class="theorem" id="org27a8f1b">
+<p>
+Every countably compact metric space has a countable everywhere dense subset
+and a countable base.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org755ebec">
+<p>
+Since \(R\) is totally bounded, by Theorem 1, \(R\) has a finite \((1/n)\)​-net for
+every \(n=1, 2, \ldots\). The union of all these nets is then a countably
+everywhere dense subset of \(R\). It follows from Theorem 5
+<a href="./09-topological-spaces-basic-concepts.html">Topological Spaces: Basic Concepts</a> that \(R\) has a countable base.
+</p>
+
+</div>
+
+<p>
+<b>Corollary 2</b>
+</p>
+<div class="theorem" id="orgbfd99a6">
+<p>
+Every countably compact metric space is compact.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orga08716d">
+<p>
+An immediate consequence of Corollary 1 and Theorem 9
+<a href="./10-compactness.html">Topological Spaces: Compactness</a>.
+</p>
+
+</div>
+
+<p>
+<b>Remark</b>
+Total boundedness is not sufficient for a metric space to be compact. The set
+of rational points in the interval \([0, 1]\) forms a metric space \(R\) which is
+totally bounded but not compact.
+</p>
+
+<p>
+<b>Theorem 2</b>
+</p>
+<div class="theorem" id="org3627e28">
+<p>
+A metric space \(R\) is compact if and only if it is totally bounded and compact.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgd2c4cde">
+<p>
+To see that compactness of \(R\) implies completeness of \(R\), we need only note
+that if \(R\) has a Cauchy sequence \(\{x_n\}\) with no limit, then \(\{x_n\}\) has
+no limit point in \(R\). Hence if \(R\) is compact, \(R\) is complete. By Theorem 1,
+if \(R\) is complete, \(R\) is totally bounded.
+</p>
+
+<p>
+Conversely, suppose \(R\) is totally bounded and complete, and let \(\{x_n\}\) be
+any infinite sequence of distinct points in \(R\). Let \(N_1\) be a finite \(1\)​-net
+for \(R\), and construct a closed sphere of radius 1 about every point of \(N_1\).
+Since these spheres cover \(R\) and there are infinitely many of them, at least
+one of the spheres, say \(S_1\), contains an infinite subsequence
+\[x_1^{(1)}, \ldots, x_n^{(1)}, \ldots\]
+of the sequence \(\{x_n\}\). Let \(N_2\) be a finite \(1/2\)​-net for \(R\), and
+construct a closed sphered of \(1/2\) for every point of \(N_2\). Then at least one
+of these spheres, say \(S_2\), contains an infinite subsequence
+\[x_1^{(2)}, \ldots, x_n^{(2)}, \ldots\]
+of the sequence \(\{x_n^{(1)\}\). Continue this construction indefinitely,
+where \(S_n\) has radius \(1/2^{n-1}\). Let \({S’}_n\) be the closed sphere with the
+same centre as \(S_n\) but with a radius \(r_n\) twice as large (i.e., equal to
+\(1/2^n\)). Then clearly
+\[{S’}_1 \subseteq {S’}_2 \subseteq \ldots \subseteq {S’}_n \subseteq \ldots,\]
+and moreover \(r_n \rightarrow 0\) as \(n \rightarrow \infty\). Since \(R\) is
+complete, it follows from the nested sphere theorem (Theorem 2, <a href="./07-complete-metric-spaces.html">Complete Metric Spaces</a>) that
+\[\cap_{n=1}^\infty {S’}_n \neq \emptyset.\]
+In fact, there is a point \(x_0 \in R\) such that
+\[\cap_{n=1}^\infty {S’}_n = \{x_0\}\]
+(recall Problem 3, <a href="./07-complete-metric-spaces.html">Complete Metric Spaces</a>). Clearly \(x_0\) is a limit point of
+the original sequence \(\{x_n\}\), since every neighbourhood of \(x_0\) contains
+some sphere \(S_k\) and hence some infinite subsequence \(\{x_n^{(k)}\}\).
+Therefore every infinite sequence \(\{x_n\}\) of distinct points of \(R\) has a
+limit point of \(R\). It follows that \(R\) is countably compact and hence compact,
+by Corollary 2.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 3</b>
+</p>
+<div class="theorem" id="org406794b">
+<p>
+A subset \(M\) of a complete metric space \(R\) is relatively compact if and only
+if it is totally bounded.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="org10c7fb3">
+<p>
+An immediate consequence of Theorem 2 and the fact that a closed subset of a
+complete metric space is itself complete.
+</p>
+
+</div>
+
+<p>
+<b>Remark</b>
+The utility of Theorem 3 stems from the fact it is usually easier to prove that
+a set is totally bounded than to give a direct proof of its relative
+compactness.
+</p>
+
+<p>
+<b>Definition</b>
+A family \(\Phi\) of functions \(\phi\) defined on a closed interval \([a, b]\) is
+said to be <i>uniformly bounded</i> if there exists a number \(K > 0\) such that
+\(|\phi(x)| \leq K\) for all \(x \in [a, b]\) and all \(\phi \in \Phi\).
+</p>
+
+<p>
+<b>Definition</b>
+A family \(\Phi\) of functions \(\phi\) defined a closed interval \([a, b]\) is said
+to be <i>equicontinuous</i> if, given any \(\epsilon > 0\), there exists a number
+\(\delta > 0\) such that \(|x’ - x’’| < \delta\) imples
+\(|\phi(x’) - \phi(x’’)| < \epsilon\) for all \(x’, x’’ \in [a, b]\) and all
+\(\phi \in \Phi\).
+</p>
+
+<p>
+<b>Theorem 4 (Arzelà)</b>
+</p>
+<div class="theorem" id="org41611cd">
+<p>
+A necessary and sufficient condition for a family \(\Phi\) of continuous
+functions \(\phi\) defined on a closed interval \([a, b]\) to be relatively compact
+in \(C_{[a, b]}\) is that \(\Phi\) be uniformly bounded and continuous.
+</p>
+
+</div>
+
+<p>
+<i>Proof</i>
+</p>
+<div class="proof" id="orgb278698">
+<p>
+We first prove necessity and then sufficiency.
+</p>
+
+<p>
+(Necessity.) Suppose \(\Phi\) is relatively compact in \(C_{[a, b]}\). Then by
+Theorem 3, it is totally bounded, so given any \(\epsilon > 0\), there is a
+finite \((\epsilon/3)\)​-net \(\phi_1, \ldots, \phi_n\) in \(\Phi\) (see Problem 1).
+Being a continuous function defined on a closed interval, each \(\phi_i\) is
+bounded:
+\[|\phi_i(x)| \leq K \quad (a \leq x \leq b).\]
+Let \(K = \max\{K_1, \ldots, K_n\} + \epsilon/3\). By the definition of an
+\((\epsilon/3)\)​-net, given any \(\phi \in \Phi\), there is at least one \(\phi_i\)
+such that
+\[\rho(\phi, \phi_i) = \max_{a \leq x \leq b} |\phi(x) = \phi_i(x)| \leq
+\epsilon/3.\]
+Therefore \(|\phi(x)| \leq |\phi_i(x)| + \epsilon/3 \leq K_i + \epsilon/3 \leq
+K\), i.e. \(\Phi\) is uniformly bounded. Moreover, each function \(\phi_i\) in the
+\((\epsilon/3)\)​-net is continuous, and hence uniformly continuous, on \([a, b]\).
+Hence, given any \(\epsilon > 0\), there is a \(\delta_i\) such that
+\[|\phi_i(x_1) - \phi_i(x_2)| \leq \epsilon/3\]
+whenever \(|x_1-x_2| < \delta_i\).
+Let \(\delta = \min\{\delta_1, \ldots, \delta_n\}\). Then, given any
+\(\phi \in \Phi\) and choosing \(\phi_i\) such that \(\rho(\phi, \phi_i) <
+\epsilon/3\), we have
+\[\begin{equation}
+\begin{split} |\phi(x_1) - \phi(x_2)| &\leq |\phi(x_1) -
+\phi_i(x_1) + |\phi_i(x_1) - \phi_i(x_2)| + |\phi_i(x_2) - \phi(x_2)| \\
+& < \epsilon/3 + \epsilon/3 + \epsilon/3 = \epsilon
+\end{split}\end{equation}\]
+whenever \(|x_1 - x_2| < \delta\). This proves the equicontinuity of \(\Phi\).
+</p>
+
+<p>
+(Sufficiency.) Suppose \(\Phi\) is uniformly bounded and equicontinuous. Accordin
+to Theorem 3, to prove that \(\Phi\) is relatively compact in \(C_{[a, b]}\), we
+need only show that \(\Phi\) is totally bounded, i.e., that given any \(\epsilon >
+0\), there exists a finite \(\epsilon\)​-net for \(\Phi\) in \(C_{[a, b]}\). Since
+\(\Phi\) is uniformly bounded, \(|\phi(x)| \leq K\) for all \(\phi \in \Phi\), and by
+equicontinuity, let \(\delta > 0\) be such that
+\[|\phi(x_1) - \phi(x_2)| < \epsilon/5\]
+for all \(\phi \in \Phi\) whenever \(|x_1-x_2|< \delta\). Divide the interval \(a
+\leq x \leq b\) along the x-axis into subintervals of length less than
+\(\delta\), by introducing points of subdivision \(x_0, x_1, \ldots, x_n\) such
+that
+\[a = x_0 < x_1 < \ldots < x_n = b\]
+and then draw a vertical line through each of these points. Similarly, divide
+the interval \(-K \leq y \leq K\) along the y-axis into subintervals of length
+less than \(\epsilon/5\), by introducing points of subdivision
+\(y_0, y_1, \ldots, y_m\) such that
+\[-K = y_0 < y_1 < \ldots < y_m= K\]
+and then draw a horizontal line through each of these points. In this way, the
+rectangle \(a < x < b\), \(-K < y < K\) is divided into \(nm\) cells of horizontal
+side length less than \(\delta\) and vertical side length less than \(\epsilon/5\).
+</p>
+
+<p>
+We now associate with each function \(\phi \in \Phi\) a polygonal line
+\(y = \psi(x)\) which has vertices at points of the form \((x_k, y_l)\) and differs
+from the function \(\phi\) by less than \(\epsilon/5\) at every point \(x_k\) (the
+reader should draw a figure and convince themself on the existence of such a
+function).
+</p>
+
+<p>
+Since
+\[\begin{equation}
+\begin{split} |\phi(x_k) - \psi(x_k)| &\leq \epsilon/5, \\
+​|\phi(x_{k+1}) - \psi(x_{k+1})| &\leq \epsilon/5, \\
+​|\phi(x_k) - \phi(x_{k+1})| &\leq \epsilon/5,
+\end{split}\end{equation}\]
+by construction, we have
+\[|\psi(x_k) - \psi(x_{k+1})| \leq 3\epsilon/5.\]
+Moreover,
+\[|\psi(x_k) - \psi(x)| \leq 3\epsilon/5 \quad (x_k \leq x \leq x_{k+1}),\]
+since \(\psi(x)\) is linear between the point \(x_k\) and \(x_{k+1}\). Let \(x\) be any
+point in \([a, b]\) and \(x_k\) the point of subdivision nearest to \(x\) on the
+left. Then
+\[|\phi(x)-\psi(x)|
+\leq |\phi(x)-\phi(x_k)| + |\phi(x_k)-\psi(x_k)| + |\psi(x_k)-\psi(x)|
+< \epsilon,\]
+i.e. the set of polygonal lines \(\psi(x)\) forms an \(\epsilon\)​-net for \(\Phi\).
+But there are obviously only finitely many such lines. Therefore \(\Phi\) is
+totally bounded.
+</p>
+
+</div>
+
+<p>
+<b>Theorem 5 (Peano)</b>
+</p>
+<div class="theorem" id="orgeb01671">
+<p>
+Let \(f(x, y)\) be defined and continuous on a plane domain \(G\). Then at least
+one integral curve of the differential equation \(\frac{dy}{dx} = f(x, y)\)
+passes through each point \((x_0, y_0)\) of \(G\).
+</p>
+
+</div>
+
+<div class="proof" id="orgecead7f">
+<p>
+By the continuity of \(f\), we have \(|f(x, y)| \leq K\) in some domain
+\(G’ \subseteq G\) containing the point \((x_0, y_0)\). Draw the lines with slopes
+\(K\) and \(-K\) through the point \((x_0, y_0)\). Then draw vertical lines \(x = a\)
+and \(x=b \quad (a < x_0 < b\)  which together with the first two lines form two
+isosceles triangles contained in \(G’\) with common vertex \((x_0, y_0)\), as shown
+in the diagram. (TODO INCLUDE DIAGRAM.) This gives a closed interval \([a, b]\),
+which will figure in the rest of the proof.
+</p>
+
+<p>
+The next step is to construct a family of polygonal lines, called
+<i>Euler lines</i>, associated with the differential equation
+\(\frac{dy}{dx} = f(x, y)\).
+We begin by drawying the line with slope \(f(x_0, y_0)\) through the point
+\((x_0, y_0)\). Next, choosing a point \((x_1, y_1)\) on the first line, we draw
+the line \(f(x_1, y_1)\) through the point \((x_1, y_1)\). Then, choosing a point
+\((x_2, y_2)\) on the second line, we draw the line with slope \(f(x_2, y_2)\)
+through the point \((x_2, y_2)\), and so on indefinitely. SUppose we construct a
+whole sequence \(L_1, L_2, \ldots, L_n, \ldots\) of such Euler lines going
+through the point \((x_0, y_0)\), with the property that the length of the
+longest line segment making up \(L_n\) approaches \(0\) as \(n \rightarrow \infty\).
+Let \(\phi_n\) be the function with graph \(L_n\). Then this gives a family of
+functions \(\phi_1, \phi_2, \ldots, \phi_n, \ldots\), all defined on the interval
+\([a, b]\), which is easily seen to be uniformly bounded and equicontinuous (as
+they are bounded by \(K\) and are straight lines). It follows from Arzelà’s
+theorem that the sequence \(\{\phi_n\}\) is relatively compact and therefore
+conatains a uniformly convergent subsequence
+\[\phi^{(1)}, \phi^{(2)}, \ldots, \phi^{(n)}, \ldots.\]
+Let \(\phi(x) = \lim_{n \rightarrow \infty} \phi^{(n)}(x)\). Then clearly
+\(\phi(x_0) = y_0\), so that the curve \(y = \phi(x)\) passes through the point
+\((x_0, y_0)\). We now show that the \(y = \phi(x)\) satisfies the differential
+equation \(\frac{dy}{dx} = f(x, y)\) in the open interval \((a, b)\). This means
+showing that, given any \(\epsilon > 0\) and any points \(x’, x’’ \in (a, b)\), we
+have
+\[|\frac{\phi(x’’) - \phi(x’)}{x’’ - x’} - f(x’, \phi(x’))| < \epsilon\]
+whenever \(|x’’ - x’|\) is sufficiently small, or equivalently that
+\[|\frac{\phi^{(n)}(x’’) - \phi^{(n)}(x’)}{x’’-x’} - f(x’, \phi^{(n)}(x’))|
+< \epsilon\]
+whenever \(n\) is sufficiently large and \(|x’’ - x’|\) is sufficiently small. Let
+\(y’ = \phi(x’)\). Then, by continuity of \(f\), given any \(\epsilon > 0\), there is
+a number \(\eta > 0\) such that
+\[f(x’, y’) - \epsilon < f(x, y) < f(x’, y’) + \epsilon\]
+whenever \(|x - x’| < 2\eta\), \(|y-y’| < 4K\eta\).
+The set of points \((x, y)\) satisfying these inequalities is a rectange which we
+denote by \(Q\). Let \(N\) be so large that for all \(n > N\), the length of the
+longest segment making up \(L_n\) is less than \(\eta\) and moreover
+\[|\phi(x) - \phi^{(n)}(x)| < K\eta.\]
+Then all the Euler lines \(L_n\) with \(n > N\) live inside the rectange \(Q\)
+(why?). Suppose \(L_n\) has vertices
+\((a_0, b_0), (a_1, b_1), \ldots, (a_{k+1}, b_{k+1})\),
+where \(a \leq x’ < a_1 < a_2 < \ldots < a_k < x’’ \leq a_{k+1}\).
+[Note we assume that \(x’’ > x’\). The case \(x’’ < x’\) is treated similarly.]
+Then
+\[\begin{equation}
+\begin{split} \phi^{(n)}(a_1) - \phi^{(n)}(x’) & = f(a_0, b_0)(a_1 - x’), \\
+\phi^{(n)}(a_{i+1}) - \phi^{(n)}(a_i) & = f(a_i, b_i)(a_{i+1} - a_i) \quad
+(i = 1, 2, \ldots, k-1), \\
+\phi^{(n)}(x’’) - \phi^{(n)}(a_k) & = f(a_k, b_k)(a’’ - a_k).
+\end{split}\end{equation}\]
+Hence, if \(|x’’ - x’| < \eta\),
+\[\begin{equation}
+\begin{split} [f(x’, y’) - \epsilon](a_1 - x’) & < \phi^{(n)}(a_1) -
+\phi^{(n)}(x’) < [f(x’, y’) + \epsilon](a_1 - x’), \\
+[f(x’, y’) - \epsilon](a_{i+1} - a_i) & < \phi^{(n)}(a_{i+1}) -
+\phi^{(n)}(a_i) \\
+& < [f(x’, y’) + \epsilon](a_{i+1} - a_i) \quad (i=1, 2, \ldots,
+k-1), \\
+[f(x’, y’) - \epsilon](x’’ - a_k) & < \phi^{(n)}(x’’) -
+\phi^{(n)}(a_k) < [f(x’, y’) + \epsilon](x’’ - a_k).
+\end{split}\end{equation}\]
+Adding these inequalities, we get
+\[[f(x’, y’) - \epsilon](x’’ - x’) < \phi^{(n)}(x’’) - \phi^{(n)}(x’) <
+[f(x’, y’) + \epsilon](x’’ - x’)\]
+if \(|x’’ - x’| < \eta\), which is equivalent to
+\[|\frac{\phi^{(n)}(x’’) - \phi^{(n)}(x’)}{x’’-x’} - f(x’, \phi^{(n)}(x’))|
+< \epsilon.\]
+</p>
+
+</div>
+
+<div id="outline-container-compactness-in-metric-spaces-problems" class="outline-2">
+<h2 id="compactness-in-metric-spaces-problems">Problems</h2>
+<div class="outline-text-2" id="text-compactness-in-metric-spaces-problems">
+<ol class="org-ol">
+<li><p><p>
+Let \(M\) be a totally bounded subset of a metric space \(R\).
+Prove that the \(\epsilon\)​-nets figuring in the definition of total
+boundedness of \(M\) can always be chosen to consist of points of \(M\) rather
+than \(R\).
+</p>
+
+<p>
+<i>Hint.</i> Given an \(\epsilon\)​-net for \(M\) consisting of points
+\(a_1, a_2, \ldots, a_n \in R\), all with \(\epsilon\) of some point of \(M\),
+replace each point \(a_k\) by a point \(b_k \in M\) such that
+\(\rho(a_k, b_k) \leq \epsilon\).
+</p></p></li>
+<li><p><p>
+Prove that every totally bounded metric space is separable.
+</p>
+
+<p>
+<i>Hint.</i> COnstruct a finite \((1/n)\)​-net for every \(n=1, 2, \ldots\). Then take
+the union of these nets.
+</p></p></li>
+<li><p>Let \(M\) be a bounded subset of the space \(C_{[a, b]}\). Prove that the set of
+all functions $F(x) = &int;<sub>a</sub><sup>x</sup> f(t)dt with \(f \in M\) compact.</p></li>
+<li><p><p>
+Given two metric compacta \(X\) and \(Y\), let \(C_{XY}\) be the set of all
+continuous mappings of \(X\) into \(Y\). Let distance be defined in \(C_{XY}\) by
+the formula \(\rho(f, g) = \sup{x \in X} \rho(f(x), g(x))\). Prove that
+\(C_{XY}\) is a metric space. Let \(M_{XY}\) be the set of all mappings of \(X\)
+into \(Y\), with the same metric. Prove that \(C_{XY}\) is closed in \(M_{XY}\).
+</p>
+
+<p>
+<i>Hint.</i> Use the method of Problem 1, page 65 to prove that the limit of a
+uniformly convergent subsequence of continuous mappings is itself a
+continuous mapping.
+</p></p></li>
+<li><p><p>
+Let \(X\), \(Y\), and \(C_{XY}\) be the same as in the preceding problem. Prove
+the following generalisation of Arzelà’s theorem: A necessary and sufficient
+condition for a set \(D \subseteq C_{XY}\) to be relatively compact is that
+\(D\) be an <i>equicontinuous</i> family of functions, in the sense that given any
+\(\epsilon > 0\), there exists a number \(\delta > 0\) such that
+\(\rho(x’, y’) < \delta\) implies \(\rho(f(x’), f(x’’)) < \epsilon\) for all
+\(x’, x’’ \in X\) and all \(f \in D\).
+</p>
+
+<p>
+<i>Hint.</i> To prove the sufficiency, show that \(D\) is relatively compact in
+\(M_{XY}\) (defined in the preceding problem) and hence in \(C_{XY}\), since
+\(C_{XY}\) is closed in \(M_{XY}\). To prove the relative compactness of \(D\) in
+\(M_{XY}\), first represent \(X\) as a union of finitely many pairwise disjoint
+sets \(D_i\) such that \(x’, x’’ \in E_i\) implies \(\rho(x’, x’’) < \delta\). For
+example, let \(x_1, \ldots, x_n\) be a \((\delta/2)\)​-net for \(X\), and let
+\[E_i = S[x_i, \delta] - \cup_{j \lt i} S[x_j, \delta].\]
+Then let \(y_1, \ldots, y_n\), be an \(\epsilon\)​-net in \(Y\), and let \(L\) be the
+set of all functions taking the values \(y_j\) on the sets \(E_i\). Given any
+\(f \in D_1\) and any \(x_i \in \{x_1, \ldots, x_n\}\), let \(y_j \in \{y_0,
+   \ldots, y_n\}\) be such that \(\rho(f(x_i),y_j) < \epsilon\) and let \(g \in L\)
+be such that \(g(x_i) = y_j\). Show that \(\rho(f(x), g(x)) < 2\epsilon\),
+thereby proving that \(L\) is a finite \(2\epsilon\)​-net for \(D\) in \(M_{XY}\).
+</p></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="footer">
+<center>
+<a href="./index.html"><img src="https://christianchristiansen.net/portfolio/yayaya-icon.webp"></a>
+<a href="./index.html"><h1>Christian Christiansen.</h1></a>
+<div id="postamble" class="status">
+<a href="../contact.html"><code>christian.l.christiansen {at} gmail.com</code><br /></a>
+</div>
+</center>
+</div>
+</body>
+</html>
