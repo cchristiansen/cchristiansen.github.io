@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-03-31 Fri 12:33 -->
+<!-- 2023-03-31 Fri 12:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Topological Spaces: Compactness in Metric Spaces. Christian Christiansen.</title>
@@ -59,7 +59,7 @@ infinite-dimensional totally bounded set.
 <p>
 <b>Theorem 1</b>
 </p>
-<div class="theorem" id="orga8ef414">
+<div class="theorem" id="orgf0271c3">
 <p>
 Every countably compact metric space \(R\) is totally bounded.
 </p>
@@ -69,7 +69,7 @@ Every countably compact metric space \(R\) is totally bounded.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orgaf882e1">
+<div class="proof" id="orgf8459c5">
 <p>
 Suppose \(R\) is not totally bounded, then there is an \(\epsilon_0 > 0\) such that
 \(R\) has no finite \(\epsilon_0\)​-net. Choose any point \(a_1 \in R\). Then \(R\)
@@ -91,7 +91,7 @@ construction gives an infinite sequence of distinct points
 <p>
 <b>Corollary 1</b>
 </p>
-<div class="theorem" id="org2fbc479">
+<div class="theorem" id="org68719d3">
 <p>
 Every countably compact metric space has a countable everywhere dense subset
 and a countable base.
@@ -102,7 +102,7 @@ and a countable base.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orgb551431">
+<div class="proof" id="org4bd2749">
 <p>
 Since \(R\) is totally bounded, by Theorem 1, \(R\) has a finite \((1/n)\)​-net for
 every \(n=1, 2, \ldots\). The union of all these nets is then a countably
@@ -115,7 +115,7 @@ everywhere dense subset of \(R\). It follows from Theorem 5
 <p>
 <b>Corollary 2</b>
 </p>
-<div class="theorem" id="org72e454d">
+<div class="theorem" id="org7edd99f">
 <p>
 Every countably compact metric space is compact.
 </p>
@@ -125,7 +125,7 @@ Every countably compact metric space is compact.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org06452c5">
+<div class="proof" id="org98e5325">
 <p>
 An immediate consequence of Corollary 1 and Theorem 9
 <a href="./10-compactness.html">Topological Spaces: Compactness</a>.
@@ -143,7 +143,7 @@ totally bounded but not compact.
 <p>
 <b>Theorem 2</b>
 </p>
-<div class="theorem" id="org8ce76d3">
+<div class="theorem" id="orgd919ae5">
 <p>
 A metric space \(R\) is compact if and only if it is totally bounded and
 complete.
@@ -154,12 +154,12 @@ complete.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org4fab1b3">
+<div class="proof" id="orgcdd5b51">
 <p>
 To see that compactness of \(R\) implies completeness of \(R\), we need only note
 that if \(R\) has a Cauchy sequence \(\{x_n\}\) with no limit, then \(\{x_n\}\) has
 no limit point in \(R\). Hence if \(R\) is compact, \(R\) is complete. By Theorem 1,
-if \(R\) is complete, \(R\) is totally bounded.
+if \(R\) is compact, \(R\) is totally bounded.
 </p>
 
 <p>
@@ -196,7 +196,7 @@ by Corollary 2.
 <p>
 <b>Theorem 3</b>
 </p>
-<div class="theorem" id="orgdd3b7c1">
+<div class="theorem" id="orgb75c9ce">
 <p>
 A subset \(M\) of a complete metric space \(R\) is relatively compact if and only
 if it is totally bounded.
@@ -207,7 +207,7 @@ if it is totally bounded.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org92e86c1">
+<div class="proof" id="org0615c16">
 <p>
 An immediate consequence of Theorem 2 and the fact that a closed subset of a
 complete metric space is itself complete.
@@ -241,7 +241,7 @@ to be <i>equicontinuous</i> if, given any \(\epsilon > 0\), there exists a numbe
 <p>
 <b>Theorem 4 (Arzelà)</b>
 </p>
-<div class="theorem" id="orgae14bf2">
+<div class="theorem" id="orgac00a44">
 <p>
 A necessary and sufficient condition for a family \(\Phi\) of continuous
 functions \(\phi\) defined on a closed interval \([a, b]\) to be relatively compact
@@ -253,7 +253,7 @@ in \(C_{[a, b]}\) is that \(\Phi\) be uniformly bounded and continuous.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org915fe2c">
+<div class="proof" id="orgb21c06d">
 <p>
 We first prove necessity and then sufficiency.
 </p>
@@ -345,7 +345,7 @@ totally bounded.
 <p>
 <b>Theorem 5 (Peano)</b>
 </p>
-<div class="theorem" id="orgd77f1f5">
+<div class="theorem" id="org297419e">
 <p>
 Let \(f(x, y)\) be defined and continuous on a plane domain \(G\). Then at least
 one integral curve of the differential equation \(\frac{dy}{dx} = f(x, y)\)
@@ -354,7 +354,7 @@ passes through each point \((x_0, y_0)\) of \(G\).
 
 </div>
 
-<div class="proof" id="orgafd11da">
+<div class="proof" id="orgd3e481a">
 <p>
 By the continuity of \(f\), we have \(|f(x, y)| \leq K\) in some domain
 \(G’ \subseteq G\) containing the point \((x_0, y_0)\). Draw the lines with slopes
