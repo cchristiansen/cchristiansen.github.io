@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-03-31 Fri 13:29 -->
+<!-- 2023-03-31 Fri 17:48 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Topological Spaces: Compactness in Metric Spaces. Christian Christiansen.</title>
@@ -38,7 +38,8 @@
 <p>
 <b>Definition</b>
 Let \(R\) be a metric space and \(\epsilon\) any positive number. Then a set
-\(A \subseteq R\) is said to be an \(\epsilon\)​<i>-net</i> for a set \(M \subseteq R\) if,
+\(A \subseteq R\) is said to be an \(\epsilon\)​<i>-net</i> for a set
+\(M \subseteq R\) if,
 for every \(x \in M\) there is at least one point \(a \in A\) such that
 \(\rho(x, a) \leq \epsilon\).
 </p>
@@ -59,7 +60,7 @@ infinite-dimensional totally bounded set.
 <p>
 <b>Theorem 1</b>
 </p>
-<div class="theorem" id="orgad1bac2">
+<div class="theorem" id="org8701f4f">
 <p>
 Every countably compact metric space \(R\) is totally bounded.
 </p>
@@ -69,7 +70,7 @@ Every countably compact metric space \(R\) is totally bounded.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org1e97382">
+<div class="proof" id="org3b12d10">
 <p>
 Suppose \(R\) is not totally bounded, then there is an \(\epsilon_0 > 0\) such that
 \(R\) has no finite \(\epsilon_0\)​-net. Choose any point \(a_1 \in R\). Then \(R\)
@@ -91,7 +92,7 @@ construction gives an infinite sequence of distinct points
 <p>
 <b>Corollary 1</b>
 </p>
-<div class="theorem" id="orgac90188">
+<div class="theorem" id="org4f5d248">
 <p>
 Every countably compact metric space has a countable everywhere dense subset
 and a countable base.
@@ -102,7 +103,7 @@ and a countable base.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org7d565b1">
+<div class="proof" id="org33be08b">
 <p>
 Since \(R\) is totally bounded, by Theorem 1, \(R\) has a finite \((1/n)\)​-net for
 every \(n=1, 2, \ldots\). The union of all these nets is then a countably
@@ -115,7 +116,7 @@ everywhere dense subset of \(R\). It follows from Theorem 5
 <p>
 <b>Corollary 2</b>
 </p>
-<div class="theorem" id="orgc4f1691">
+<div class="theorem" id="orgeb625d4">
 <p>
 Every countably compact metric space is compact.
 </p>
@@ -125,7 +126,7 @@ Every countably compact metric space is compact.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org10cec12">
+<div class="proof" id="org6bcaecd">
 <p>
 An immediate consequence of Corollary 1 and Theorem 9
 <a href="./10-compactness.html">Topological Spaces: Compactness</a>.
@@ -143,7 +144,7 @@ totally bounded but not compact.
 <p>
 <b>Theorem 2</b>
 </p>
-<div class="theorem" id="org2b80f18">
+<div class="theorem" id="org9fc1be3">
 <p>
 A metric space \(R\) is compact if and only if it is totally bounded and
 complete.
@@ -154,7 +155,7 @@ complete.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org716948e">
+<div class="proof" id="org1d46f6e">
 <p>
 To see that compactness of \(R\) implies completeness of \(R\), we need only note
 that if \(R\) has a Cauchy sequence \(\{x_n\}\) with no limit, then \(\{x_n\}\) has
@@ -166,7 +167,7 @@ if \(R\) is compact, \(R\) is totally bounded.
 Conversely, suppose \(R\) is totally bounded and complete, and let \(\{x_n\}\) be
 any infinite sequence of distinct points in \(R\). Let \(N_1\) be a finite \(1\)​-net
 for \(R\), and construct a closed sphere of radius 1 about every point of \(N_1\).
-Since these spheres cover \(R\) and there are infinitely many of them, at least
+Since these spheres cover \(R\) and there are finitely many of them, at least
 one of the spheres, say \(S_1\), contains an infinite subsequence
 \[x_1^{(1)}, \ldots, x_n^{(1)}, \ldots\]
 of the sequence \(\{x_n\}\). Let \(N_2\) be a finite \(1/2\)​-net for \(R\), and
@@ -179,7 +180,8 @@ same centre as \(S_n\) but with a radius \(r_n\) twice as large (i.e., equal to
 \(1/2^n\)). Then clearly
 \[{S’}_1 \subseteq {S’}_2 \subseteq \ldots \subseteq {S’}_n \subseteq \ldots,\]
 and moreover \(r_n \rightarrow 0\) as \(n \rightarrow \infty\). Since \(R\) is
-complete, it follows from the nested sphere theorem (Theorem 2, <a href="./07-complete-metric-spaces.html">Complete Metric Spaces</a>) that
+complete, it follows from the nested sphere theorem (Theorem 2, <a href="./07-complete-metric-spaces.html">Complete Metric
+Spaces</a>) that
 \[\cap_{n=1}^\infty {S’}_n \neq \emptyset.\]
 In fact, there is a point \(x_0 \in R\) such that
 \[\cap_{n=1}^\infty {S’}_n = \{x_0\}\]
@@ -196,7 +198,7 @@ by Corollary 2.
 <p>
 <b>Theorem 3</b>
 </p>
-<div class="theorem" id="orgefd43aa">
+<div class="theorem" id="org4436e78">
 <p>
 A subset \(M\) of a complete metric space \(R\) is relatively compact if and only
 if it is totally bounded.
@@ -207,7 +209,7 @@ if it is totally bounded.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org4bc2f4c">
+<div class="proof" id="org451f91e">
 <p>
 An immediate consequence of Theorem 2 and the fact that a closed subset of a
 complete metric space is itself complete.
@@ -241,7 +243,7 @@ to be <i>equicontinuous</i> if, given any \(\epsilon > 0\), there exists a numbe
 <p>
 <b>Theorem 4 (Arzelà)</b>
 </p>
-<div class="theorem" id="org607a735">
+<div class="theorem" id="org4ecb743">
 <p>
 A necessary and sufficient condition for a family \(\Phi\) of continuous
 functions \(\phi\) defined on a closed interval \([a, b]\) to be relatively compact
@@ -253,7 +255,7 @@ in \(C_{[a, b]}\) is that \(\Phi\) be uniformly bounded and equicontinuous.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org7a03603">
+<div class="proof" id="orgc2c4280">
 <p>
 We first prove necessity and then sufficiency.
 </p>
@@ -345,7 +347,7 @@ totally bounded.
 <p>
 <b>Theorem 5 (Peano)</b>
 </p>
-<div class="theorem" id="orga3fc087">
+<div class="theorem" id="org00825f1">
 <p>
 Let \(f(x, y)\) be defined and continuous on a plane domain \(G\). Then at least
 one integral curve of the differential equation \(\frac{dy}{dx} = f(x, y)\)
@@ -357,15 +359,15 @@ passes through each point \((x_0, y_0)\) of \(G\).
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org7526b0d">
+<div class="proof" id="org6474ca4">
 <p>
 By the continuity of \(f\), we have \(|f(x, y)| \leq K\) in some domain
 \(G’ \subseteq G\) containing the point \((x_0, y_0)\). Draw the lines with slopes
 \(K\) and \(-K\) through the point \((x_0, y_0)\). Then draw vertical lines \(x = a\)
 and \(x=b \quad (a < x_0 < b)\)  which together with the first two lines form two
-isosceles triangles contained in \(G’\) with common vertex \((x_0, y_0)\), as shown
-in the diagram. (TODO INCLUDE DIAGRAM.) This gives a closed interval \([a, b]\),
-which will figure in the rest of the proof.
+isosceles triangles contained in \(G’\) with common vertex \((x_0, y_0)\).
+This gives a closed interval \([a, b]\), which will figure in the
+rest of the proof.
 </p>
 
 <p>
