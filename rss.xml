@@ -14,6 +14,75 @@
 	<height>32</height>
     </image>
     <item>
+        <title>Markdown + CSS + Pandoc</title>
+        <link>https://christianchristiansen.net/log/markdown-css-pandoc.html</link>
+        <pubDate>Sat, 06 May 2023 14:26:34 AEST</pubDate>
+        <guid>
+        https://christianchristiansen.net/log/markdown-css-pandoc.html
+        </guid>
+        <description>
+        
+&lt;p&gt;&lt;em&gt;Kære Tøger,&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&quot;out-with-the-old&quot;&gt;Out with the old&lt;/h2&gt;
+&lt;p&gt;The specifications of HTML (and CSS) have greatly matured since the
+days of Macromedia Shockwave and &lt;code
+class=&quot;blink&quot;&gt;&amp;lt;blink&amp;gt;&lt;/code&gt; tags. Even JavaScript has become more
+sane, admittedly from a low starting base (see &lt;a
+href=&quot;https://www.destroyallsoftware.com/talks/wat&quot;&gt;wat&lt;/a&gt;). Yet few
+people today would propose writing articles in HTML: closing tags are
+cumbersome, naming body parts in code seems outdated, angle brackets –
+despite their winsome aesthetic – are out.&lt;/p&gt;
+&lt;h2 id=&quot;kiss-principle&quot;&gt;KISS principle&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Markdown&lt;/strong&gt;, a minimal markup language designed to
+compile to HTML, is the favoured replacement to HTML for articles,
+essays and other long-form writing amongst current techy scribblers (at
+least amongst those who have yet to discover the one true way of Emacs
+and Org-mode). The syntax is ludicrously simple and requires no
+explanation (see the &lt;a
+href=&quot;https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax&quot;&gt;primer&lt;/a&gt;
+by GitHub). Write in your preferred text editor, and save it with the
+extension &lt;code&gt;.md&lt;/code&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Too easy.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;quoter&quot;&gt;
+– said some person once.
+&lt;/div&gt;
+&lt;h2 id=&quot;shapeshifting&quot;&gt;Shapeshifting&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://pandoc.org&quot;&gt;&lt;strong&gt;Pandoc&lt;/strong&gt;&lt;/a&gt;, created by
+a philosopher named &lt;a href=&quot;https://johnmacfarlane.net&quot;&gt;John
+MacFarlane&lt;/a&gt;, is the best program for converting text files from one
+format to another. To convert &lt;code&gt;input.md&lt;/code&gt; to
+&lt;code&gt;output.html&lt;/code&gt;, type the following into your favourite
+terminal:&lt;/p&gt;
+&lt;div class=&quot;sourceCode&quot; id=&quot;cb1&quot;&gt;&lt;pre class=&quot;sourceCode sh&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span id=&quot;cb1-1&quot;&gt;&lt;a href=&quot;#cb1-1&quot; aria-hidden=&quot;true&quot; tabindex=&quot;-1&quot;&gt;&lt;/a&gt;&lt;span class=&quot;ex&quot;&gt;pandoc&lt;/span&gt; input.md &lt;span class=&quot;at&quot;&gt;-o&lt;/span&gt; output.html&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Those are the basics covered.&lt;/p&gt;
+&lt;h2 id=&quot;form-and-substance&quot;&gt;Form and substance&lt;/h2&gt;
+&lt;p&gt;To add pizzazz, we require &lt;strong&gt;Cascading Style Sheets
+(CSS)&lt;/strong&gt;. To include a link to a CSS stylesheet, use the following
+option with Pandoc:&lt;/p&gt;
+&lt;div class=&quot;sourceCode&quot; id=&quot;cb2&quot;&gt;&lt;pre class=&quot;sourceCode sh&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span id=&quot;cb2-1&quot;&gt;&lt;a href=&quot;#cb2-1&quot; aria-hidden=&quot;true&quot; tabindex=&quot;-1&quot;&gt;&lt;/a&gt;&lt;span class=&quot;ex&quot;&gt;pandoc&lt;/span&gt; &lt;span class=&quot;at&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;at&quot;&gt;--css&lt;/span&gt; style.css input.md &lt;span class=&quot;at&quot;&gt;-o&lt;/span&gt; output.html&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;thats-all-folks&quot;&gt;That’s all folks!&lt;/h2&gt;
+&lt;p&gt;Das war’s. Of course, there are many rabbit holes one can end up
+going down, but remember, the purpose of using Markdown in the first
+place is to keep as much syntax (and distraction) away as possible.&lt;/p&gt;
+&lt;p&gt;Keep writing. 加油！ Any questions, ask me – I’ll gladly answer.&lt;/p&gt;
+&lt;h2 id=&quot;postscriptum&quot;&gt;Postscriptum&lt;/h2&gt;
+&lt;p&gt;The Markdown and CSS of this post are available &lt;a
+href=&quot;./markdown-css-pandoc.md&quot;&gt;here&lt;/a&gt; and &lt;a
+href=&quot;../main.css&quot;&gt;here&lt;/a&gt;. To re-create the post, type in the
+following:&lt;/p&gt;
+&lt;div class=&quot;sourceCode&quot; id=&quot;cb3&quot;&gt;&lt;pre class=&quot;sourceCode sh&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span id=&quot;cb3-1&quot;&gt;&lt;a href=&quot;#cb3-1&quot; aria-hidden=&quot;true&quot; tabindex=&quot;-1&quot;&gt;&lt;/a&gt;&lt;span class=&quot;ex&quot;&gt;pandoc&lt;/span&gt; &lt;span class=&quot;at&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;at&quot;&gt;--css&lt;/span&gt; main.css &lt;span class=&quot;dt&quot;&gt;\&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&quot;cb3-2&quot;&gt;&lt;a href=&quot;#cb3-2&quot; aria-hidden=&quot;true&quot; tabindex=&quot;-1&quot;&gt;&lt;/a&gt;markdown-css-pandoc.md &lt;span class=&quot;at&quot;&gt;-o&lt;/span&gt; markdown-css-pandoc.html&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note: for the correct fonts to be used, you will need &lt;a
+href=&quot;../fonts/Roboto_Mono/RobotoMono-Regular.ttf&quot;&gt;RobotoMono&lt;/a&gt; and &lt;a
+href=&quot;../fonts/EBGaramond-0.016/ttf/EBGaramond12-Regular.ttf&quot;&gt;EBGaramond&lt;/a&gt;
+to be in the relative paths as determined by &lt;code&gt;font-face&lt;/code&gt; in
+the CSS file.&lt;/p&gt;
+
+        </description>
+    </item>
+    <item>
         <title>Øresund Øffensiv</title>
         <link>https://christianchristiansen.net/log/øresund-øffensiv.html</link>
         <pubDate>Wed, 12 Apr 2023 16:26:56 AEST</pubDate>

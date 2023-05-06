@@ -140,6 +140,9 @@ blockquote, .verse {
 code {
     text-align: center;
     font-family: "RobotoMono";
+}
+
+p code {
     font-size: 0.7em;
 }
 
@@ -193,4 +196,27 @@ a:active {
 
 .footer code {
     font-size: 1em;
+    white-space: nowrap;
+}
+
+#profile {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding: 8px;
+    box-shadow: 0px 0px 15px 15px plum;
+    background: transparent;
+    border-radius: 999em;
+    transition: box-shadow ease-in-out 4s;
+}
+
+#profile:hover {
+    box-shadow: 0px 0px 15px 15px darkmagenta;
+}
+
+.blink {
+  animation: blinker 1s step-start infinite;
+}
+
+@keyframes blinker {
+  50% {opacity: 0;}
 }
