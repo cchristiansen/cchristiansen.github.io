@@ -93,8 +93,11 @@ def insert(entry, index, same_dir=False):
             raise Exception(f"{entry.filename} has already been added")
 
     insert_here = -1
+    seen_log = False
     for i, line in enumerate(index):
-        if ".htm" in line and "<p" in line[:2]:
+        if "Log" in line:
+            seen_log = True
+        if seen_log and ".htm" in line and "<p" in line[:2]:
             insert_here = i
             insert_line = line
             break
