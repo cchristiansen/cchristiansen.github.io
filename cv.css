@@ -1,0 +1,292 @@
+html {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-color: white;
+    color: black;
+}
+
+html,body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+@font-face {
+    font-family: RobotoMono;
+    src: url(./fonts/Roboto_Mono/RobotoMono-Regular.ttf);
+}
+
+@font-face {
+    font-family: EBGaramond;
+    src: url(./fonts/EBGaramond-0.016/ttf/EBGaramond12-Regular.ttf);
+}
+
+@viewport {
+    width: device-width ;
+    zoom: 1.0 ;
+}
+
+@-ms-viewport {
+    width: device-width ;
+}
+
+body, #main-block {
+    -webkit-animation: 4s fadein; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: 4s fadein; /* Firefox < 16 */
+        -ms-animation: 4s fadein; /* Internet Explorer */
+         -o-animation: 4s fadein; /* Opera < 12.1 */
+            animation: 4s fadein;
+	-webkit-animation-fill-mode: forwards;
+       -moz-animation-fill-mode: forwards;
+        -ms-animation-fill-mode: forwards;
+            animation-fill-mode: forwards;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+body, #main-block {
+    max-height: 100%;
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    margin: auto;
+    font-family: "EBGaramond", "Latin Modern Roman", serif;
+    font-size: 1.4em;
+}
+
+#titlecard {
+    height: 100%;
+    width: 100%;
+}
+
+h1 {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+#cv {
+    padding-top: 20%;
+    font-style: italic;
+    color: darkmagenta;
+    -webkit-animation: 8s fadein, 2s fromleft; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: 8s fadein, 2s fromleft; /* Firefox < 16 */
+        -ms-animation: 8s fadein, 2s fromleft; /* Internet Explorer */
+         -o-animation: 8s fadein, 2s fromleft;/* Opera < 12.1 */
+            animation: 8s fadein, 2s fromleft;
+	-webkit-animation-fill-mode: forwards;
+       -moz-animation-fill-mode: forwards;
+        -ms-animation-fill-mode: forwards;
+            animation-fill-mode: forwards;
+}
+
+@keyframes fromleft {
+    from { margin-left: -500px; }
+    to   { margin-left: 0px; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fromleft {
+    from { left: -500px; }
+    to   { left: 0px; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fromleft {
+    from { left: -500px; }
+    to   { left: 0px; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fromleft {
+    from { left: -500px; }
+    to   { left: 0px; }
+}
+
+#cc {
+    float: right;
+    margin-top: -50px;
+    display: block;
+}
+
+@media screen and (min-width: 300px) {
+    h1 {
+        font-size: 2em;
+    }
+}
+@media screen and (min-width: 550px) {
+    h1 {
+        font-size: 4em;
+    }
+}
+@media screen and (min-width: 700px) {
+    h1 {
+        font-size: 5.5em;
+    }
+}
+@media screen and (min-width: 770px) {
+    h1 {
+        font-size: 6em;
+    }
+}
+
+#links {
+    padding: 20px;
+    float: center;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+a:link {
+    color: darkmagenta;
+    text-decoration: none;
+}
+
+a:visited {
+    color: darkmagenta;
+    text-decoration: none;
+}
+
+a:hover {
+    color: plum;
+    text-decoration: none;
+}
+
+a:active {
+    color: plum;
+    text-decoration: none;
+}
+
+h2 {
+    text-align: center;
+    font-size: 4em;
+    margin: auto;
+}
+
+section {
+    padding: 20px;
+    margin: 50px 0;
+    position: relative;
+}
+
+h3 {
+    display: inline;
+}
+
+.job-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: auto;
+    margin-right: auto;
+    float: center;
+}
+
+.job {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 24em;
+    min-width: 15em;
+    display: block;
+    padding: 20px;
+    padding-bottom: 0px;
+    border: 2px solid white;
+    border-radius: 5px;
+}
+
+.job:hover, .job:active, .education:hover, .education:active, .skills:hover, .skills:active, .extra-curricular:hover, .extra-curricular:active {
+    border: 2px solid darkmagenta;
+}
+
+.date {
+    margin-top: 3px;
+    float: right;
+    font-style: italic;
+}
+
+.description {
+    font-weight: bold;
+    color: darkmagenta;
+}
+
+.education, .extra-curricular {
+    max-width: 28em;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    padding: 20px;
+    padding-bottom: 0px;
+    border: 2px solid white;
+    border-radius: 5px;
+    float: center;
+}
+
+.skills {
+    max-width: 25em;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    padding: 20px;
+    padding-bottom: 0px;
+    border: 2px solid white;
+    border-radius: 5px;
+    float: center;
+}
+
+ul {
+    margin-top: 0.2em;
+}
+
+p, li {
+    margin-left: 0em;
+    line-height: 1.2;
+}
+
+.language {
+    color: darkmagenta;
+}
+
+.footer img {
+    width: 100px;
+    height: 100px;
+}
+
+.footer h1 {
+    position: relative;
+    font-size: 1.4em;
+    padding-left: 0px;
+    padding-right: 0px;
+    color: black;
+}
+
+.footer {
+    padding: 20px;
+}
+
+.footer code {
+    font-size: 1em;
+    white-space: nowrap;
+}
