@@ -14,6 +14,224 @@
 	<height>32</height>
     </image>
     <item>
+        <title>A case for copyleft</title>
+        <link>https://christianchristiansen.net/log/a-case-for-copyleft.html</link>
+        <pubDate>Sun, 16 Jul 2023 15:18:20 AEST</pubDate>
+        <guid>
+        https://christianchristiansen.net/log/a-case-for-copyleft.html
+        </guid>
+        <description>
+        
+&lt;h1 class=&quot;title&quot;&gt;A case for copyleft&lt;/h1&gt;
+&lt;div id=&quot;table-of-contents&quot; role=&quot;doc-toc&quot;&gt;
+&lt;h2&gt;Table of Contents&lt;/h2&gt;
+&lt;div id=&quot;text-table-of-contents&quot; role=&quot;doc-toc&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#org340de95&quot;&gt;What is a software licence?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#orgb3ae795&quot;&gt;The legal default: proprietary&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#orga3602ef&quot;&gt;Free (as in freedom) software&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#orgb59d86f&quot;&gt;Permissive&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#orgc3b2c18&quot;&gt;Copyleft&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-org340de95&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;org340de95&quot;&gt;What is a software licence?&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-org340de95&quot;&gt;
+&lt;p&gt;
+Coding is difficult. Communicating a set of instructions to an overly pedantic
+machine and dealing with the aftermath – the misplaced comma, the fallacies in
+your logic, the unplugged cable, the pervasive self-doubt – is no sane person’s
+idea of easy. But coding is also fun. The ability to communicate a set of
+instructions to a machine, which will execute precisely what you have
+instructed, and to see the exact product of your thought, is intensely
+gratifying.
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+The programmer, like the poet, works only slightly removed from pure
+thought-stuff. She&lt;sup&gt;&lt;a id=&quot;fnr.1&quot; class=&quot;footref&quot; href=&quot;#fn.1&quot; role=&quot;doc-backlink&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; builds her castles in the air, from air, creating by
+exertion of the imagination. […] One types the correct incantation on a
+keyboard, and a display screen comes to life, showing things that never were
+nor could be.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;
+&lt;div class=&quot;quoter&quot;&gt;Fred Brooks, The Mythical Man Month&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+A licence sets the terms and conditions of how others may interact with your
+thought-stuff. May they look at it? Touch it? Prod it? May they play with it?
+Adapt it to their own needs? Make money with it? And if they improve it, do
+they have to share those improvements with you?
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-orgb3ae795&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;orgb3ae795&quot;&gt;The legal default: proprietary&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-orgb3ae795&quot;&gt;
+&lt;p&gt;
+As with all copyright, by default, anything you create belongs to you. If you
+write code, nobody else may use it, play with it, sniff it. This evidently
+sucks. The first hackers&lt;sup&gt;&lt;a id=&quot;fnr.2&quot; class=&quot;footref&quot; href=&quot;#fn.2&quot; role=&quot;doc-backlink&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; flagrantly disregarded these limitations:
+they stayed up all night sharing ideas, code, thoughts, theories, computing
+time, and Chinese sweet-and-sour bitter melon. Military sponsors (who are
+accustomed to secrecy) understandably balked, as did those who were primarily
+interested in money. (The future richest person in the world, Bill Gates,
+denounced this culture of sharing in An Open Letter to Hobbyists, denouncing
+hobbyists as thieves.) Software should be closed and locked away. Software
+should be proprietary. Sharing and caring be damned.
+&lt;/p&gt;
+
+&lt;p&gt;
+As a reaction against closed software, hackers gathered to defend their culture
+of openness and sharing, and created an alternative: free and open source
+software.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-orga3602ef&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;orga3602ef&quot;&gt;Free (as in freedom) software&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-orga3602ef&quot;&gt;
+&lt;p&gt;
+Free and open source software&lt;sup&gt;&lt;a id=&quot;fnr.3&quot; class=&quot;footref&quot; href=&quot;#fn.3&quot; role=&quot;doc-backlink&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; licences allow users to share, to play
+with, to modify, to monetise code. Free and open source software powers the 100
+fastest supercomputers, roves on Mars, underpins the Internet, runs on most
+phones. Amazon, Microsoft, Meta (Facebook) and Alphabet (Google), all fervent
+users of free and open source software, made a combined gross profit of over
+$600 billion in 2022.
+&lt;/p&gt;
+
+&lt;p&gt;
+Free and open source software licences come in two flavours: permissive and
+copyleft. Permissive says: do whatever the hell you want to do with
+it. Copyleft says: do whatever the hell you want to do with it, but allow
+others to do whatever the hell they want to do with it too.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-orgb59d86f&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;orgb59d86f&quot;&gt;Permissive&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-orgb59d86f&quot;&gt;
+&lt;p&gt;
+GitHub, bought by Microsoft in 2018, is the world’s largest host of free and
+open source software. Developers gather to share code, ideas, issues and fixes.
+It is the first port of call for developers to start a new project, and the
+overwhelming number of projects use a permissive licence.
+&lt;/p&gt;
+
+&lt;p&gt;
+Why? The owner, Microsoft, uses MIT, a permissive licence. Other big players –
+Google, Amazon, Apple, Facebook – use permissive licences too. They benefit
+from inculcating a culture of permissive licences, as it allows them to reap
+the benefits of using volunteers’ code, having volunteers fix their bugs and
+write new features, and to simply close off access when it suits them. Copyleft
+is viral&lt;sup&gt;&lt;a id=&quot;fnr.4&quot; class=&quot;footref&quot; href=&quot;#fn.4&quot; role=&quot;doc-backlink&quot;&gt;4&lt;/a&gt;&lt;/sup&gt;. Copyleft is a cancer&lt;sup&gt;&lt;a id=&quot;fnr.5&quot; class=&quot;footref&quot; href=&quot;#fn.5&quot; role=&quot;doc-backlink&quot;&gt;5&lt;/a&gt;&lt;/sup&gt;. Copyleft scares users
+off from using the code. Is that so?
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-orgc3b2c18&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;orgc3b2c18&quot;&gt;Copyleft&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-orgc3b2c18&quot;&gt;
+&lt;p&gt;
+Copyleft stipulates that our freedoms are non-negotiable. You have the right to
+use my software, to modify it, to share it. But if you share it, you must grant
+the person you share the software with those same freedoms: they too must be
+allowed to use the software, to modify it, to share it. You are unable to
+restrict those freedoms in any way.
+&lt;/p&gt;
+
+&lt;p&gt;
+Copyleft is so simple, so idealistic, so compelling, it seems impossible that
+it could work. Detractors have probed for loopholes, a fault in the logic.
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+Would I be able to charge the other person? How about if so much of the ship
+changed, every part is new, is the ship still copyleft? Do I still have to
+provide those freedoms if an emu is chasing me? What about on a Tuesday?
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+To soothe all of these fears and block up any cracks, the best copyleft
+licence, the GNU AGPL, runs to 5535 words. Still though, questions come, and
+all-encompassing statements:
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+No one could make money off of it. No company would dare touch it. Nothing so
+morally naïve could survive in the ‘real’ world. Take your head out of the
+clouds, clear your mind of ‘thought-stuff’, this ain’t gonna work.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+Yet, copyleft powers the 100 fastest supercomputers, roves on Mars, underpins
+the Internet, runs on most phones. Amazon, Microsoft, Meta (Facebook) and
+Alphabet (Google), all heavy users of copyleft software, made a combined gross
+profit of over $600 billion in 2022.
+&lt;/p&gt;
+
+&lt;p&gt;
+The case for copyleft is clear. Coding is difficult, but we can share the
+burden. Let us share the fun too.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;footnotes&quot;&gt;
+&lt;h2 class=&quot;footnotes&quot;&gt;Footnotes: &lt;/h2&gt;
+&lt;div id=&quot;text-footnotes&quot;&gt;
+
+&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.1&quot; class=&quot;footnum&quot; href=&quot;#fnr.1&quot; role=&quot;doc-backlink&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;div class=&quot;footpara&quot; role=&quot;doc-footnote&quot;&gt;&lt;p class=&quot;footpara&quot;&gt;
+As was more common in 1975, Fred Brooks used the male pronoun as the
+neutral default. The male default rankles with me, however, so I’ve tweaked the
+pronouns. See:
+&lt;a href=&quot;https://thesocietypages.org/socimages/2013/02/16/male-as-the-neutral-default/&quot;&gt;https://thesocietypages.org/socimages/2013/02/16/male-as-the-neutral-default/&lt;/a&gt;
+&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.2&quot; class=&quot;footnum&quot; href=&quot;#fnr.2&quot; role=&quot;doc-backlink&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; &lt;div class=&quot;footpara&quot; role=&quot;doc-footnote&quot;&gt;&lt;p class=&quot;footpara&quot;&gt;
+hacker: A person who delights in having an intimate understanding
+of the internal workings of a system, computers and computer networks in
+particular. G. Malkin, RFC 1392: the Internet Users’ Glossary.
+&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.3&quot; class=&quot;footnum&quot; href=&quot;#fnr.3&quot; role=&quot;doc-backlink&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; &lt;div class=&quot;footpara&quot; role=&quot;doc-footnote&quot;&gt;&lt;p class=&quot;footpara&quot;&gt;
+As in any other sphere with heated ideological differences, there are
+many terms used to describe essentially the same concept. Free software, the
+original term, is favoured by idealists. Open source was created by pragmatists
+who were worried that the term free was being misunderstood and was scaring off
+businesses. Open source is now the most commonly used term. Free and open
+source software, a lengthy and unwieldly compromise, is preferred by those who
+adopt pretensions of idealism, but are too cowardly to fully commit. Other
+alternatives, such as free libre and open source software (FLOSS), have even
+more obvious flaws.
+&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.4&quot; class=&quot;footnum&quot; href=&quot;#fnr.4&quot; role=&quot;doc-backlink&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; &lt;div class=&quot;footpara&quot; role=&quot;doc-footnote&quot;&gt;&lt;p class=&quot;footpara&quot;&gt;
+&lt;a href=&quot;https://github.com/readme/guides/open-source-licensing&quot;&gt;https://github.com/readme/guides/open-source-licensing&lt;/a&gt;
+&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.5&quot; class=&quot;footnum&quot; href=&quot;#fnr.5&quot; role=&quot;doc-backlink&quot;&gt;5&lt;/a&gt;&lt;/sup&gt; &lt;div class=&quot;footpara&quot; role=&quot;doc-footnote&quot;&gt;&lt;p class=&quot;footpara&quot;&gt;
+&lt;a href=&quot;https://www.theregister.com/2001/06/02/ballmer_linux_is_a_cancer/&quot;&gt;https://www.theregister.com/2001/06/02/ballmer_linux_is_a_cancer/&lt;/a&gt;
+&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;
+
+
+&lt;/div&gt;
+&lt;/div&gt;
+        </description>
+    </item>
+    <item>
         <title>Markdown + CSS + Pandoc</title>
         <link>https://christianchristiansen.net/log/markdown-css-pandoc.html</link>
         <pubDate>Sat, 06 May 2023 14:26:34 AEST</pubDate>
