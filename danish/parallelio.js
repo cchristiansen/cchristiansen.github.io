@@ -2,7 +2,7 @@ const translations = {
     "ad": "",
     "af": "off",
     "aldrig": "never",
-    "alene": "alone",
+    "alene": "alone/only",
     "alle": "all",
     "alle mennesker": "everybody/everyone",
     "allerhøjeste": "highest",
