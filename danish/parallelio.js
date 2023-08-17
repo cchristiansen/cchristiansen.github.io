@@ -79,7 +79,7 @@ const translations = {
     "egne": "own",
     "ej": "",
     "eller": "or",
-    "embede": "office",
+    "embede": "office/posts",
     "embedsmand": "official",
     "embedsmænd": "officials",
     "en": "a/an/one",
