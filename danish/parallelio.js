@@ -261,7 +261,7 @@ const translations = {
     "mærke med": "find out/confess",
     "mønster": "pattern",
     "mønstret": "pattern/patterns",
-    "nabo": "neighbour",
+    "nabo": "neighbour/neighbours",
     "natten": "night",
     "navn": "name",
     "nej": "no",
