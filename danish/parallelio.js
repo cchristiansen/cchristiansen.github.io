@@ -452,18 +452,14 @@ const selectWordsMatcherHelper = (words, matchesSoFar) => {
     if (matchesSoFar === null) {
       let matchesSoFar = [
         ...document.querySelectorAll("."+word)
-      ].filter((item) => {
-        if (item.parentElement.className.includes("t2")) {
-          return item
-        }
-      }).map((item) => [item]);
+      ].map((item) => [item]);
       return selectWordsMatcherHelper(words, matchesSoFar);
     } else if (matchesSoFar.length === 0) {
       return []
     } else {
       matchesSoFar = matchesSoFar.map((matches) => {
         let match = matches.at(-1);
-        if (match.nextElementSibling.className.split(" ").includes(word)) {
+        if (match.nextElementSibling?.className.split(" ").includes(word)) {
           return [...matches, match.nextElementSibling];
         }
         return [];
@@ -477,59 +473,66 @@ const selectWordsMatcher = (words) => {
   return selectWordsMatcherHelper(words, null);
 }
 
+const highlightElems = (elems, key) => {
+  elems.forEach((match) => {
+    if (match.parentElement.className.includes("t1")) {
+      match.onmouseover = ((e) => {
+        match.className = match.className + " highlighted";
+        translations[key].split("/").forEach((word) => {
+          if (word !== "") {
+            if (!word.includes(" ")) {
+              document.querySelectorAll("."+word).forEach((item) => {
+                if (item.parentElement.className.includes("t2")) {
+                  item.className = item.className + " highlighted";
+                }
+              });
+            } else {
+              let words = word.split(" ");
+              let sequenceMatches = selectWordsMatcher(words);
+              sequenceMatches.forEach((sequence) => {
+                sequence.forEach((item) => {
+                  item.className = item.className + " highlighted";
+                })
+              })
+            }
+          }
+        });
+      });
+      match.onmouseout = ((e) => {
+        match.className = match.className.replace(" highlighted", "");
+        translations[key].split("/").forEach((word) => {
+          if (word !== "") {
+            if (!word.includes(" ")) {
+              document.querySelectorAll("."+word).forEach((item) => {
+                if (item.parentElement.className.includes("t2")) {
+                  item.className = item.className.replace(" highlighted", "");
+                }
+              });
+            } else {
+              let words = word.split(" ");
+              let sequenceMatches = selectWordsMatcher(words);
+              sequenceMatches.forEach((sequence) => {
+                sequence.forEach((item) => {
+                  item.className = item.className.replace(" highlighted", "");
+                })
+              })
+            }
+          }
+        });
+      });
+    }
+  });
+}
+
 window.addEventListener('load', function () {
   Object.keys(translations).forEach((key) => {
+    let danishElems = []
     if (!key.includes(" ")) {
-      document.querySelectorAll("."+key).forEach((match) => {
-        if (match.parentElement.className.includes("t1")) {
-          match.onmouseover = ((e) => {
-            match.className = match.className + " highlighted";
-            translations[key].split("/").forEach((word) => {
-              if (word !== "") {
-                if (!word.includes(" ")) {
-                  document.querySelectorAll("."+word).forEach((item) => {
-                    if (item.parentElement.className.includes("t2")) {
-                      item.className = item.className + " highlighted";
-                    }
-                  });
-                } else {
-                  let words = word.split(" ");
-                  let sequenceMatches = selectWordsMatcher(words);
-                  sequenceMatches.forEach((sequence) => {
-                    sequence.forEach((item) => {
-                      item.className = item.className + " highlighted";
-                    })
-                  })
-                }
-              }
-            });
-          });
-          match.onmouseout = ((e) => {
-            match.className = match.className.replace(" highlighted", "");
-            translations[key].split("/").forEach((word) => {
-              if (word !== "") {
-                if (!word.includes(" ")) {
-                  document.querySelectorAll("."+word).forEach((item) => {
-                    if (item.parentElement.className.includes("t2")) {
-                      item.className = item.className.replace(" highlighted", "");
-                    }
-                  });
-                } else {
-                  let words = word.split(" ");
-                  let sequenceMatches = selectWordsMatcher(words);
-                  sequenceMatches.forEach((sequence) => {
-                    sequence.forEach((item) => {
-                      item.className = item.className.replace(" highlighted", "");
-                    })
-                  })
-                }
-              }
-            });
-          });
-        }
-      });
+      danishElems = document.querySelectorAll("."+key);
     } else {
-      console.log(key);
+      let words = key.split(" ");
+      danishElems = selectWordsMatcher(words).flat();
     }
+    highlightElems(danishElems, key);
   });
 });
