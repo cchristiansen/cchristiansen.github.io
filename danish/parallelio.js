@@ -133,6 +133,7 @@ const translations = {
     "ganske": "completely/most",
     "garderoben": "dressing room",
     "gav": "give",
+    "gav sig ud": "pretended",
     "gik": "went",
     "give": "give",
     "gjorde": "did",
@@ -259,7 +260,7 @@ const translations = {
     "mænd": "men",
     "mærke med": "find out/confess",
     "mønster": "pattern",
-    "mønstret": "pattern",
+    "mønstret": "pattern/patterns",
     "nabo": "neighbour",
     "natten": "night",
     "navn": "name",
@@ -324,7 +325,6 @@ const translations = {
     "sidder": "fit",
     "siden": "ago",
     "sidst": "last",
-    "sig": "",
     "sige": "tell",
     "siger": "saying",
     "silke": "silk",
@@ -409,7 +409,7 @@ const translations = {
     "usynlige": "invisible",
     "usædvanligt": "unusually",
     "utilladelig": "inexcusably",
-    "var": "would/were",
+    "var": "would/were/was",
     "ved": "at",
     "vejret": "air",
     "velsignet": "heavenly",
@@ -525,7 +525,7 @@ const highlightElems = (elems, key) => {
 }
 
 window.addEventListener('load', function () {
-  Object.keys(translations).forEach((key) => {
+  Object.keys(translations).sort((a, b) => a.length > b.length).forEach((key) => {
     let danishElems = []
     if (!key.includes(" ")) {
       danishElems = document.querySelectorAll("."+key);
