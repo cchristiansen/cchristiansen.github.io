@@ -444,18 +444,36 @@ const translations = {
     "øjnene": "eyes"
 }
 
-// const selectWordsMatcherHelper = (words, sofar) => {
-//   if (words.length === 0) {
-//     return sofar;
-//   } else {
-//     let word = words.shift();
+const selectWordsMatcherHelper = (words, matchesSoFar) => {
+  if (words.length === 0) {
+    return matchesSoFar;
+  } else {
+    let word = words.shift();
+    if (matchesSoFar === null) {
+      let matches = [...document.querySelectorAll("."+word)].filter((item) => {
+        if (item.parentElement.className.includes("t2")) {
+          return item
+        }
+      }).map((item) => [item]);
+      return selectWordsMatcherHelper(words, matches);
+    } else if (matchesSoFar.length === 0) {
+      return []
+    } else {
+      matchesSoFar = matchesSoFar.map((matches) => {
+        let match = matches.at(-1);
+        if (match.nextElementSibling.className.split(" ").includes(word)) {
+          return [...matches, match.nextElementSibling];
+        }
+        return [];
+      }).filter((matches) => matches.length > 0);
+      return matchesSoFar;
+    }
+  }
+}
 
-//   }
-// }
-
-// const selectWordsMatcher = (words) => {
-//   return selectWordsMatcherHelper(words, []);
-// }
+const selectWordsMatcher = (words) => {
+  return selectWordsMatcherHelper(words, null);
+}
 
 window.addEventListener('load', function () {
   Object.keys(translations).forEach((key) => {
@@ -472,9 +490,14 @@ window.addEventListener('load', function () {
                       item.className = item.className + " highlighted";
                     }
                   });
-                // } else {
-                //   let words = word.split(" ");
-                //   let matches = selectWordsMatcher(words);
+                } else {
+                  let words = word.split(" ");
+                  let sequenceMatches = selectWordsMatcher(words);
+                  sequenceMatches.forEach((sequence) => {
+                    sequence.forEach((item) => {
+                      item.className = item.className + " highlighted";
+                    })
+                  })
                 }
               }
             });
@@ -489,6 +512,14 @@ window.addEventListener('load', function () {
                       item.className = item.className.replace(" highlighted", "");
                     }
                   });
+                } else {
+                  let words = word.split(" ");
+                  let sequenceMatches = selectWordsMatcher(words);
+                  sequenceMatches.forEach((sequence) => {
+                    sequence.forEach((item) => {
+                      item.className = item.className.replace(" highlighted", "");
+                    })
+                  })
                 }
               }
             });
