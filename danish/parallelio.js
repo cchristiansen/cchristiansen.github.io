@@ -525,14 +525,16 @@ const highlightElems = (elems, key) => {
 }
 
 window.addEventListener('load', function () {
-  Object.keys(translations).sort((a, b) => a.length > b.length).forEach((key) => {
-    let danishElems = []
-    if (!key.includes(" ")) {
-      danishElems = document.querySelectorAll("."+key);
-    } else {
-      let words = key.split(" ");
-      danishElems = selectWordsMatcher(words).flat();
-    }
-    highlightElems(danishElems, key);
-  });
+  Object.keys(translations)
+    .sort((a, b) => a.length > b.length)
+    .forEach((key) => {
+      let danishElems = []
+      if (!key.includes(" ")) {
+        danishElems = document.querySelectorAll("."+key);
+      } else {
+        let words = key.split(" ");
+        danishElems = selectWordsMatcher(words).flat();
+      }
+      highlightElems(danishElems, key);
+    });
 });
