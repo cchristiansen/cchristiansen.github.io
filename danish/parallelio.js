@@ -399,7 +399,7 @@ const translations = {
     "tøj": "cloth",
     "tøjet": "cloth",
     "ud": "out",
-    "uden": "out",
+    "uden": "out/without",
     "udenfor": "outside",
     "udsøgte": "chosen",
     "uhyre": "exceedingly",
