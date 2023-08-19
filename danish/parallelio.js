@@ -115,7 +115,7 @@ const translations = {
     "forstand": "intelligent",
     "forstod": "understood",
     "fortæller": "tell",
-    "forunderlig": "perculiar",
+    "forunderlig": "peculiar",
     "forunderlige": "wonderful",
     "fra": "from",
     "fremmede": "strangers",
