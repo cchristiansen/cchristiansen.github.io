@@ -130,7 +130,7 @@ const translations = {
     "gaden": "streets",
     "gamle": "old",
     "gang": "time",
-    "ganske": "completely",
+    "ganske": "completely/most",
     "garderoben": "dressing room",
     "gav": "give",
     "gik": "went",
