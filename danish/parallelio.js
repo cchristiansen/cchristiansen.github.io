@@ -450,12 +450,14 @@ const selectWordsMatcherHelper = (words, matchesSoFar) => {
   } else {
     let word = words.shift();
     if (matchesSoFar === null) {
-      let matches = [...document.querySelectorAll("."+word)].filter((item) => {
+      let matchesSoFar = [
+        ...document.querySelectorAll("."+word)
+      ].filter((item) => {
         if (item.parentElement.className.includes("t2")) {
           return item
         }
       }).map((item) => [item]);
-      return selectWordsMatcherHelper(words, matches);
+      return selectWordsMatcherHelper(words, matchesSoFar);
     } else if (matchesSoFar.length === 0) {
       return []
     } else {
@@ -466,7 +468,7 @@ const selectWordsMatcherHelper = (words, matchesSoFar) => {
         }
         return [];
       }).filter((matches) => matches.length > 0);
-      return matchesSoFar;
+      return selectWordsMatcherHelper(words, matchesSoFar);
     }
   }
 }
