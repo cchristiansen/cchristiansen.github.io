@@ -309,7 +309,7 @@ const translations = {
     "rådet": "council",
     "røst": "prattle",
     "sad": "sat",
-    "sagde": "said",
+    "sagde": "said/say",
     "sakse": "scissors",
     "salen": "room",
     "samme": "same",
