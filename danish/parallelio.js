@@ -77,8 +77,8 @@ const translations = {
     "egen": "own",
     "egenskab": "way",
     "egne": "own",
-    "ej": "",
-    "eller": "or",
+    "ej": "neither",
+    "eller": "or/nor",
     "embede": "office/posts",
     "embedsmand": "official",
     "embedsmænd": "officials",
@@ -115,7 +115,7 @@ const translations = {
     "forstand": "intelligent",
     "forstod": "understood",
     "fortæller": "tell",
-    "forunderlig": "perculiar",
+    "forunderlig": "peculiar",
     "forunderlige": "wonderful",
     "fra": "from",
     "fremmede": "strangers",
@@ -130,9 +130,10 @@ const translations = {
     "gaden": "streets",
     "gamle": "old",
     "gang": "time",
-    "ganske": "completely",
+    "ganske": "completely/most",
     "garderoben": "dressing room",
     "gav": "give",
+    "gav sig ud": "pretended",
     "gik": "went",
     "give": "give",
     "gjorde": "did",
@@ -259,8 +260,8 @@ const translations = {
     "mænd": "men",
     "mærke med": "find out/confess",
     "mønster": "pattern",
-    "mønstret": "pattern",
-    "nabo": "neighbour",
+    "mønstret": "pattern/patterns",
+    "nabo": "neighbour/neighbours",
     "natten": "night",
     "navn": "name",
     "nej": "no",
@@ -324,7 +325,6 @@ const translations = {
     "sidder": "fit",
     "siden": "ago",
     "sidst": "last",
-    "sig": "",
     "sige": "tell",
     "siger": "saying",
     "silke": "silk",
@@ -399,7 +399,7 @@ const translations = {
     "tøj": "cloth",
     "tøjet": "cloth",
     "ud": "out",
-    "uden": "out",
+    "uden": "out/without",
     "udenfor": "outside",
     "udsøgte": "chosen",
     "uhyre": "exceedingly",
@@ -409,7 +409,7 @@ const translations = {
     "usynlige": "invisible",
     "usædvanligt": "unusually",
     "utilladelig": "inexcusably",
-    "var": "would/were",
+    "var": "would/were/was",
     "ved": "at",
     "vejret": "air",
     "velsignet": "heavenly",
@@ -444,59 +444,97 @@ const translations = {
     "øjnene": "eyes"
 }
 
-// const selectWordsMatcherHelper = (words, sofar) => {
-//   if (words.length === 0) {
-//     return sofar;
-//   } else {
-//     let word = words.shift();
-
-//   }
-// }
-
-// const selectWordsMatcher = (words) => {
-//   return selectWordsMatcherHelper(words, []);
-// }
-
-window.addEventListener('load', function () {
-  Object.keys(translations).forEach((key) => {
-    if (!key.includes(" ")) {
-      document.querySelectorAll("."+key).forEach((match) => {
-        if (match.parentElement.className.includes("t1")) {
-          match.onmouseover = ((e) => {
-            match.className = match.className + " highlighted";
-            translations[key].split("/").forEach((word) => {
-              if (word !== "") {
-                if (!word.includes(" ")) {
-                  document.querySelectorAll("."+word).forEach((item) => {
-                    if (item.parentElement.className.includes("t2")) {
-                      item.className = item.className + " highlighted";
-                    }
-                  });
-                // } else {
-                //   let words = word.split(" ");
-                //   let matches = selectWordsMatcher(words);
-                }
-              }
-            });
-          });
-          match.onmouseout = ((e) => {
-            match.className = match.className.replace(" highlighted", "");
-            translations[key].split("/").forEach((word) => {
-              if (word !== "") {
-                if (!word.includes(" ")) {
-                  document.querySelectorAll("."+word).forEach((item) => {
-                    if (item.parentElement.className.includes("t2")) {
-                      item.className = item.className.replace(" highlighted", "");
-                    }
-                  });
-                }
-              }
-            });
-          });
-        }
-      });
+const selectWordsMatcherHelper = (words, matchesSoFar) => {
+  if (words.length === 0) {
+    return matchesSoFar;
+  } else {
+    let word = words.shift();
+    if (matchesSoFar === null) {
+      let matchesSoFar = [
+        ...document.querySelectorAll("."+word)
+      ].map((item) => [item]);
+      return selectWordsMatcherHelper(words, matchesSoFar);
+    } else if (matchesSoFar.length === 0) {
+      return []
     } else {
-      console.log(key);
+      matchesSoFar = matchesSoFar.map((matches) => {
+        let match = matches.at(-1);
+        if (match.nextElementSibling?.className.split(" ").includes(word)) {
+          return [...matches, match.nextElementSibling];
+        }
+        return [];
+      }).filter((matches) => matches.length > 0);
+      return selectWordsMatcherHelper(words, matchesSoFar);
+    }
+  }
+}
+
+const selectWordsMatcher = (words) => {
+  return selectWordsMatcherHelper(words, null);
+}
+
+const highlightElems = (elems, key) => {
+  elems.forEach((match) => {
+    if (match.parentElement.className.includes("t1")) {
+      match.onmouseover = ((e) => {
+        match.className = match.className + " highlighted";
+        translations[key].split("/").forEach((word) => {
+          if (word !== "") {
+            if (!word.includes(" ")) {
+              document.querySelectorAll("."+word).forEach((item) => {
+                if (item.parentElement.className.includes("t2")) {
+                  item.className = item.className + " highlighted";
+                }
+              });
+            } else {
+              let words = word.split(" ");
+              let sequenceMatches = selectWordsMatcher(words);
+              sequenceMatches.forEach((sequence) => {
+                sequence.forEach((item) => {
+                  item.className = item.className + " highlighted";
+                })
+              })
+            }
+          }
+        });
+      });
+      match.onmouseout = ((e) => {
+        match.className = match.className.replace(" highlighted", "");
+        translations[key].split("/").forEach((word) => {
+          if (word !== "") {
+            if (!word.includes(" ")) {
+              document.querySelectorAll("."+word).forEach((item) => {
+                if (item.parentElement.className.includes("t2")) {
+                  item.className = item.className.replace(" highlighted", "");
+                }
+              });
+            } else {
+              let words = word.split(" ");
+              let sequenceMatches = selectWordsMatcher(words);
+              sequenceMatches.forEach((sequence) => {
+                sequence.forEach((item) => {
+                  item.className = item.className.replace(" highlighted", "");
+                })
+              })
+            }
+          }
+        });
+      });
     }
   });
+}
+
+window.addEventListener('load', function () {
+  Object.keys(translations)
+    .sort((a, b) => a.length > b.length)
+    .forEach((key) => {
+      let danishElems = []
+      if (!key.includes(" ")) {
+        danishElems = document.querySelectorAll("."+key);
+      } else {
+        let words = key.split(" ");
+        danishElems = selectWordsMatcher(words).flat();
+      }
+      highlightElems(danishElems, key);
+    });
 });
