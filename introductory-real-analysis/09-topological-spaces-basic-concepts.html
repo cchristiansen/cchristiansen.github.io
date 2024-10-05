@@ -3,38 +3,80 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-02-20 Mon 08:43 -->
+<!-- 2024-05-13 Mon 16:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Topological Spaces: Basic Concepts. Christian Christiansen.</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Christian Christiansen" />
 <link rel="stylesheet" type="text/css" href="../main.css">
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        displayAlign: "center",
-        displayIndent: "0em",
-
-        "HTML-CSS": { scale: 100,
-                        linebreaks: { automatic: "false" },
-                        webFont: "TeX"
-                       },
-        SVG: {scale: 100,
-              linebreaks: { automatic: "false" },
-              font: "TeX"},
-        NativeMML: {scale: 100},
-        TeX: { equationNumbers: {autoNumber: "AMS"},
-               MultLineWidth: "85%",
-               TagSide: "right",
-               TagIndent: ".8em"
-             }
-});
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-tex',
+      displayOverflow: 'overflow'
+    }
+  };
 </script>
-<script src="https://christianchristiansen.net/mathjax/tex-chtml.js"></script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://christianchristiansen.net/mathjax/tex-chtml.js">
+</script>
 </head>
 <body>
 <div id="content">
 <h1 class="title">Topological Spaces: Basic Concepts</h1>
+
+<div id="outline-container-topological-spaces-basic-concepts-content" class="outline-2">
+<h2 id="topological-spaces-basic-concepts-content">Questions for testing self</h2>
+<div class="outline-text-2" id="text-topological-spaces-basic-concepts-content">
+<ul class="org-ul">
+<li><p>What is a topological space?</p></li>
+<li><p>What is a compact point?</p></li>
+<li><p>What is a limit point?</p></li>
+<li><p>Prove that the intersection of any topologies is itself a topology.</p></li>
+<li><p>What is a base?</p></li>
+<li><p>What is the first axiom of countability?</p></li>
+<li><p>Prove that if a topological space \(T\) satisfies the first axiom of
+countability, then every contact point \(x\) of a set \(M \subseteq T\) is the
+limit of a convergent sequence of points in \(M\).</p></li>
+<li><p>What is the first axiom of separation?</p></li>
+<li><p>Prove that every finite subset of a \(T_1\)​-space is closed.</p></li>
+<li><p>What is the second axiom of separation, similarly, a Hausdorff space?</p></li>
+<li><p>What does it mean for a topological space to be normal?</p></li>
+<li><p>Is every metric space normal? Prove it.</p></li>
+<li><p>When is a mapping said to be continuous?</p></li>
+<li><p>Prove that a mapping of a topological space \(X\) into a topological space \(Y\)
+is continuous if and only if the preimage \(\Gamma = f^{-1}(G)\) of every open
+set \(G \subseteq Y\) is open (in \(X\)).</p></li>
+<li><p>What is a homeomorphism?</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-topological-spaces-basic-concepts-notes" class="outline-2">
+<h2 id="topological-spaces-basic-concepts-notes">Notes</h2>
+<div class="outline-text-2" id="text-topological-spaces-basic-concepts-notes">
 <p>
 <b>Definition</b>
 Given a set \(X\), a <i>topology</i> in \(X\) is a system \(\tau\) of subsets
@@ -83,7 +125,7 @@ is a set of the system \(\tau_1\).
 <p>
 <b>Theorem 1</b>
 </p>
-<div class="theorem" id="orgbbb80dc">
+<div class="theorem" id="org9d95aac">
 <p>
 The intersection \(\tau = \cap_\alpha \tau_\alpha\) of any sets of topologies in
 \(X\) is itself a topology in \(X\).
@@ -94,7 +136,7 @@ The intersection \(\tau = \cap_\alpha \tau_\alpha\) of any sets of topologies in
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org07a377d">
+<div class="proof" id="orge9d8492">
 <p>
 Clearly \(\cap_\alpha \tau_\alpha\) contains \(X\) and \(\emptyset\). Also, every
 \(\tau_\alpha\) is closed (algebraically) under the operations of taking
@@ -107,7 +149,7 @@ arbitrary unions and finite intersections, the same is true of
 <p>
 <b>Corollary</b>
 </p>
-<div class="proof" id="orgc81989b">
+<div class="proof" id="org64403c5">
 <p>
 Let \(\mathscr{B}\) be any system of subsets of a set \(X\). Then there exists a
 minimal topology in \(X\) containing \(\mathscr{B}\), i.e. a topology
@@ -120,7 +162,7 @@ containing \(\mathscr{B}\).
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org26eca9f">
+<div class="proof" id="org7bbc927">
 <p>
 A topology containing \(\mathscr{B}\) always exists, e.g. the topology in which
 every subset of \(X\) is open. The intersection fo all topologies containing
@@ -152,7 +194,7 @@ in \(\mathscr{G}\).
 <p>
 <b>Theorem 2</b>
 </p>
-<div class="theorem" id="orga2850ef">
+<div class="theorem" id="orgeec60ed">
 <p>
 Given a set \(T\), let \(\mathscr{G}\) be a system of subsets
 \(G_\alpha \subseteq T\) with the following two properties:
@@ -173,7 +215,7 @@ Suppose the empty set \(\emptyset\) and all sets representable as unions of sets
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orgf62152d">
+<div class="proof" id="orgde29791">
 <p>
 Evident from the conditions of the theorem that the whole set \(T\) and the empty
 set \(\emptyset\) are open sets; and the union of any number of open sets is
@@ -196,7 +238,7 @@ sets in \(T\) are defined.
 <p>
 <b>Theorem 3</b>
 </p>
-<div class="theorem" id="org9c030a8">
+<div class="theorem" id="org2ea8047">
 <p>
 A system \(\mathscr{G}\) of open sets \(G_\alpha\) in a topological space \(T\) is a
 base for \(T\) if and only if, given any open set \(G \subseteq T\) and any point
@@ -209,7 +251,7 @@ base for \(T\) if and only if, given any open set \(G \subseteq T\) and any poin
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orgecad15e">
+<div class="proof" id="org3ba3eb8">
 <p>
 If \(\mathscr{G}\) is a base for \(T\), then every open set \(G \subseteq T\) is set
 \(G \subseteq T\) and any point
@@ -235,7 +277,7 @@ more than countably many sets. Such a space is said to satisfy the
 <p>
 <b>Theorem 4</b>
 </p>
-<div class="theorem" id="org83565d6">
+<div class="theorem" id="org2a5c6cb">
 <p>
 If a topological space \(T\) has a countable base, then \(T\) contains a countable
 everywhere dense subset, i.e. a countable set \(M \subseteq T\) such that
@@ -246,7 +288,7 @@ everywhere dense subset, i.e. a countable set \(M \subseteq T\) such that
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orge8e79e2">
+<div class="proof" id="org44e2285">
 <p>
 Let \(\mathscr{G} = \{G_1, \ldots, G_n, \ldots\}\) be a countable base for \(T\),
 and choose a point \(x_n\) in each \(G_n\). Then the set
@@ -262,7 +304,7 @@ some of the sets \(G_n\) in \(\mathscr{G}\) and \(G_n\) contains the point
 <p>
 <b>Theorem 5</b>
 </p>
-<div class="theorem" id="orgf5d6ef4">
+<div class="theorem" id="org6119bc3">
 <p>
 If a metric space \(R\) has a countable everywhere dense subset, then \(R\) has a
 countable base.
@@ -273,7 +315,7 @@ countable base.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orgc7b090a">
+<div class="proof" id="org01c6719">
 <p>
 Suppose \(R\) has a countable everywhere dense subset \(\{x_1, \ldots, x_n,
 \ldots\}\). Then, given any open set \(G \subseteq R\) and any \(x \in G\), there is
@@ -304,7 +346,7 @@ of \(\mathscr{M}\) which also covers \(T\).
 <p>
 <b>Theorem 6</b>
 </p>
-<div class="theorem" id="org81c1737">
+<div class="theorem" id="org602717f">
 <p>
 If \(T\) is a topological space with a countable base \(\mathscr{G}\), then every
 open cover \(\mathscr{O}\) has a finite or countable subcover.
@@ -315,7 +357,7 @@ open cover \(\mathscr{O}\) has a finite or countable subcover.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org9b66159">
+<div class="proof" id="orgdb792ba">
 <p>
 Since \(\mathscr{O}\) covers \(T\), each point \(x \in T\) belongs to some open set
 \(O_\alpha \in \mathscr{O}\). Moreover, since \(\mathscr{G}\) is a countable base
@@ -337,7 +379,7 @@ A topological space \(T\) is <i>connected</i> if it has no subsets other than
 <p>
 <b>Theorem 7</b>
 </p>
-<div class="theorem" id="org97a5cb1">
+<div class="theorem" id="orgf358ac0">
 <p>
 If a topological space \(T\) satisfies the <i>first axiom of countability</i>, i.e. if
 there is a countable neighbourhood base at every point \(x \in T\), then every
@@ -350,7 +392,7 @@ sequence of points in \(M\).
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orgd4a192d">
+<div class="proof" id="org75711c1">
 <p>
 Let \(\mathscr{O}\) be a countable neighbourhood base at \(x\), consisting of sets
 \(O_n\). it can be assumed that \(O_{n+1} \subseteq O_n (n = 1, 2, \ldots)\),
@@ -373,7 +415,7 @@ space \(T\), there is a neighbourhood \(O_x\) of \(x\) and a neighbourhood \(O_y
 <p>
 <b>Theorem 8</b>
 </p>
-<div class="theorem" id="org1909793">
+<div class="theorem" id="org4e8f799">
 <p>
 Every finite subset of a \(T_1\)​-space is closed.
 </p>
@@ -383,7 +425,7 @@ Every finite subset of a \(T_1\)​-space is closed.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org5a11fe8">
+<div class="proof" id="orge4449ce">
 <p>
 Given any single-element set \(\{x\}\), suppose \(y \neq x\). Then \(y\) has a
 neighbourhood \(O_y\) which does not contain \(x\), i.e. \(y \notin [\{x\}]\).
@@ -413,7 +455,7 @@ and an open set \(O_2\) containing \(F_2\) such that \(O_1 \cap O_2 = \emptyset\
 <p>
 <b>Theorem 9</b>
 </p>
-<div class="theorem" id="org795bc2b">
+<div class="theorem" id="orgf2cbce0">
 <p>
 Every metric space is normal.
 </p>
@@ -423,7 +465,7 @@ Every metric space is normal.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org7c49117">
+<div class="proof" id="orga0823bd">
 <p>
 Let \(X\) and \(Y\) be any two disjoint closed subsets of \(R\). Every point \(x
 \in X\) has a neighbourhood \(O_x\) disjoint from \(Y\), and hence is at a positive
@@ -473,7 +515,7 @@ real line is called a continuous real function on \(X\).
 <p>
 <b>Theorem 10</b>
 </p>
-<div class="theorem" id="org03be2e8">
+<div class="theorem" id="orgd3e60ae">
 <p>
 A mapping \(f\) of a topological space \(X\) into a topological space \(Y\) is
 continuous if and only if the preimage \(\Gamma = f^{-1}(G)\) of every open set
@@ -485,7 +527,7 @@ continuous if and only if the preimage \(\Gamma = f^{-1}(G)\) of every open set
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org57a3684">
+<div class="proof" id="org930defc">
 <p>
 Suppose \(f\) is continuous and \(G\) is an open subset of \(Y\). Choose
 \(x \in \Gamma = f^{-1}(G)\) and let \(y = f(x)\). Then \(G\) is a neighbourhood of
@@ -508,7 +550,7 @@ arbitrary point of \(X\).
 <p>
 <b>Theorem 10’</b>
 </p>
-<div class="theorem" id="orga1aebaa">
+<div class="theorem" id="org1d70c73">
 <p>
 A mapping \(f\) of a topological space \(X\) into a topological space \(Y\) is
 continuous if and only if the preimage \(\Gamma = f^{-1}(F)\) of every closed set
@@ -520,7 +562,7 @@ continuous if and only if the preimage \(\Gamma = f^{-1}(F)\) of every closed se
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orgaa6c0c5">
+<div class="proof" id="org91e5803">
 <p>
 Use the fact that thereforereimage ofclosed complement is the complement of the
 preimage.
@@ -531,7 +573,7 @@ preimage.
 <p>
 <b>Theorem 11</b>
 </p>
-<div class="theorem" id="orgbf8923a">
+<div class="theorem" id="orgf95286c">
 <p>
 Given topological spaces \(X\), \(Y\) and \(Z\), suppose \(f\) is a continuous mapping
 of \(X\) into \(Y\) and \(\phi\) is a continuous mapping of \(Y\) into \(Z\). Then the
@@ -544,7 +586,7 @@ continuous.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org205e1b6">
+<div class="proof" id="org9405a41">
 <p>
 Immediate consequence of Theorem 10.
 </p>
@@ -572,6 +614,8 @@ metric space).
 A necessary and sufficient condition for a topological space with a countable
 base to be metrizable is that it be normal.
 </p>
+</div>
+</div>
 
 <div id="outline-container-topological-spaces-basic-concepts-problems" class="outline-2">
 <h2 id="topological-spaces-basic-concepts-problems">Problems</h2>
