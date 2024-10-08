@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-05-13 Mon 16:43 -->
+<!-- 2024-10-08 Tue 19:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Topological Spaces: Basic Concepts. Christian Christiansen.</title>
@@ -125,7 +125,7 @@ is a set of the system \(\tau_1\).
 <p>
 <b>Theorem 1</b>
 </p>
-<div class="theorem" id="org9d95aac">
+<div class="theorem" id="org6050220">
 <p>
 The intersection \(\tau = \cap_\alpha \tau_\alpha\) of any sets of topologies in
 \(X\) is itself a topology in \(X\).
@@ -136,7 +136,7 @@ The intersection \(\tau = \cap_\alpha \tau_\alpha\) of any sets of topologies in
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orge9d8492">
+<div class="proof" id="org624e3c8">
 <p>
 Clearly \(\cap_\alpha \tau_\alpha\) contains \(X\) and \(\emptyset\). Also, every
 \(\tau_\alpha\) is closed (algebraically) under the operations of taking
@@ -149,7 +149,7 @@ arbitrary unions and finite intersections, the same is true of
 <p>
 <b>Corollary</b>
 </p>
-<div class="proof" id="org64403c5">
+<div class="proof" id="org76eb7d4">
 <p>
 Let \(\mathscr{B}\) be any system of subsets of a set \(X\). Then there exists a
 minimal topology in \(X\) containing \(\mathscr{B}\), i.e. a topology
@@ -162,7 +162,7 @@ containing \(\mathscr{B}\).
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org7bbc927">
+<div class="proof" id="orgb3ad3f2">
 <p>
 A topology containing \(\mathscr{B}\) always exists, e.g. the topology in which
 every subset of \(X\) is open. The intersection fo all topologies containing
@@ -194,7 +194,7 @@ in \(\mathscr{G}\).
 <p>
 <b>Theorem 2</b>
 </p>
-<div class="theorem" id="orgeec60ed">
+<div class="theorem" id="org5af5109">
 <p>
 Given a set \(T\), let \(\mathscr{G}\) be a system of subsets
 \(G_\alpha \subseteq T\) with the following two properties:
@@ -215,7 +215,7 @@ Suppose the empty set \(\emptyset\) and all sets representable as unions of sets
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orgde29791">
+<div class="proof" id="org579921c">
 <p>
 Evident from the conditions of the theorem that the whole set \(T\) and the empty
 set \(\emptyset\) are open sets; and the union of any number of open sets is
@@ -238,7 +238,7 @@ sets in \(T\) are defined.
 <p>
 <b>Theorem 3</b>
 </p>
-<div class="theorem" id="org2ea8047">
+<div class="theorem" id="orga887295">
 <p>
 A system \(\mathscr{G}\) of open sets \(G_\alpha\) in a topological space \(T\) is a
 base for \(T\) if and only if, given any open set \(G \subseteq T\) and any point
@@ -251,7 +251,7 @@ base for \(T\) if and only if, given any open set \(G \subseteq T\) and any poin
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org3ba3eb8">
+<div class="proof" id="org596f1d2">
 <p>
 If \(\mathscr{G}\) is a base for \(T\), then every open set \(G \subseteq T\) is set
 \(G \subseteq T\) and any point
@@ -277,7 +277,7 @@ more than countably many sets. Such a space is said to satisfy the
 <p>
 <b>Theorem 4</b>
 </p>
-<div class="theorem" id="org2a5c6cb">
+<div class="theorem" id="org14ada59">
 <p>
 If a topological space \(T\) has a countable base, then \(T\) contains a countable
 everywhere dense subset, i.e. a countable set \(M \subseteq T\) such that
@@ -288,7 +288,7 @@ everywhere dense subset, i.e. a countable set \(M \subseteq T\) such that
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org44e2285">
+<div class="proof" id="org3b988a3">
 <p>
 Let \(\mathscr{G} = \{G_1, \ldots, G_n, \ldots\}\) be a countable base for \(T\),
 and choose a point \(x_n\) in each \(G_n\). Then the set
@@ -304,7 +304,7 @@ some of the sets \(G_n\) in \(\mathscr{G}\) and \(G_n\) contains the point
 <p>
 <b>Theorem 5</b>
 </p>
-<div class="theorem" id="org6119bc3">
+<div class="theorem" id="orgdc5cbd7">
 <p>
 If a metric space \(R\) has a countable everywhere dense subset, then \(R\) has a
 countable base.
@@ -315,7 +315,7 @@ countable base.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org01c6719">
+<div class="proof" id="orgf34d213">
 <p>
 Suppose \(R\) has a countable everywhere dense subset \(\{x_1, \ldots, x_n,
 \ldots\}\). Then, given any open set \(G \subseteq R\) and any \(x \in G\), there is
@@ -346,7 +346,7 @@ of \(\mathscr{M}\) which also covers \(T\).
 <p>
 <b>Theorem 6</b>
 </p>
-<div class="theorem" id="org602717f">
+<div class="theorem" id="orgdc8b90f">
 <p>
 If \(T\) is a topological space with a countable base \(\mathscr{G}\), then every
 open cover \(\mathscr{O}\) has a finite or countable subcover.
@@ -357,7 +357,7 @@ open cover \(\mathscr{O}\) has a finite or countable subcover.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orgdb792ba">
+<div class="proof" id="org419d436">
 <p>
 Since \(\mathscr{O}\) covers \(T\), each point \(x \in T\) belongs to some open set
 \(O_\alpha \in \mathscr{O}\). Moreover, since \(\mathscr{G}\) is a countable base
@@ -379,7 +379,7 @@ A topological space \(T\) is <i>connected</i> if it has no subsets other than
 <p>
 <b>Theorem 7</b>
 </p>
-<div class="theorem" id="orgf358ac0">
+<div class="theorem" id="orgc76fbb0">
 <p>
 If a topological space \(T\) satisfies the <i>first axiom of countability</i>, i.e. if
 there is a countable neighbourhood base at every point \(x \in T\), then every
@@ -392,7 +392,7 @@ sequence of points in \(M\).
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org75711c1">
+<div class="proof" id="org5fc5c8b">
 <p>
 Let \(\mathscr{O}\) be a countable neighbourhood base at \(x\), consisting of sets
 \(O_n\). it can be assumed that \(O_{n+1} \subseteq O_n (n = 1, 2, \ldots)\),
@@ -415,7 +415,7 @@ space \(T\), there is a neighbourhood \(O_x\) of \(x\) and a neighbourhood \(O_y
 <p>
 <b>Theorem 8</b>
 </p>
-<div class="theorem" id="org4e8f799">
+<div class="theorem" id="orgff8ce49">
 <p>
 Every finite subset of a \(T_1\)​-space is closed.
 </p>
@@ -425,7 +425,7 @@ Every finite subset of a \(T_1\)​-space is closed.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orge4449ce">
+<div class="proof" id="org8f52859">
 <p>
 Given any single-element set \(\{x\}\), suppose \(y \neq x\). Then \(y\) has a
 neighbourhood \(O_y\) which does not contain \(x\), i.e. \(y \notin [\{x\}]\).
@@ -455,7 +455,7 @@ and an open set \(O_2\) containing \(F_2\) such that \(O_1 \cap O_2 = \emptyset\
 <p>
 <b>Theorem 9</b>
 </p>
-<div class="theorem" id="orgf2cbce0">
+<div class="theorem" id="org0e8a12e">
 <p>
 Every metric space is normal.
 </p>
@@ -465,7 +465,7 @@ Every metric space is normal.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="orga0823bd">
+<div class="proof" id="orgc542595">
 <p>
 Let \(X\) and \(Y\) be any two disjoint closed subsets of \(R\). Every point \(x
 \in X\) has a neighbourhood \(O_x\) disjoint from \(Y\), and hence is at a positive
@@ -515,7 +515,7 @@ real line is called a continuous real function on \(X\).
 <p>
 <b>Theorem 10</b>
 </p>
-<div class="theorem" id="orgd3e60ae">
+<div class="theorem" id="org5cb8d07">
 <p>
 A mapping \(f\) of a topological space \(X\) into a topological space \(Y\) is
 continuous if and only if the preimage \(\Gamma = f^{-1}(G)\) of every open set
@@ -527,7 +527,7 @@ continuous if and only if the preimage \(\Gamma = f^{-1}(G)\) of every open set
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org930defc">
+<div class="proof" id="orgb00f00c">
 <p>
 Suppose \(f\) is continuous and \(G\) is an open subset of \(Y\). Choose
 \(x \in \Gamma = f^{-1}(G)\) and let \(y = f(x)\). Then \(G\) is a neighbourhood of
@@ -550,7 +550,7 @@ arbitrary point of \(X\).
 <p>
 <b>Theorem 10’</b>
 </p>
-<div class="theorem" id="org1d70c73">
+<div class="theorem" id="orgc694640">
 <p>
 A mapping \(f\) of a topological space \(X\) into a topological space \(Y\) is
 continuous if and only if the preimage \(\Gamma = f^{-1}(F)\) of every closed set
@@ -562,7 +562,7 @@ continuous if and only if the preimage \(\Gamma = f^{-1}(F)\) of every closed se
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org91e5803">
+<div class="proof" id="org080db73">
 <p>
 Use the fact that thereforereimage ofclosed complement is the complement of the
 preimage.
@@ -573,7 +573,7 @@ preimage.
 <p>
 <b>Theorem 11</b>
 </p>
-<div class="theorem" id="orgf95286c">
+<div class="theorem" id="org9a81964">
 <p>
 Given topological spaces \(X\), \(Y\) and \(Z\), suppose \(f\) is a continuous mapping
 of \(X\) into \(Y\) and \(\phi\) is a continuous mapping of \(Y\) into \(Z\). Then the
@@ -586,7 +586,7 @@ continuous.
 <p>
 <i>Proof</i>
 </p>
-<div class="proof" id="org9405a41">
+<div class="proof" id="org39f27fc">
 <p>
 Immediate consequence of Theorem 10.
 </p>
@@ -643,8 +643,8 @@ arbitrary unions. However \(\cup_{x \in G} O_x \supseteq G\) since
 <p>
 If \([M] = M\), then \(M\) contains all of its contact points. So for all
 \(x \in T-M\), there exists a neighbourhood of \(x\) which doesn’t contain
-any points of \(M\), i.e. \(x\) has a neighbourhood contained in \(T-M\). By
-the result of Problem 1, \(T-M\) is open, hence \(M\) is closed.
+any points of \(M\), i.e. \(x\) has a neighbourhood contained in \(T-M\).
+By the result of Problem 1, \(T-M\) is open, hence \(M\) is closed.
 </p>
 
 <p>
@@ -662,10 +662,9 @@ points of \(M\) are in \(M\), i.e. \(M = [M]\).
 <p>
 If \([M]\) is not the smallest closed set, then there exists \(x \in [M]\), a
 contact point of \(M\), such that \(x \notin M\) and \(x \notin M’\).
-As we assume for contradiction that \(M’ = [M] - \{x\}\) is closed, then
-\(T - M’ = T - ([M] - \{x\})\) is open, but \(x\) is a contact point of \(M\)
-so every neighbourhood contains an element of \(M\). This leads to a
-contradiction.
+\(T - M’\) is open as \(M’\) is closed. But \(x \in [M]\) is a contact point,
+and \(T - M’\) open, so \(x \in T - M’\), but \(T-M’\) does not contain \(M\), so
+therefore \(x\) is not a contact point of \(M\) and we have a contradiction.
 </p></p></li>
 <li><p>The closure operator satisfies Theorem 1 on page 46 (Metric Spaces:
 convergence. Open and closed sets), i.e.
@@ -686,6 +685,19 @@ of \(M\), and not of \(N\), which is impossible as \(M\) is contained in
 
 <p>
 \([M]\) is closed, so by the result of 2.1, \([[M]] = [M]\).
+</p>
+
+<p>
+<i>Note:</i> To prove that the closure of a set is always closed, we use a
+similar proof to 2.1.
+</p>
+
+<p>
+By definition, a closure \([M]\) contains all of its contact points, so
+for all \(x \in T-[M]\), there exists an open neighbourhood which
+doesn’t contain any points of \(M\). The union of these neighbourhoods
+is itself open, therefore \(T-[M]\) is open and we have that \([M]\) is
+closed.
 </p></p></li>
 <li><p><p>
 \([M \cup N] = [M] \cup [N]\);
