@@ -220,3 +220,73 @@ a:active {
 @keyframes blinker {
   50% {opacity: 0;}
 }
+
+.notice {
+  background-color: yellow;
+  border-radius: 25px;
+  padding: 15px;
+  margin-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: ceenter;
+}
+
+.notice a, .notice a:visited {
+  color: black;
+}
+
+.notice a:hover {
+  color: plum;
+}
+
+@keyframes fadeshadow {
+    from {}
+    to   {
+  -webkit-box-shadow: 0 0 20px yellow;
+     -moz-box-shadow: 0 0 20px yellow;
+          box-shadow: 0 0 20px yellow;
+    }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadeshadow {
+    from {}
+    to   {
+  -webkit-box-shadow: 0 0 20px yellow;
+     -moz-box-shadow: 0 0 20px yellow;
+          box-shadow: 0 0 20px yellow;
+    }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadeshadow {
+    from {}
+    to   {
+  -webkit-box-shadow: 0 0 20px yellow;
+     -moz-box-shadow: 0 0 20px yellow;
+          box-shadow: 0 0 20px yellow;
+    }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadeshadow {
+    from {}
+    to   {
+  -webkit-box-shadow: 0 0 20px yellow;
+     -moz-box-shadow: 0 0 20px yellow;
+          box-shadow: 0 0 20px yellow;
+    }
+}
+
+
+.notice:hover {
+  -webkit-animation: 0.5s fadeshadow; /* Safari, Chrome and Opera > 12.1 */
+     -moz-animation: 0.5s fadeshadow; /* Firefox < 16 */
+      -ms-animation: 0.5s fadeshadow; /* Internet Explorer */
+       -o-animation: 0.5s fadeshadow; /* Opera < 12.1 */
+          animation: 0.5s fadeshadow;
+  -webkit-animation-fill-mode: forwards;
+     -moz-animation-fill-mode: forwards;
+      -ms-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}

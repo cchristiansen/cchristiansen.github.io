@@ -80,78 +80,13 @@ body, #main-block {
 }
 
 #titlecard {
-    height: 100%;
-    width: 100%;
+    padding: 20px;
+    height: auto;
+    text-align: center;
 }
 
 h1 {
-    padding-left: 50px;
-    padding-right: 50px;
-}
-
-#cv {
-    padding-top: 20%;
-    font-style: italic;
-    color: darkmagenta;
-    -webkit-animation: 8s fadein, 2s fromleft; /* Safari, Chrome and Opera > 12.1 */
-       -moz-animation: 8s fadein, 2s fromleft; /* Firefox < 16 */
-        -ms-animation: 8s fadein, 2s fromleft; /* Internet Explorer */
-         -o-animation: 8s fadein, 2s fromleft;/* Opera < 12.1 */
-            animation: 8s fadein, 2s fromleft;
-	-webkit-animation-fill-mode: forwards;
-       -moz-animation-fill-mode: forwards;
-        -ms-animation-fill-mode: forwards;
-            animation-fill-mode: forwards;
-}
-
-@keyframes fromleft {
-    from { margin-left: -500px; }
-    to   { margin-left: 0px; }
-}
-
-/* Firefox < 16 */
-@-moz-keyframes fromleft {
-    from { left: -500px; }
-    to   { left: 0px; }
-}
-
-/* Safari, Chrome and Opera > 12.1 */
-@-webkit-keyframes fromleft {
-    from { left: -500px; }
-    to   { left: 0px; }
-}
-
-/* Internet Explorer */
-@-ms-keyframes fromleft {
-    from { left: -500px; }
-    to   { left: 0px; }
-}
-
-#cc {
-    float: right;
-    margin-top: -50px;
-    display: block;
-}
-
-@media screen and (min-width: 300px) {
-    h1 {
-        font-size: 2em;
-    }
-}
-@media screen and (min-width: 550px) {
-    h1 {
-        font-size: 4em;
-    }
-}
-@media screen and (min-width: 700px) {
-    h1 {
-        font-size: 5.5em;
-    }
-}
-@media screen and (min-width: 770px) {
-    h1 {
-        font-size: 6em;
-    }
+    margin: auto;
 }
 
 #links {
@@ -183,7 +118,7 @@ a:active {
 
 h2 {
     text-align: center;
-    font-size: 4em;
+    font-size: 1.6em;
     margin: auto;
 }
 
@@ -195,6 +130,12 @@ section {
 
 h3 {
     display: inline;
+}
+
+.profile {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1200px;
 }
 
 .job-container {
