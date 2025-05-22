@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-05-19 Fri 11:26 -->
+<!-- 2025-05-22 Thu 16:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Introductory Real Analysis. Christian Christiansen</title>
@@ -12,27 +12,38 @@
 <meta name="description" content="/Introductory Real Analysis/ is a translation, and revision, by Richard A. Silverman of the second edition of Элементы теории функций и функционального анализа (Elements of the Theory of Functions and Functional Analysis), written by Андрей Николаевич Колмогоров (Andrey Nikolaevich Kolmogorov) and Сергей Васильевич Фомни (Sergei Vasilyevich Fomin)."
  />
 <link rel="stylesheet" type="text/css" href="../main.css">
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        displayAlign: "center",
-        displayIndent: "0em",
-
-        "HTML-CSS": { scale: 100,
-                        linebreaks: { automatic: "false" },
-                        webFont: "TeX"
-                       },
-        SVG: {scale: 100,
-              linebreaks: { automatic: "false" },
-              font: "TeX"},
-        NativeMML: {scale: 100},
-        TeX: { equationNumbers: {autoNumber: "AMS"},
-               MultLineWidth: "85%",
-               TagSide: "right",
-               TagIndent: ".8em"
-             }
-});
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-tex',
+      displayOverflow: 'overflow'
+    }
+  };
 </script>
-<script src="https://christianchristiansen.net/mathjax/tex-chtml.js"></script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://christianchristiansen.net/mathjax/tex-chtml.js">
+</script>
 </head>
 <body>
 <div id="content">
@@ -52,7 +63,6 @@ the overly literal translation by Leo F. Boron of the first edition called
 <i>Elements of the Theory of the Theory of Functions and Functional Analysis</i>.
 However, Silverman appears to have introduced several mathematical errors.
 </p>
-
 <div id="outline-container-errata" class="outline-2">
 <h2 id="errata">Errata</h2>
 <div class="outline-text-2" id="text-errata">
@@ -88,12 +98,12 @@ theorem should be renamed Theorem 5’.</p></li>
 <li><p>Page 98: Example 2 should come after Definition 2.</p></li>
 <li><p>Page 100: Theorem 2 proof. finitely many of them, not infinitely many of
 them.</p></li>
+<li><p>Page 101: Second example. is totally bounded, not it totally bounded.</p></li>
 <li><p>Page 105: Theorem 5 proof, equation (3). \(\phi^{(n)}(x’)\), not \(\phi(x’)\).</p></li>
 <li><p>Page 107: Problem 5. \(y_j\), not \(y_i\).</p></li>
 </ul>
 </div>
 </div>
-
 <div id="outline-container-on-the-display-of-mathematical-symbols" class="outline-2">
 <h2 id="on-the-display-of-mathematical-symbols">On the display of mathematical symbols</h2>
 <div class="outline-text-2" id="text-on-the-display-of-mathematical-symbols">
@@ -106,7 +116,6 @@ the use of JavaScript on an otherwise script-free site.
 </p>
 </div>
 </div>
-
 <div id="outline-container-sketched-notes" class="outline-2">
 <h2 id="sketched-notes">Sketched notes</h2>
 <div class="outline-text-2" id="text-sketched-notes">
@@ -143,6 +152,7 @@ clarification of open ends, would be greatly welcomed.
 <li value="9"><p><a href="./09-topological-spaces-basic-concepts.html">Basic Concepts</a></p></li>
 <li><p><a href="./10-compactness.html">Compactness</a></p></li>
 <li><p><a href="./11-compactness-in-metric-spaces.html">Compactness in Metric Spaces</a></p></li>
+<li><p><a href="./12-real-functions-on-metric-and-topological-spaces.html">Real Functions on Metric and Topological Spaces</a></p></li>
 </ol></p></li>
 </ol>
 <p>

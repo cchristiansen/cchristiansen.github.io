@@ -3,34 +3,45 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-01-19 Thu 18:20 -->
+<!-- 2025-05-22 Thu 16:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Metric Spaces: Complete Metric Spaces. Christian Christiansen</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Christian Christiansen" />
 <link rel="stylesheet" type="text/css" href="../main.css">
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        displayAlign: "center",
-        displayIndent: "0em",
-
-        "HTML-CSS": { scale: 100,
-                        linebreaks: { automatic: "false" },
-                        webFont: "TeX"
-                       },
-        SVG: {scale: 100,
-              linebreaks: { automatic: "false" },
-              font: "TeX"},
-        NativeMML: {scale: 100},
-        TeX: { equationNumbers: {autoNumber: "AMS"},
-               MultLineWidth: "85%",
-               TagSide: "right",
-               TagIndent: ".8em"
-             }
-});
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-tex',
+      displayOverflow: 'overflow'
+    }
+  };
 </script>
-<script src="https://christianchristiansen.net/mathjax/tex-chtml.js"></script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://christianchristiansen.net/mathjax/tex-chtml.js">
+</script>
 </head>
 <body>
 <div id="content">
@@ -44,7 +55,7 @@ sequence satisfying this criterion is called a <i>Cauchy sequence</i> or <i>fund
 <p>
 <b>Theorem 1</b>
 </p>
-<div class="theorem" id="org0d9a8d5">
+<div class="theorem" id="org662c4eb">
 <p>
 Every convergent sequence \(\{x_n\}\) is fundamental.
 </p>
@@ -79,7 +90,6 @@ number of nowhere dense sets.
 Every metric space \(R\) has a completion. This completion is unique to within
 an isometric mapping carrying every point \(x \in R\) into itself.
 </p>
-
 <div id="outline-container-complete-metric-spaces-problems" class="outline-2">
 <h2 id="complete-metric-spaces-problems">Problems</h2>
 <div class="outline-text-2" id="text-complete-metric-spaces-problems">
@@ -111,13 +121,17 @@ Prove that the space \(m\) is complete.
 \(\rho(x_n, x_{n^\prime}) = \sup_k (x_{n_k} - x_{{n^\prime}_k}) < \epsilon\)
 </p></p></li>
 <li><p><p>
-Prove that if \(R\) is complete, then the intersection \(\cap_{n = 1}^\infty
-   S_n\) riguring in Theorem 2 consists of a single point.
+Prove that if \(R\) is complete, then the intersection
+\(\cap_{n = 1}^\infty S_n\) from Theorem 2 consists of a single point.
 </p>
 
 <p>
 \(R\) complete, so limit in \(R\) by definition. And by Theorem 2, intersection
-nonempty.
+nonempty. Need to prove uniqueness. Assume for contradiction there exists a
+second distinct point, such that the distance between the two points is
+nonzero. Then one of the spheres will not contain the second point, as the
+sphere will be smaller than the distance. As the second point is arbitrary,
+we have our result.
 </p></p></li>
 <li><p><p>
 The <i>diameter</i> of a subset \(A\) of a metric space \(R\) is
